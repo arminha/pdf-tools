@@ -14,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
@@ -67,11 +68,22 @@ public class PdfPermissionManagerGui extends JFrame {
                             currentPdf = f.getAbsolutePath();
                             openFileLabel.setText(currentPdf);
                         } catch (IOException ioe) {
-                            // TODO display error
-                            ioe.printStackTrace();
+                            String errMsg = "Cannot read file" + " \""
+                                    + f.getAbsolutePath() + "\":";
+                            JOptionPane.showMessageDialog(
+                                    PdfPermissionManagerGui.this, new String[] {
+                                            errMsg, ioe.getMessage() },
+                                    "Error reading file",
+                                    JOptionPane.ERROR_MESSAGE);
                         }
                     } else {
-                        // TODO display error
+                        String errMsg = "Cannot read file" + " \""
+                                + f.getAbsolutePath() + "\"";
+                        JOptionPane
+                                .showMessageDialog(
+                                        PdfPermissionManagerGui.this, errMsg,
+                                        "Error reading file",
+                                        JOptionPane.ERROR_MESSAGE);
                     }
                 }
             }
@@ -94,8 +106,15 @@ public class PdfPermissionManagerGui extends JFrame {
                     }
                     File f = new File(filename);
                     if (f.exists()) {
-                        // TODO error
-                        return;
+                        // ask if the file should be overwritten
+                        String msg = "Overwrite file " + " \""
+                                + f.getAbsolutePath() + "\"?";
+                        int resultVal = JOptionPane.showConfirmDialog(
+                                PdfPermissionManagerGui.this, msg,
+                                "Overwrite file", JOptionPane.YES_NO_OPTION);
+                        if (resultVal == JOptionPane.NO_OPTION) {
+                            return;
+                        }
                     }
                     try {
                         PdfReader reader = new PdfReader(currentPdf);
@@ -103,8 +122,12 @@ public class PdfPermissionManagerGui extends JFrame {
                         permManager.changePermissions(reader, fout, permPanel
                                 .getPermissions());
                     } catch (IOException ioe) {
-                        // TODO error
-                        ioe.printStackTrace();
+                        String errMsg = "Cannot save as file" + " \""
+                                + f.getAbsolutePath() + "\":";
+                        JOptionPane.showMessageDialog(
+                                PdfPermissionManagerGui.this, new String[] {
+                                        errMsg, ioe.getMessage() },
+                                "Error saving", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             }
