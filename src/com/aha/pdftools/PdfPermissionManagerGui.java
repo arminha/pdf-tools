@@ -68,21 +68,21 @@ public class PdfPermissionManagerGui extends JFrame {
                             currentPdf = f.getAbsolutePath();
                             openFileLabel.setText(currentPdf);
                         } catch (IOException ioe) {
-                            String errMsg = "Cannot read file" + " \""
-                                    + f.getAbsolutePath() + "\":";
+                            String errMsg = Messages.getString("PdfPermissionManagerGui.18") + " \"" //$NON-NLS-1$ //$NON-NLS-2$
+                                    + f.getAbsolutePath() + "\":"; //$NON-NLS-1$
                             JOptionPane.showMessageDialog(
                                     PdfPermissionManagerGui.this, new String[] {
                                             errMsg, ioe.getMessage() },
-                                    "Error reading file",
+                                    Messages.getString("PdfPermissionManagerGui.21"), //$NON-NLS-1$
                                     JOptionPane.ERROR_MESSAGE);
                         }
                     } else {
-                        String errMsg = "Cannot read file" + " \""
-                                + f.getAbsolutePath() + "\"";
+                        String errMsg = Messages.getString("PdfPermissionManagerGui.18") + " \"" //$NON-NLS-1$ //$NON-NLS-2$
+                                + f.getAbsolutePath() + "\""; //$NON-NLS-1$
                         JOptionPane
                                 .showMessageDialog(
                                         PdfPermissionManagerGui.this, errMsg,
-                                        "Error reading file",
+                                        Messages.getString("PdfPermissionManagerGui.21"), //$NON-NLS-1$
                                         JOptionPane.ERROR_MESSAGE);
                     }
                 }
@@ -107,11 +107,11 @@ public class PdfPermissionManagerGui extends JFrame {
                     File f = new File(filename);
                     if (f.exists()) {
                         // ask if the file should be overwritten
-                        String msg = "Overwrite file " + " \""
-                                + f.getAbsolutePath() + "\"?";
+                        String msg = Messages.getString("PdfPermissionManagerGui.26") + " \"" //$NON-NLS-1$ //$NON-NLS-2$
+                                + f.getAbsolutePath() + "\" " + Messages.getString("PdfPermissionManagerGui.34") + "?"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                         int resultVal = JOptionPane.showConfirmDialog(
                                 PdfPermissionManagerGui.this, msg,
-                                "Overwrite file", JOptionPane.YES_NO_OPTION);
+                                Messages.getString("PdfPermissionManagerGui.29"), JOptionPane.YES_NO_OPTION); //$NON-NLS-1$
                         if (resultVal == JOptionPane.NO_OPTION) {
                             return;
                         }
@@ -122,12 +122,12 @@ public class PdfPermissionManagerGui extends JFrame {
                         permManager.changePermissions(reader, fout, permPanel
                                 .getPermissions());
                     } catch (IOException ioe) {
-                        String errMsg = "Cannot save as file" + " \""
-                                + f.getAbsolutePath() + "\":";
+                        String errMsg = Messages.getString("PdfPermissionManagerGui.30") + " \"" //$NON-NLS-1$ //$NON-NLS-2$
+                                + f.getAbsolutePath() + "\":"; //$NON-NLS-1$
                         JOptionPane.showMessageDialog(
                                 PdfPermissionManagerGui.this, new String[] {
                                         errMsg, ioe.getMessage() },
-                                "Error saving", JOptionPane.ERROR_MESSAGE);
+                                Messages.getString("PdfPermissionManagerGui.33"), JOptionPane.ERROR_MESSAGE); //$NON-NLS-1$
                     }
                 }
             }
