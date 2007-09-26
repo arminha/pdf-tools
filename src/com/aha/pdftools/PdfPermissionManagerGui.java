@@ -284,6 +284,7 @@ public class PdfPermissionManagerGui extends JFrame {
         gui.pack();
         Dimension s = gui.getPreferredSize();
         s.width += 50;
+        gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         gui.setSize(s);
         gui.setVisible(true);
     }
