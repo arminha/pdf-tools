@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
@@ -22,7 +23,7 @@ import org.jdesktop.layout.GroupLayout;
 
 import com.lowagie.text.pdf.PdfReader;
 
-@SuppressWarnings("serial")
+@SuppressWarnings("serial")//$NON-NLS-1$
 public class PdfPermissionManagerGui extends JFrame {
 
     // TODO swing gui
@@ -37,12 +38,13 @@ public class PdfPermissionManagerGui extends JFrame {
     private PdfPermissionManager permManager = new PdfPermissionManager();
 
     public PdfPermissionManagerGui() {
-        super("Pdf Permission Manager");
+        super(Messages.getString("PdfPermissionManagerGui.1")); //$NON-NLS-1$
 
         Container content = getContentPane();
 
         // create widgets
-        openButton = new JButton("Open..");
+        openButton = new JButton(Messages
+                .getString("PdfPermissionManagerGui.2")); //$NON-NLS-1$
         openButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 JFileChooser chooser = new JFileChooser();
@@ -75,7 +77,8 @@ public class PdfPermissionManagerGui extends JFrame {
             }
         });
 
-        saveButton = new JButton("Save As..");
+        saveButton = new JButton(Messages
+                .getString("PdfPermissionManagerGui.3")); //$NON-NLS-1$
         saveButton.setEnabled(false);
         saveButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -86,8 +89,8 @@ public class PdfPermissionManagerGui extends JFrame {
                 if (returnVal == JFileChooser.APPROVE_OPTION) {
                     String filename = chooser.getSelectedFile()
                             .getAbsolutePath();
-                    if (!filename.endsWith(".pdf")) {
-                        filename += ".pdf";
+                    if (!filename.endsWith(".pdf")) { //$NON-NLS-1$
+                        filename += ".pdf"; //$NON-NLS-1$
                     }
                     File f = new File(filename);
                     if (f.exists()) {
@@ -107,7 +110,8 @@ public class PdfPermissionManagerGui extends JFrame {
             }
         });
 
-        exitButton = new JButton("Exit");
+        exitButton = new JButton(Messages
+                .getString("PdfPermissionManagerGui.6")); //$NON-NLS-1$
         exitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.exit(0);
@@ -116,7 +120,7 @@ public class PdfPermissionManagerGui extends JFrame {
 
         permPanel = new PermPanel();
         permPanel.setEnabled(false);
-        openFileLabel = new JTextField("No file opened");
+        openFileLabel = new JTextField();
         openFileLabel.setEditable(false);
 
         // layout
@@ -171,14 +175,26 @@ public class PdfPermissionManagerGui extends JFrame {
         JCheckBox modifyAnnotationsBox;
 
         public PermPanel() {
-            assemblyBox = new JCheckBox("Assembly");
-            copyBox = new JCheckBox("Copy");
-            degradedPrintingBox = new JCheckBox("Degraded Printing");
-            printingBox = new JCheckBox("Printing");
-            screenReadersBox = new JCheckBox("Screenreader");
-            fillInBox = new JCheckBox("Fill In");
-            modifyContentsBox = new JCheckBox("Modify Contents");
-            modifyAnnotationsBox = new JCheckBox("Modify Annotations");
+
+            this.setBorder(BorderFactory.createTitledBorder(Messages
+                    .getString("PdfPermissionManagerGui.0"))); //$NON-NLS-1$
+
+            assemblyBox = new JCheckBox(Messages
+                    .getString("PdfPermissionManagerGui.8")); //$NON-NLS-1$
+            copyBox = new JCheckBox(Messages
+                    .getString("PdfPermissionManagerGui.9")); //$NON-NLS-1$
+            degradedPrintingBox = new JCheckBox(Messages
+                    .getString("PdfPermissionManagerGui.10")); //$NON-NLS-1$
+            printingBox = new JCheckBox(Messages
+                    .getString("PdfPermissionManagerGui.11")); //$NON-NLS-1$
+            screenReadersBox = new JCheckBox(Messages
+                    .getString("PdfPermissionManagerGui.12")); //$NON-NLS-1$
+            fillInBox = new JCheckBox(Messages
+                    .getString("PdfPermissionManagerGui.13")); //$NON-NLS-1$
+            modifyContentsBox = new JCheckBox(Messages
+                    .getString("PdfPermissionManagerGui.14")); //$NON-NLS-1$
+            modifyAnnotationsBox = new JCheckBox(Messages
+                    .getString("PdfPermissionManagerGui.15")); //$NON-NLS-1$
 
             // layout
             final GroupLayout layout = new GroupLayout(this);
@@ -262,14 +278,14 @@ public class PdfPermissionManagerGui extends JFrame {
         @Override
         public boolean accept(File f) {
             if (f.isFile()) {
-                return (f.getName().endsWith(".pdf"));
+                return (f.getName().endsWith(".pdf")); //$NON-NLS-1$
             }
             return f.isDirectory();
         }
 
         @Override
         public String getDescription() {
-            return "Pdf Files (.pdf)";
+            return Messages.getString("PdfPermissionManagerGui.17"); //$NON-NLS-1$
         }
 
     }
