@@ -139,7 +139,7 @@ public class PdfPermissionManagerGui extends JFrame {
         final GroupLayout.SequentialGroup horizontal = layout
                 .createSequentialGroup();
         horizontal.add(layout.createParallelGroup().add(openFileLabel, 100,
-                GroupLayout.PREFERRED_SIZE, 2000).add(permPanel,
+                GroupLayout.PREFERRED_SIZE, 4000).add(permPanel,
                 GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE,
                 GroupLayout.PREFERRED_SIZE));
         horizontal.add(layout.createParallelGroup().add(openButton).add(
@@ -151,9 +151,9 @@ public class PdfPermissionManagerGui extends JFrame {
                 .createSequentialGroup();
         vertical.add(layout.createParallelGroup().add(openFileLabel).add(
                 openButton));
-        vertical
-                .add(layout.createParallelGroup(GroupLayout.TRAILING).add(
-                        permPanel).add(
+        vertical.add(layout.createParallelGroup(GroupLayout.TRAILING).add(
+                layout.createSequentialGroup().add(permPanel).add(0, 0, 4000))
+                .add(
                         layout.createSequentialGroup().add(saveButton).add(
                                 exitButton)));
         layout.setVerticalGroup(vertical);
