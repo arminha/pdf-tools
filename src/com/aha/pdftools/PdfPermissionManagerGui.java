@@ -3,6 +3,12 @@ package com.aha.pdftools;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetAdapter;
+import java.awt.dnd.DropTargetDropEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
@@ -10,6 +16,7 @@ import java.awt.event.ComponentEvent;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -330,7 +337,7 @@ public class PdfPermissionManagerGui extends JFrame {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        PdfPermissionManagerGui gui = new PdfPermissionManagerGui();
+        final PdfPermissionManagerGui gui = new PdfPermissionManagerGui();
         gui.pack();
         Dimension s = gui.getPreferredSize();
         gui.setMinimumSize(s);
@@ -339,6 +346,26 @@ public class PdfPermissionManagerGui extends JFrame {
         }
         gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         gui.setVisible(true);
+        // add drag and drop
+        new DropTarget(gui, new DropTargetAdapter() {
+            public void drop(DropTargetDropEvent dtde) {
+                if (dtde
+                        .isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
+                    dtde.acceptDrop(DnDConstants.ACTION_COPY);
+                    Transferable trans = dtde.getTransferable();
+                    try {
+                        List filelist = (List) trans
+                                .getTransferData(DataFlavor.javaFileListFlavor);
+                        File f = (File) filelist.get(0);
+                        dtde.dropComplete(gui.loadFile(f));
+                    } catch (Exception e) {
+                        dtde.dropComplete(false);
+                    }
+                } else {
+                    dtde.rejectDrop();
+                }
+            }
+        });
     }
 
     public static boolean isJava6OrHigher() {
