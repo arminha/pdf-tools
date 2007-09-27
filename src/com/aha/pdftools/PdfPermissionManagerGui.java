@@ -5,6 +5,8 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -27,11 +29,9 @@ import com.lowagie.text.pdf.PdfReader;
 @SuppressWarnings("serial")//$NON-NLS-1$
 public class PdfPermissionManagerGui extends JFrame {
 
-    // TODO swing gui
-
-    JButton openButton; // Open..
-    JButton saveButton; // Save as..
-    JButton exitButton; // Exit / Quit
+    JButton openButton;
+    JButton saveButton;
+    JButton exitButton;
     PermPanel permPanel;
     JTextField openFileLabel;
 
@@ -185,6 +185,24 @@ public class PdfPermissionManagerGui extends JFrame {
                                 exitButton)));
         layout.setVerticalGroup(vertical);
     }
+    
+    private Dimension packedMinimumSize;
+    
+    public Dimension getPackedMinimumSize() {
+        return packedMinimumSize;
+    }
+
+    public void setPackedMinimumSize(Dimension packedMinimumSize) {
+        this.packedMinimumSize = packedMinimumSize;
+    }
+    
+    @Override
+    public Dimension getMinimumSize() {
+        if (null != packedMinimumSize) {
+            return packedMinimumSize;
+        }
+        return super.getMinimumSize();
+    }
 
     class PermPanel extends JPanel {
 
@@ -322,9 +340,51 @@ public class PdfPermissionManagerGui extends JFrame {
         PdfPermissionManagerGui gui = new PdfPermissionManagerGui();
         gui.pack();
         Dimension s = gui.getPreferredSize();
-        s.width += 50;
+        gui.setMinimumSize(s);
+        if (!isJava6OrHigher()) {
+            enforceMinimalSize(s, gui);
+        }
         gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        gui.setSize(s);
         gui.setVisible(true);
     }
+    
+    public static boolean isJava6OrHigher() {
+        try {
+            String[] rawVersion = System.getProperty("java.version").split(".");
+            int first = Integer.parseInt(rawVersion[0]);
+            int second = Integer.parseInt(rawVersion[1]);
+            if (first > 1) {
+                return true;
+            } else if (first < 1) {
+                return false;
+            }
+            if (second >= 6) {
+                return true;
+            }
+        } catch (Exception e) {
+        }
+        return false;
+    }
+    
+    public static void enforceMinimalSize(final Dimension d, final JFrame frame) {
+        frame.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                Dimension s = frame.getSize();
+                boolean resize = false;
+                if (s.width < d.width) {
+                    s.width = d.width;
+                    resize = true;
+                }
+                if (s.height < d.height) {
+                    s.height = d.height;
+                    resize = true;
+                }
+                if (resize) {
+                    frame.setSize(s);
+                }
+            }
+        });
+    }
+
 }
