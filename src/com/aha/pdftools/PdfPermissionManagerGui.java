@@ -31,6 +31,7 @@ import javax.swing.filechooser.FileFilter;
 
 import org.jdesktop.layout.GroupLayout;
 
+import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.PdfReader;
 
 @SuppressWarnings("serial")//$NON-NLS-1$
@@ -111,6 +112,16 @@ public class PdfPermissionManagerGui extends JFrame {
                                 .showMessageDialog(
                                         PdfPermissionManagerGui.this,
                                         new String[] { errMsg, ioe.getMessage() },
+                                        Messages
+                                                .getString("PdfPermissionManagerGui.33"), JOptionPane.ERROR_MESSAGE); //$NON-NLS-1$
+                    } catch (DocumentException de) {
+                        String errMsg = Messages
+                                .getString("PdfPermissionManagerGui.30") + " \"" //$NON-NLS-1$ //$NON-NLS-2$
+                                + f.getAbsolutePath() + "\":"; //$NON-NLS-1$
+                        JOptionPane
+                                .showMessageDialog(
+                                        PdfPermissionManagerGui.this,
+                                        new String[] { errMsg, de.getMessage() },
                                         Messages
                                                 .getString("PdfPermissionManagerGui.33"), JOptionPane.ERROR_MESSAGE); //$NON-NLS-1$
                     }
@@ -354,6 +365,7 @@ public class PdfPermissionManagerGui extends JFrame {
                     dtde.acceptDrop(DnDConstants.ACTION_COPY);
                     Transferable trans = dtde.getTransferable();
                     try {
+                        @SuppressWarnings("unchecked")
                         List filelist = (List) trans
                                 .getTransferData(DataFlavor.javaFileListFlavor);
                         File f = (File) filelist.get(0);

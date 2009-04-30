@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 
+import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.PdfEncryption;
 import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.PdfStamper;
@@ -22,9 +23,9 @@ public class PdfPermissionManager {
     }
 
     public void changePermissions(PdfReader reader, OutputStream os,
-            PdfPermissions permissions) {
+            PdfPermissions permissions) throws DocumentException, IOException {
         try {
-            Class readerClass = reader.getClass();
+            Class<? extends PdfReader> readerClass = reader.getClass();
             Field pwField = readerClass.getDeclaredField("ownerPasswordUsed");
             pwField.setAccessible(true);
             pwField.set(reader, new Boolean(true));
@@ -33,16 +34,11 @@ public class PdfPermissionManager {
             e.printStackTrace();
         }
 
-        try {
-            PdfStamper stp = new PdfStamper(reader, os, '\0');
-            int perms = permissions.getPermissions();
-            stp.setEncryption(null, "changeit".getBytes(), perms,
-                    PdfEncryption.STANDARD_ENCRYPTION_40);
-            stp.close();
-        } catch (Exception e) {
-            // TODO error occured
-            e.printStackTrace();
-        }
+        PdfStamper stp = new PdfStamper(reader, os, '\0');
+        int perms = permissions.getPermissions();
+        stp.setEncryption(null, "changeit".getBytes(), perms,
+                PdfEncryption.STANDARD_ENCRYPTION_40);
+        stp.close();
     }
 
     public static void main(String[] args) {
@@ -51,6 +47,9 @@ public class PdfPermissionManager {
             pm.changePermissions(new PdfReader(args[0]), new FileOutputStream(
                     args[1]), new PdfPermissions());
         } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (DocumentException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
