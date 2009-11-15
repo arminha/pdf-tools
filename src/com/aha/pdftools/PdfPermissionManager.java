@@ -30,8 +30,7 @@ public class PdfPermissionManager {
             pwField.setAccessible(true);
             pwField.set(reader, new Boolean(true));
         } catch (Exception e) {
-            // TODO hack failed
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
         PdfStamper stp = new PdfStamper(reader, os, '\0');
