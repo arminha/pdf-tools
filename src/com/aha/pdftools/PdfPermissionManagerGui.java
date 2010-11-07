@@ -69,6 +69,7 @@ public class PdfPermissionManagerGui extends JFrame {
         openButton = new JButton(Messages
                 .getString("PdfPermissionManagerGui.OpenButton")); //$NON-NLS-1$
         openButton.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 JFileChooser chooser = new JFileChooser();
                 chooser.setFileFilter(new PdfFileFilter());
@@ -85,6 +86,7 @@ public class PdfPermissionManagerGui extends JFrame {
                 .getString("PdfPermissionManagerGui.SaveButton")); //$NON-NLS-1$
         saveButton.setEnabled(false);
         saveButton.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 JFileChooser chooser = new JFileChooser();
                 chooser.setFileFilter(new PdfFileFilter());
@@ -139,6 +141,7 @@ public class PdfPermissionManagerGui extends JFrame {
         exitButton = new JButton(Messages
                 .getString("PdfPermissionManagerGui.ExitButton")); //$NON-NLS-1$
         exitButton.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 System.exit(0);
             }
@@ -364,6 +367,7 @@ public class PdfPermissionManagerGui extends JFrame {
         gui.setVisible(true);
         // add drag and drop
         new DropTarget(gui, new DropTargetAdapter() {
+            @Override
             public void drop(DropTargetDropEvent dtde) {
                 if (dtde
                         .isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
