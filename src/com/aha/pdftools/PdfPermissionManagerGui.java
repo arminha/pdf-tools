@@ -11,8 +11,6 @@ import java.awt.dnd.DropTargetAdapter;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -362,9 +360,6 @@ public class PdfPermissionManagerGui extends JFrame {
         gui.pack();
         Dimension s = gui.getPreferredSize();
         gui.setMinimumSize(s);
-        if (!isJava6OrHigher()) {
-            enforceMinimalSize(s, gui);
-        }
         gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         gui.setVisible(true);
         // add drag and drop
@@ -397,45 +392,6 @@ public class PdfPermissionManagerGui extends JFrame {
                     }
                 } else {
                     dtde.rejectDrop();
-                }
-            }
-        });
-    }
-
-    public static boolean isJava6OrHigher() {
-        try {
-            String[] rawVersion = System.getProperty("java.version").split("."); //$NON-NLS-1$ //$NON-NLS-2$
-            int first = Integer.parseInt(rawVersion[0]);
-            int second = Integer.parseInt(rawVersion[1]);
-            if (first > 1) {
-                return true;
-            } else if (first < 1) {
-                return false;
-            }
-            if (second >= 6) {
-                return true;
-            }
-        } catch (Exception e) {
-        }
-        return false;
-    }
-
-    public static void enforceMinimalSize(final Dimension d, final JFrame frame) {
-        frame.addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                Dimension s = frame.getSize();
-                boolean resize = false;
-                if (s.width < d.width) {
-                    s.width = d.width;
-                    resize = true;
-                }
-                if (s.height < d.height) {
-                    s.height = d.height;
-                    resize = true;
-                }
-                if (resize) {
-                    frame.setSize(s);
                 }
             }
         });
