@@ -16,8 +16,12 @@ import java.awt.event.ComponentEvent;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URI;
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -37,6 +41,15 @@ import com.lowagie.text.pdf.PdfReader;
 
 @SuppressWarnings("serial")//$NON-NLS-1$
 public class PdfPermissionManagerGui extends JFrame {
+
+    private static DataFlavor uriListFlavor = null;
+    static {
+        try {
+            uriListFlavor = new DataFlavor("text/uri-list; class=java.lang.String");
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(PdfPermissionManagerGui.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     private static final String PDF_EXTENSION = ".pdf"; //$NON-NLS-1$
     
@@ -366,6 +379,18 @@ public class PdfPermissionManagerGui extends JFrame {
                         List filelist = (List) trans
                                 .getTransferData(DataFlavor.javaFileListFlavor);
                         File f = (File) filelist.get(0);
+                        dtde.dropComplete(gui.loadFile(f));
+                    } catch (Exception e) {
+                        dtde.dropComplete(false);
+                    }
+                } else if (dtde.isDataFlavorSupported(uriListFlavor)) {
+                    dtde.acceptDrop(DnDConstants.ACTION_COPY);
+                    Transferable trans = dtde.getTransferable();
+                    try {
+                        String uris = (String) trans.getTransferData(uriListFlavor);
+                        StringTokenizer tokenizer = new StringTokenizer(uris);
+                        URI uri = new URI(tokenizer.nextToken());
+                        File f = new File(uri);
                         dtde.dropComplete(gui.loadFile(f));
                     } catch (Exception e) {
                         dtde.dropComplete(false);
