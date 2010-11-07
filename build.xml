@@ -71,4 +71,20 @@
     nbproject/build-impl.xml file. 
 
     -->
+    <property name="one-jar.dist.dir" value="lib/OneJar"/>
+    <import optional="true">
+        <javaresource name="one-jar-ant-task.xml">
+            <classpath location="${one-jar.dist.dir}/one-jar-ant-task-0.97.jar" />
+        </javaresource>
+    </import>
+    <target name="-post-jar">
+        <one-jar destfile="${dist.dir}/PdfPermissionManager_all.jar">
+            <main jar="${dist.jar}" />
+            <lib>
+                <fileset dir="${dist.dir}/lib">
+                    <include name="*.jar" />
+                </fileset>
+            </lib>
+        </one-jar>
+    </target>
 </project>
