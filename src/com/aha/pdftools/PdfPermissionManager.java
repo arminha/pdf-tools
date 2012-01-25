@@ -23,7 +23,8 @@ public class PdfPermissionManager {
     }
 
     public void changePermissions(PdfReader reader, OutputStream os,
-            PdfPermissions permissions) throws DocumentException, IOException {
+            PdfPermissions permissions, String password)
+            throws DocumentException, IOException {
         try {
             Class<? extends PdfReader> readerClass = reader.getClass();
             Field pwField = readerClass.getDeclaredField("ownerPasswordUsed");
@@ -35,7 +36,7 @@ public class PdfPermissionManager {
 
         PdfStamper stp = new PdfStamper(reader, os, '\0');
         int perms = permissions.getPermissions();
-        stp.setEncryption(null, "changeit".getBytes(), perms,
+        stp.setEncryption(null, password.getBytes(), perms,
                 PdfEncryption.STANDARD_ENCRYPTION_40);
         stp.close();
     }
@@ -44,7 +45,7 @@ public class PdfPermissionManager {
         try {
             PdfPermissionManager pm = new PdfPermissionManager();
             pm.changePermissions(new PdfReader(args[0]), new FileOutputStream(
-                    args[1]), new PdfPermissions());
+                    args[1]), new PdfPermissions(), "changeit");
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

@@ -111,11 +111,9 @@ public class PdfPermissionManagerGui extends JFrame {
                             return;
                         }
                     }
+                    String password = AskNewOwnerPassword();
                     try {
-                        PdfReader reader = new PdfReader(currentPdf);
-                        FileOutputStream fout = new FileOutputStream(f);
-                        permManager.changePermissions(reader, fout, permPanel
-                                .getPermissions());
+                        processFile(currentPdf, f, permPanel.getPermissions(), password);
                     } catch (IOException ioe) {
                         String errMsg = MessageFormat.format(Messages.getString("PdfPermissionManagerGui.CannotSaveAs"), f.getAbsolutePath()); //$NON-NLS-1$
                         JOptionPane
@@ -223,6 +221,18 @@ public class PdfPermissionManagerGui extends JFrame {
                     JOptionPane.ERROR_MESSAGE);
             return false;
         }
+    }
+
+    private String AskNewOwnerPassword() {
+        String password = JOptionPane.showInputDialog(PdfPermissionManagerGui.this, Messages.getString("PdfPermissionManagerGui.EnterOwnerPassword"), "changeit"); //$NON-NLS-2$
+        return password;
+    }
+
+    private void processFile(String inputFile, File output, PdfPermissions permissions, String password)
+            throws IOException, DocumentException {
+        PdfReader reader = new PdfReader(inputFile);
+        FileOutputStream fout = new FileOutputStream(output);
+        permManager.changePermissions(reader, fout, permissions, password);
     }
 
     class PermPanel extends JPanel {
