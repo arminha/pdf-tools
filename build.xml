@@ -89,4 +89,11 @@
         </one-jar>
     </target>
     -->
+    <property name="launch4j.dir" location="lib/launch4j" />
+    <taskdef name="launch4j"
+        classname="net.sf.launch4j.ant.Launch4jTask"
+        classpath="${launch4j.dir}/launch4j.jar:${launch4j.dir}/lib/xstream.jar" />
+    <target name="-post-jar">
+        <launch4j configFile="./launch4j_config.xml" />
+    </target>
 </project>
