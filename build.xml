@@ -71,6 +71,7 @@
     nbproject/build-impl.xml file. 
 
     -->
+    <!--    
     <property name="one-jar.dist.dir" value="lib/OneJar"/>
     <import optional="true">
         <javaresource name="one-jar-ant-task.xml">
@@ -87,4 +88,5 @@
             </lib>
         </one-jar>
     </target>
+    -->
 </project>
