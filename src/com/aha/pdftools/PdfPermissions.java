@@ -1,6 +1,6 @@
 package com.aha.pdftools;
 
-import com.lowagie.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.PdfWriter;
 
 public class PdfPermissions {
 
@@ -17,34 +17,35 @@ public class PdfPermissions {
     }
 
     public PdfPermissions(int perms) {
-        allowAssembly = (perms & PdfWriter.AllowAssembly) != 0;
-        allowCopy = (perms & PdfWriter.AllowCopy) != 0;
-        allowDegradedPrinting = (perms & PdfWriter.AllowDegradedPrinting) != 0;
-        allowPrinting = (perms & PdfWriter.AllowPrinting) != 0;
-        allowScreenReaders = (perms & PdfWriter.AllowScreenReaders) != 0;
-        allowFillIn = (perms & PdfWriter.AllowFillIn) != 0;
-        allowModifyContents = (perms & PdfWriter.AllowModifyContents) != 0;
-        allowModifyAnnotations = (perms & PdfWriter.AllowModifyAnnotations) != 0;
+        allowAssembly = (perms & PdfWriter.ALLOW_ASSEMBLY) != 0;
+        allowCopy = (perms & PdfWriter.ALLOW_COPY) != 0;
+        allowDegradedPrinting = (perms & PdfWriter.ALLOW_DEGRADED_PRINTING) != 0;
+        allowPrinting = (perms & PdfWriter.ALLOW_PRINTING) != 0;
+        allowScreenReaders = (perms & PdfWriter.ALLOW_SCREENREADERS) != 0;
+        allowFillIn = (perms & PdfWriter.ALLOW_FILL_IN) != 0;
+        allowModifyContents = (perms & PdfWriter.ALLOW_MODIFY_CONTENTS) != 0;
+        allowModifyAnnotations = (perms & PdfWriter.ALLOW_MODIFY_ANNOTATIONS) != 0;
     }
 
     public int getPermissions() {
-        int perms = 0;
+        // as per User access permissions table in the pdf specification
+        int perms = 0xFFFFF0C0;
         if (allowAssembly)
-            perms = perms | PdfWriter.AllowAssembly;
+            perms = perms | PdfWriter.ALLOW_ASSEMBLY;
         if (allowCopy)
-            perms = perms | PdfWriter.AllowCopy;
+            perms = perms | PdfWriter.ALLOW_COPY;
         if (allowDegradedPrinting)
-            perms = perms | PdfWriter.AllowDegradedPrinting;
+            perms = perms | PdfWriter.ALLOW_DEGRADED_PRINTING;
         if (allowPrinting)
-            perms = perms | PdfWriter.AllowPrinting;
+            perms = perms | PdfWriter.ALLOW_PRINTING;
         if (allowScreenReaders)
-            perms = perms | PdfWriter.AllowScreenReaders;
+            perms = perms | PdfWriter.ALLOW_SCREENREADERS;
         if (allowFillIn)
-            perms = perms | PdfWriter.AllowFillIn;
+            perms = perms | PdfWriter.ALLOW_FILL_IN;
         if (allowModifyContents)
-            perms = perms | PdfWriter.AllowModifyContents;
+            perms = perms | PdfWriter.ALLOW_MODIFY_CONTENTS;
         if (allowModifyAnnotations)
-            perms = perms | PdfWriter.AllowModifyAnnotations;
+            perms = perms | PdfWriter.ALLOW_MODIFY_ANNOTATIONS;
         return perms;
     }
 

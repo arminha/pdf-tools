@@ -5,10 +5,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.pdf.PdfEncryption;
-import com.lowagie.text.pdf.PdfReader;
-import com.lowagie.text.pdf.PdfStamper;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.pdf.PdfEncryption;
+import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.pdf.PdfStamper;
 
 public class PdfPermissionManager {
 

@@ -1,5 +1,7 @@
 package com.aha.pdftools;
 
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.pdf.PdfReader;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -33,9 +35,6 @@ import javax.swing.UIManager;
 import javax.swing.filechooser.FileFilter;
 
 import org.jdesktop.layout.GroupLayout;
-
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.pdf.PdfReader;
 
 @SuppressWarnings("serial")//$NON-NLS-1$
 public class PdfPermissionManagerGui extends JFrame {
