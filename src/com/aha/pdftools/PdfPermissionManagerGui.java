@@ -18,8 +18,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.text.MessageFormat;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Queue;
 import java.util.StringTokenizer;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,7 +35,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.JTextArea;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileFilter;
 
@@ -52,11 +57,13 @@ public class PdfPermissionManagerGui extends JFrame {
     
     JButton openButton;
     JButton saveButton;
+    JButton batchButton;
+    JButton saveBatchButton;
     JButton exitButton;
     PermPanel permPanel;
-    JTextField openFileLabel;
+    JTextArea openFileLabel;
 
-    private String currentPdf;
+    private File source;
     private PdfPermissionManager permManager = new PdfPermissionManager();
 
     public PdfPermissionManagerGui() {
@@ -71,6 +78,10 @@ public class PdfPermissionManagerGui extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFileChooser chooser = new JFileChooser();
+                if (source != null) {
+                    chooser.setCurrentDirectory(source.isDirectory() ?
+                        source : source.getParentFile());
+                }
                 chooser.setFileFilter(new PdfFileFilter());
                 int returnVal = chooser
                         .showOpenDialog(PdfPermissionManagerGui.this);
@@ -81,56 +92,43 @@ public class PdfPermissionManagerGui extends JFrame {
             }
         });
 
+        batchButton = new JButton("Open Folder..");
+        batchButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                JFileChooser chooser = new JFileChooser();
+                if (source != null) {
+                    chooser.setCurrentDirectory(source.isDirectory() ?
+                        source : source.getParentFile());
+                }
+                chooser.setDialogTitle("Choose folder");
+                chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                int returnVal = chooser.showOpenDialog(PdfPermissionManagerGui.this);
+                if (returnVal != JFileChooser.APPROVE_OPTION) return;
+
+                loadBatch(chooser.getSelectedFile());
+            }
+        });
+
+        saveBatchButton = new JButton("Save batch..");
+        saveBatchButton.setEnabled(false);
+        saveBatchButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                if (isBatch()) {
+                    saveBatch();
+                }
+            }
+        });
+
         saveButton = new JButton(Messages
                 .getString("PdfPermissionManagerGui.SaveButton")); //$NON-NLS-1$
         saveButton.setEnabled(false);
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JFileChooser chooser = new JFileChooser();
-                chooser.setFileFilter(new PdfFileFilter());
-                int returnVal = chooser
-                        .showSaveDialog(PdfPermissionManagerGui.this);
-                if (returnVal == JFileChooser.APPROVE_OPTION) {
-                    String filename = chooser.getSelectedFile()
-                            .getAbsolutePath();
-                    if (!filename.endsWith(PDF_EXTENSION)) {
-                        filename += PDF_EXTENSION;
-                    }
-                    File f = new File(filename);
-                    if (f.exists()) {
-                        // ask if the file should be overwritten
-                        String msg = MessageFormat.format(Messages.getString("PdfPermissionManagerGui.AskOverwriteFile"), f.getAbsolutePath()); //$NON-NLS-1$
-                        int resultVal = JOptionPane
-                                .showConfirmDialog(
-                                        PdfPermissionManagerGui.this,
-                                        msg,
-                                        Messages.getString("PdfPermissionManagerGui.SaveAs"), //$NON-NLS-1$
-                                        JOptionPane.YES_NO_OPTION);
-                        if (resultVal == JOptionPane.NO_OPTION) {
-                            return;
-                        }
-                    }
-                    String password = AskNewOwnerPassword();
-                    try {
-                        processFile(currentPdf, f, permPanel.getPermissions(), password);
-                    } catch (IOException ioe) {
-                        String errMsg = MessageFormat.format(Messages.getString("PdfPermissionManagerGui.CannotSaveAs"), f.getAbsolutePath()); //$NON-NLS-1$
-                        JOptionPane
-                                .showMessageDialog(
-                                        PdfPermissionManagerGui.this,
-                                        new String[] { errMsg, ioe.getMessage() },
-                                        Messages
-                                                .getString("PdfPermissionManagerGui.ErrorSaving"), JOptionPane.ERROR_MESSAGE); //$NON-NLS-1$
-                    } catch (DocumentException de) {
-                        String errMsg = MessageFormat.format(Messages.getString("PdfPermissionManagerGui.CannotSaveAs"), f.getAbsolutePath()); //$NON-NLS-1$
-                        JOptionPane
-                                .showMessageDialog(
-                                        PdfPermissionManagerGui.this,
-                                        new String[] { errMsg, de.getMessage() },
-                                        Messages
-                                                .getString("PdfPermissionManagerGui.ErrorSaving"), JOptionPane.ERROR_MESSAGE); //$NON-NLS-1$
-                    }
+                if (!isBatch()) {
+                    saveSingle();
                 }
             }
         });
@@ -146,7 +144,7 @@ public class PdfPermissionManagerGui extends JFrame {
 
         permPanel = new PermPanel();
         permPanel.setEnabled(false);
-        openFileLabel = new JTextField();
+        openFileLabel = new JTextArea();
         openFileLabel.setEditable(false);
 
         // layout
@@ -156,12 +154,15 @@ public class PdfPermissionManagerGui extends JFrame {
         content.setLayout(layout);
 
         content.add(openButton);
+        content.add(batchButton);
+        content.add(saveBatchButton);
         content.add(saveButton);
         content.add(exitButton);
         content.add(permPanel);
         content.add(openFileLabel);
 
-        layout.linkSize(new Component[] { openButton, saveButton, exitButton });
+        layout.linkSize(new Component[] { openButton, saveButton, exitButton,
+            batchButton, saveBatchButton });
         layout.linkSize(new Component[] { openButton, openFileLabel },
                 GroupLayout.VERTICAL);
 
@@ -172,8 +173,9 @@ public class PdfPermissionManagerGui extends JFrame {
                 GroupLayout.PREFERRED_SIZE, 4000).add(permPanel,
                 GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE,
                 GroupLayout.PREFERRED_SIZE));
-        horizontal.add(layout.createParallelGroup().add(openButton).add(
-                saveButton).add(exitButton));
+        horizontal.add(layout.createParallelGroup().add(openButton)
+                .add(batchButton).add(saveBatchButton)
+                .add(saveButton).add(exitButton));
         layout.setHorizontalGroup(horizontal);
 
         // vertical group
@@ -183,10 +185,106 @@ public class PdfPermissionManagerGui extends JFrame {
                 openButton));
         vertical.add(layout.createParallelGroup(GroupLayout.TRAILING).add(
                 layout.createSequentialGroup().add(permPanel).add(0, 0, 4000))
-                .add(
-                        layout.createSequentialGroup().add(saveButton).add(
-                                exitButton)));
+                .add(layout.createSequentialGroup().add(batchButton)
+                .add(saveBatchButton).add(saveButton).add(exitButton)));
         layout.setVerticalGroup(vertical);
+    }
+
+    private boolean isBatch() {
+        return source != null && source.isDirectory();
+    }
+
+    private List<File> getBatchFiles() {
+        ArrayList<File> files = new ArrayList<File>();
+        if (source.isDirectory()) {
+            Queue<File> dirsToProcess = new ArrayDeque<File>();
+            Set<String> processedDirs = new HashSet<String>();
+            dirsToProcess.add(source);
+            java.io.FileFilter filter = new PdfFileFilter();
+            while (!dirsToProcess.isEmpty()) {
+                File dir = dirsToProcess.remove();
+                for (File file : dir.listFiles(filter)) {
+                    if (file.isDirectory()) {
+                        try {
+                            String path = file.getCanonicalPath();
+                            if (!processedDirs.contains(path)) {
+                                dirsToProcess.add(file);
+                                processedDirs.add(path);
+                            }
+                        } catch (IOException e) {
+                            Logger.getLogger(PdfPermissionManagerGui.class.getName())
+                                    .log(Level.WARNING, null, e);
+                        }
+                    } else {
+                        files.add(file);
+                    }
+                }
+            }
+        }
+        return files;
+    }
+
+    private void saveSingle() {
+        JFileChooser chooser = new JFileChooser();
+        chooser.setFileFilter(new PdfFileFilter());
+        int returnVal = chooser
+                .showSaveDialog(PdfPermissionManagerGui.this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            String filename = chooser.getSelectedFile()
+                    .getAbsolutePath();
+            if (!filename.endsWith(PDF_EXTENSION)) {
+                filename += PDF_EXTENSION;
+            }
+            File f = new File(filename);
+            if (f.exists()) {
+                // ask if the file should be overwritten
+                String msg = MessageFormat.format(Messages.getString("PdfPermissionManagerGui.AskOverwriteFile"), f.getAbsolutePath()); //$NON-NLS-1$
+                int resultVal = JOptionPane
+                        .showConfirmDialog(
+                                PdfPermissionManagerGui.this,
+                                msg,
+                                Messages.getString("PdfPermissionManagerGui.SaveAs"), //$NON-NLS-1$
+                                JOptionPane.YES_NO_OPTION);
+                if (resultVal == JOptionPane.NO_OPTION) {
+                    return;
+                }
+            }
+            String password = askNewOwnerPassword();
+            try {
+                processFile(source, f, permPanel.getPermissions(), password);
+            } catch (IOException ioe) {
+                String errMsg = MessageFormat.format(Messages.getString("PdfPermissionManagerGui.CannotSaveAs"), f.getAbsolutePath()); //$NON-NLS-1$
+                JOptionPane
+                        .showMessageDialog(
+                                PdfPermissionManagerGui.this,
+                                new String[] { errMsg, ioe.getMessage() },
+                                Messages
+                                        .getString("PdfPermissionManagerGui.ErrorSaving"), JOptionPane.ERROR_MESSAGE); //$NON-NLS-1$
+            } catch (DocumentException de) {
+                String errMsg = MessageFormat.format(Messages.getString("PdfPermissionManagerGui.CannotSaveAs"), f.getAbsolutePath()); //$NON-NLS-1$
+                JOptionPane
+                        .showMessageDialog(
+                                PdfPermissionManagerGui.this,
+                                new String[] { errMsg, de.getMessage() },
+                                Messages
+                                        .getString("PdfPermissionManagerGui.ErrorSaving"), JOptionPane.ERROR_MESSAGE); //$NON-NLS-1$
+            }
+        }
+    }
+
+    private void saveBatch() {
+        // TODO
+    }
+
+    private void loadBatch(File dir) {
+        source = dir;
+        int number = getBatchFiles().size();
+        openFileLabel.setText(source.getAbsolutePath() + "\n" + number + " PDF files");
+
+        permPanel.setEnabled(true);
+        permPanel.setPermissions(new PdfPermissions());
+        saveButton.setEnabled(false);
+        saveBatchButton.setEnabled(true);
     }
 
     protected boolean loadFile(File f) {
@@ -199,8 +297,9 @@ public class PdfPermissionManagerGui extends JFrame {
                 permPanel.setPermissions(perms);
                 permPanel.setEnabled(true);
                 saveButton.setEnabled(true);
-                currentPdf = f.getAbsolutePath();
-                openFileLabel.setText(currentPdf);
+                saveBatchButton.setEnabled(false);
+                source = f;
+                openFileLabel.setText(source.getAbsolutePath());
                 return true;
             } catch (IOException ioe) {
                 String errMsg = MessageFormat.format(
@@ -223,14 +322,14 @@ public class PdfPermissionManagerGui extends JFrame {
         }
     }
 
-    private String AskNewOwnerPassword() {
+    private String askNewOwnerPassword() {
         String password = JOptionPane.showInputDialog(PdfPermissionManagerGui.this, Messages.getString("PdfPermissionManagerGui.EnterOwnerPassword"), "changeit"); //$NON-NLS-2$
         return password;
     }
 
-    private void processFile(String inputFile, File output, PdfPermissions permissions, String password)
+    private void processFile(File inputFile, File output, PdfPermissions permissions, String password)
             throws IOException, DocumentException {
-        PdfReader reader = new PdfReader(inputFile);
+        PdfReader reader = new PdfReader(inputFile.getAbsolutePath());
         FileOutputStream fout = new FileOutputStream(output);
         permManager.changePermissions(reader, fout, permissions, password);
     }
@@ -342,7 +441,7 @@ public class PdfPermissionManagerGui extends JFrame {
 
     }
 
-    class PdfFileFilter extends FileFilter {
+    class PdfFileFilter extends FileFilter implements java.io.FileFilter {
 
         public PdfFileFilter() {
         }
