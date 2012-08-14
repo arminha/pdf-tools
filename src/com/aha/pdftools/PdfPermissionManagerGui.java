@@ -349,8 +349,9 @@ public class PdfPermissionManagerGui extends JFrame {
     }
 
     private String askNewOwnerPassword() {
-        String password = JOptionPane.showInputDialog(PdfPermissionManagerGui.this, Messages.getString("PdfPermissionManagerGui.EnterOwnerPassword"), "changeit"); //$NON-NLS-2$
-        return password;
+//        String password = JOptionPane.showInputDialog(PdfPermissionManagerGui.this, Messages.getString("PdfPermissionManagerGui.EnterOwnerPassword"), "changeit"); //$NON-NLS-2$
+//        return password;
+        return "changeit";
     }
 
     private static void processFile(File inputFile, File output, PdfPermissions permissions, String password)
