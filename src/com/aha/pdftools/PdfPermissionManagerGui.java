@@ -64,7 +64,6 @@ public class PdfPermissionManagerGui extends JFrame {
     JTextArea openFileLabel;
 
     private File source;
-    private PdfPermissionManager permManager = new PdfPermissionManager();
 
     public PdfPermissionManagerGui() {
         super(Messages.getString("PdfPermissionManagerGui.FrameTitle")); //$NON-NLS-1$
@@ -292,7 +291,8 @@ public class PdfPermissionManagerGui extends JFrame {
             // TODO do this in a special thread
             try {
                 PdfReader reader = new PdfReader(f.getAbsolutePath());
-                PdfPermissions perms = permManager.getPdfPermissions(reader);
+                PdfPermissionManager ppm = new PdfPermissionManager();
+                PdfPermissions perms = ppm.getPdfPermissions(reader);
 
                 permPanel.setPermissions(perms);
                 permPanel.setEnabled(true);
@@ -327,14 +327,15 @@ public class PdfPermissionManagerGui extends JFrame {
         return password;
     }
 
-    private void processFile(File inputFile, File output, PdfPermissions permissions, String password)
+    private static void processFile(File inputFile, File output, PdfPermissions permissions, String password)
             throws IOException, DocumentException {
         PdfReader reader = new PdfReader(inputFile.getAbsolutePath());
         FileOutputStream fout = new FileOutputStream(output);
-        permManager.changePermissions(reader, fout, permissions, password);
+        PdfPermissionManager ppm = new PdfPermissionManager();
+        ppm.changePermissions(reader, fout, permissions, password);
     }
 
-    class PermPanel extends JPanel {
+    private static class PermPanel extends JPanel {
 
         JCheckBox assemblyBox;
         JCheckBox copyBox;
@@ -441,7 +442,7 @@ public class PdfPermissionManagerGui extends JFrame {
 
     }
 
-    class PdfFileFilter extends FileFilter implements java.io.FileFilter {
+    private static class PdfFileFilter extends FileFilter implements java.io.FileFilter {
 
         public PdfFileFilter() {
         }
