@@ -36,6 +36,8 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.ProgressMonitor;
+import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileFilter;
 
@@ -272,21 +274,45 @@ public class PdfPermissionManagerGui extends JFrame {
     }
 
     private void saveBatch() {
-        // TODO
+        String password = askNewOwnerPassword();
+        if (password == null) return;
+        int result = JOptionPane.showConfirmDialog(this, "Keep backup copies of the PDFs?", "Backup?", JOptionPane.YES_NO_CANCEL_OPTION);
+        if (result == JOptionPane.CANCEL_OPTION) return;
+        boolean keepBackup = result != JOptionPane.NO_OPTION;
+
+        List<File> files = getBatchFiles();
+        ProgressMonitor pm = new ProgressMonitor(this, "Save batch..", "", 0, files.size());
+        pm.setMillisToPopup(500);
+        pm.setProgress(0);
+        BatchSaveTask task = new BatchSaveTask(keepBackup, files , password, permPanel.getPermissions(), pm);
+        task.execute();
     }
 
-    private void loadBatch(File dir) {
-        source = dir;
-        int number = getBatchFiles().size();
-        openFileLabel.setText(source.getAbsolutePath() + "\n" + number + " PDF files");
-
-        permPanel.setEnabled(true);
-        permPanel.setPermissions(new PdfPermissions());
-        saveButton.setEnabled(false);
-        saveBatchButton.setEnabled(true);
+    private boolean load(File f) {
+        if (f.isDirectory()) {
+            return loadBatch(f);
+        } else {
+            return loadFile(f);
+        }
     }
 
-    protected boolean loadFile(File f) {
+    private boolean loadBatch(File dir) {
+        if (dir.isDirectory() && dir.canRead()) {
+            source = dir;
+            int number = getBatchFiles().size();
+            openFileLabel.setText(source.getAbsolutePath() + "\n" + number + " PDF files");
+
+            permPanel.setEnabled(true);
+            permPanel.setPermissions(new PdfPermissions());
+            saveButton.setEnabled(false);
+            saveBatchButton.setEnabled(true);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private boolean loadFile(File f) {
         if (f.isFile() && f.canRead()) {
             // TODO do this in a special thread
             try {
@@ -462,6 +488,61 @@ public class PdfPermissionManagerGui extends JFrame {
 
     }
 
+    private static class BatchSaveTask extends SwingWorker<Void, Void> {
+
+        private boolean keepBackup;
+        private List<File> sourceFiles;
+        private String password;
+        private PdfPermissions permissions;
+        private ProgressMonitor pm;
+
+        public BatchSaveTask(boolean keepBackup, List<File> sourceFiles, String password, PdfPermissions permissions, ProgressMonitor pm) {
+            this.keepBackup = keepBackup;
+            this.sourceFiles = sourceFiles;
+            this.password = password;
+            this.permissions = permissions;
+            this.pm = pm;
+        }
+
+        @Override
+        protected Void doInBackground() throws Exception {
+            int count = 0;
+            for (File file : sourceFiles) {
+                if (pm.isCanceled()) break;
+
+                count++;
+                pm.setNote(file.getAbsolutePath());
+                File backupFile = createBackup(file);
+                processFile(backupFile, file, permissions, password);
+                if (!keepBackup) {
+                    deleteBackup(backupFile);
+                }
+                setProgress(count);
+                pm.setProgress(count);
+            }
+            return null;
+        }
+
+        @Override
+        protected void done() {
+            super.done();
+            pm.close();
+        }
+
+        private File createBackup(File file) {
+            File backupFile = new File(file.getAbsolutePath() + ".bak");
+            boolean success = file.renameTo(backupFile);
+            // TODO check return value
+            return backupFile;
+        }
+
+        private void deleteBackup(File backupFile) {
+            if (backupFile.exists() && backupFile.canWrite()) {
+                backupFile.delete();
+            }
+        }
+    }
+
     public static void main(String[] args) {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -487,7 +568,7 @@ public class PdfPermissionManagerGui extends JFrame {
                         List filelist = (List) trans
                                 .getTransferData(DataFlavor.javaFileListFlavor);
                         File f = (File) filelist.get(0);
-                        dtde.dropComplete(gui.loadFile(f));
+                        dtde.dropComplete(gui.load(f));
                     } catch (Exception e) {
                         dtde.dropComplete(false);
                     }
@@ -499,7 +580,7 @@ public class PdfPermissionManagerGui extends JFrame {
                         StringTokenizer tokenizer = new StringTokenizer(uris);
                         URI uri = new URI(tokenizer.nextToken());
                         File f = new File(uri);
-                        dtde.dropComplete(gui.loadFile(f));
+                        dtde.dropComplete(gui.load(f));
                     } catch (Exception e) {
                         dtde.dropComplete(false);
                     }
