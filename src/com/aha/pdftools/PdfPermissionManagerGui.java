@@ -1,7 +1,6 @@
 package com.aha.pdftools;
 
 import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.pdf.PdfReader;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -14,7 +13,6 @@ import java.awt.dnd.DropTargetDropEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.text.MessageFormat;
@@ -252,7 +250,7 @@ public class PdfPermissionManagerGui extends JFrame {
             }
             String password = askNewOwnerPassword();
             try {
-                processFile(source, f, permPanel.getPermissions(), password);
+                PdfPermissionManager.processFile(source, f, permPanel.getPermissions(), password);
             } catch (IOException ioe) {
                 String errMsg = MessageFormat.format(Messages.getString("PdfPermissionManagerGui.CannotSaveAs"), f.getAbsolutePath()); //$NON-NLS-1$
                 JOptionPane
@@ -316,9 +314,7 @@ public class PdfPermissionManagerGui extends JFrame {
         if (f.isFile() && f.canRead()) {
             // TODO do this in a special thread
             try {
-                PdfReader reader = new PdfReader(f.getAbsolutePath());
-                PdfPermissionManager ppm = new PdfPermissionManager();
-                PdfPermissions perms = ppm.getPdfPermissions(reader);
+                PdfPermissions perms = new PdfPermissions(PdfPermissionManager.getPermissions(f));
 
                 permPanel.setPermissions(perms);
                 permPanel.setEnabled(true);
@@ -352,14 +348,6 @@ public class PdfPermissionManagerGui extends JFrame {
 //        String password = JOptionPane.showInputDialog(PdfPermissionManagerGui.this, Messages.getString("PdfPermissionManagerGui.EnterOwnerPassword"), "changeit"); //$NON-NLS-2$
 //        return password;
         return "changeit";
-    }
-
-    private static void processFile(File inputFile, File output, PdfPermissions permissions, String password)
-            throws IOException, DocumentException {
-        PdfReader reader = new PdfReader(inputFile.getAbsolutePath());
-        FileOutputStream fout = new FileOutputStream(output);
-        PdfPermissionManager ppm = new PdfPermissionManager();
-        ppm.changePermissions(reader, fout, permissions, password);
     }
 
     private static class PermPanel extends JPanel {
@@ -514,7 +502,7 @@ public class PdfPermissionManagerGui extends JFrame {
                 count++;
                 pm.setNote(file.getAbsolutePath());
                 File backupFile = createBackup(file);
-                processFile(backupFile, file, permissions, password);
+                PdfPermissionManager.processFile(backupFile, file, permissions, password);
                 if (!keepBackup) {
                     deleteBackup(backupFile);
                 }
@@ -565,8 +553,8 @@ public class PdfPermissionManagerGui extends JFrame {
                     dtde.acceptDrop(DnDConstants.ACTION_COPY);
                     Transferable trans = dtde.getTransferable();
                     try {
-                        @SuppressWarnings("unchecked") //$NON-NLS-1$
-                        List filelist = (List) trans
+                        @SuppressWarnings("rawtypes")
+						List filelist = (List) trans
                                 .getTransferData(DataFlavor.javaFileListFlavor);
                         File f = (File) filelist.get(0);
                         dtde.dropComplete(gui.load(f));
