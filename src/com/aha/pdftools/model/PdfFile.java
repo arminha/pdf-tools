@@ -1,15 +1,25 @@
 package com.aha.pdftools.model;
 
+import java.io.File;
+
 public class PdfFile extends PdfPermissions {
 
-	private String mSourcePath;
-	
-	public PdfFile(String sourcePath, int perm) {
+	private final File mSourceFile;
+
+	public PdfFile(File sourceFile, int perm) {
 		super(perm);
-		mSourcePath = sourcePath;
+		mSourceFile = sourceFile;
 	}
-	
+
 	public String getSourcePath() {
-		return mSourcePath;
+		return mSourceFile.getAbsolutePath();
+	}
+
+	public File getSourceFile() {
+		return mSourceFile;
+	}
+
+	public String getName() {
+		return mSourceFile.getName();
 	}
 }

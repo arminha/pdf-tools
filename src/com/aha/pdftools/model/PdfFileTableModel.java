@@ -10,7 +10,8 @@ public class PdfFileTableModel extends AbstractTableAdapter<PdfFile> {
 
 	public PdfFileTableModel(SelectionInList<PdfFile> listModel) {
 		super(listModel, new String [] {
-				"Source Path",
+				"Name",
+				"Path",
 				"Assembly",
 				"Copy",
 				"Degraded Printing",
@@ -28,22 +29,24 @@ public class PdfFileTableModel extends AbstractTableAdapter<PdfFile> {
 		PdfFile pdfFile = getRow(rowIndex);
 		switch (columnIndex) {
 		case 0:
-			return pdfFile.getSourcePath();
+			return pdfFile.getName();
 		case 1:
-			return pdfFile.isAssembly();
+			return pdfFile.getSourcePath();
 		case 2:
-			return pdfFile.isCopy();
+			return pdfFile.isAssembly();
 		case 3:
-			return pdfFile.isDegradedPrinting();
+			return pdfFile.isCopy();
 		case 4:
-			return pdfFile.isPrinting();
+			return pdfFile.isDegradedPrinting();
 		case 5:
-			return pdfFile.isScreenReaders();
+			return pdfFile.isPrinting();
 		case 6:
-			return pdfFile.isFillIn();
+			return pdfFile.isScreenReaders();
 		case 7:
-			return pdfFile.isModifyAnnotations();
+			return pdfFile.isFillIn();
 		case 8:
+			return pdfFile.isModifyAnnotations();
+		case 9:
 			return pdfFile.isModifyContents();
 		default:
 			return null;
@@ -54,28 +57,28 @@ public class PdfFileTableModel extends AbstractTableAdapter<PdfFile> {
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 		PdfFile pdfFile = getRow(rowIndex);
 		switch (columnIndex) {
-		case 1:
+		case 2:
 			pdfFile.setAssembly((Boolean)aValue);
 			break;
-		case 2:
+		case 3:
 			pdfFile.setCopy((Boolean)aValue);
 			break;
-		case 3:
+		case 4:
 			pdfFile.setDegradedPrinting((Boolean)aValue);
 			break;
-		case 4:
+		case 5:
 			pdfFile.setPrinting((Boolean)aValue);
 			break;
-		case 5:
+		case 6:
 			pdfFile.setScreenReaders((Boolean)aValue);
 			break;
-		case 6:
+		case 7:
 			pdfFile.setFillIn((Boolean)aValue);
 			break;
-		case 7:
+		case 8:
 			pdfFile.setModifyAnnotations((Boolean)aValue);
 			break;
-		case 8:
+		case 9:
 			pdfFile.setModifyContents((Boolean)aValue);
 			break;
 		default:
@@ -85,7 +88,7 @@ public class PdfFileTableModel extends AbstractTableAdapter<PdfFile> {
 
 	@Override
 	public boolean isCellEditable(int rowIndex, int columnIndex) {
-		if (columnIndex >= 1 && columnIndex <= 8) {
+		if (columnIndex >= 2 && columnIndex <= 9) {
 			return true;
 		}
 		return super.isCellEditable(rowIndex, columnIndex);
@@ -95,7 +98,7 @@ public class PdfFileTableModel extends AbstractTableAdapter<PdfFile> {
 	public Class<?> getColumnClass(int columnIndex) {
 		if (columnIndex == 0) {
 			return String.class;
-		} else if (columnIndex >= 1 && columnIndex <= 8) {
+		} else if (columnIndex >= 2 && columnIndex <= 9) {
 			return Boolean.class;
 		}
 		return super.getColumnClass(columnIndex);

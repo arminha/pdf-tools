@@ -241,7 +241,7 @@ public class PermissionManager {
 				File targetDirectory = f.getParentFile();
 				for (PdfFile pdfFile : files) {
 					// TODO check source exists and target is not overwriting
-					String name = new File(pdfFile.getSourcePath()).getName();
+					String name = pdfFile.getName();
 					File target = new File(targetDirectory.getAbsolutePath() + File.separator + name);
 					saveUnits.add(new SaveUnit(pdfFile, target));
 				}
@@ -294,7 +294,7 @@ public class PermissionManager {
 				return;
 			}
 			int perm = PdfPermissionManager.getPermissions(file);
-			PdfFile pdfFile = new PdfFile(path, perm);
+			PdfFile pdfFile = new PdfFile(file, perm);
 			openFiles.getList().add(pdfFile);
 			openFileSet.add(path);
 		} catch (IOException e) {
@@ -388,7 +388,7 @@ public class PermissionManager {
 
 		protected Void doInBackground() throws Exception {
 			for (SaveUnit unit : files) {
-				File source = new File(unit.pdfFile.getSourcePath());
+				File source = unit.pdfFile.getSourceFile();
 				File target = unit.target;
 				PdfPermissionManager.processFile(source, target, unit.pdfFile, PdfPermissionManager.PASSWORD);
 			}
