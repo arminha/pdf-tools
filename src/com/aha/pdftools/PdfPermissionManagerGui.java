@@ -249,7 +249,7 @@ public class PdfPermissionManagerGui extends JFrame {
                     return;
                 }
             }
-            String password = askNewOwnerPassword();
+            String password = PdfPermissionManager.PASSWORD;
             try {
                 PdfPermissionManager.processFile(source, f, permPanel.getPermissions(), password);
             } catch (IOException ioe) {
@@ -273,8 +273,7 @@ public class PdfPermissionManagerGui extends JFrame {
     }
 
     private void saveBatch() {
-        String password = askNewOwnerPassword();
-        if (password == null) return;
+        String password = PdfPermissionManager.PASSWORD;
         int result = JOptionPane.showConfirmDialog(this, "Keep backup copies of the PDFs?", "Backup?", JOptionPane.YES_NO_CANCEL_OPTION);
         if (result == JOptionPane.CANCEL_OPTION) return;
         boolean keepBackup = result != JOptionPane.NO_OPTION;
@@ -343,12 +342,6 @@ public class PdfPermissionManagerGui extends JFrame {
                     JOptionPane.ERROR_MESSAGE);
             return false;
         }
-    }
-
-    private String askNewOwnerPassword() {
-//        String password = JOptionPane.showInputDialog(PdfPermissionManagerGui.this, Messages.getString("PdfPermissionManagerGui.EnterOwnerPassword"), "changeit"); //$NON-NLS-2$
-//        return password;
-        return "changeit";
     }
 
     private static class PermPanel extends JPanel {

@@ -7,9 +7,11 @@ import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.SwingWorker;
 
+import com.aha.pdftools.Messages;
 import com.aha.pdftools.PdfPermissionManager;
 import com.aha.pdftools.PdfPermissionManagerGui;
 import com.aha.pdftools.model.PdfFileTableModel;
@@ -22,6 +24,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -214,10 +217,39 @@ public class PermissionManager {
 	}
 
 	private void save(List<PdfFile> files) {
+		List<SaveUnit> saveUnits = new ArrayList<SaveUnit>();
 		if (files.size() == 1) {
-			// TODO choose target file
+			File f = chooseSaveFile(null, true);
+			if (f != null) {
+				if (f.exists()) {
+					// ask if the file should be overwritten
+					String msg = MessageFormat.format(Messages.getString("PdfPermissionManagerGui.AskOverwriteFile"), f.getAbsolutePath()); //$NON-NLS-1$
+					int resultVal = JOptionPane.showConfirmDialog(
+							frame,
+							msg,
+							Messages.getString("PdfPermissionManagerGui.SaveAs"), //$NON-NLS-1$
+							JOptionPane.YES_NO_OPTION);
+					if (resultVal == JOptionPane.NO_OPTION) {
+						return;
+					}
+				}
+				saveUnits.add(new SaveUnit(files.get(0), f));
+			}
 		} else if (files.size() > 1) {
-			// TODO choose target folder
+			File f = chooseSaveFile("file name will be ignored", false);
+			if (f != null) {
+				File targetDirectory = f.getParentFile();
+				for (PdfFile pdfFile : files) {
+					// TODO check source exists and target is not overwriting
+					String name = new File(pdfFile.getSourcePath()).getName();
+					File target = new File(targetDirectory.getAbsolutePath() + File.separator + name);
+					saveUnits.add(new SaveUnit(pdfFile, target));
+				}
+			}
+		}
+
+		if (!saveUnits.isEmpty()) {
+			new SaveFileTask(saveUnits).execute();
 		}
 	}
 
@@ -296,10 +328,31 @@ public class PermissionManager {
 		return new JFileChooser();
 	}
 
+	private File chooseSaveFile(String initalName, boolean addExtension) {
+		JFileChooser chooser = getFileChooser();
+		chooser.setFileFilter(new PdfFileFilter());
+		if (initalName != null) {
+			chooser.setName(initalName);
+		}
+		int result = chooser.showSaveDialog(frame);
+		if (result == JFileChooser.APPROVE_OPTION) {
+			File file = chooser.getSelectedFile();
+			if (addExtension) {
+				String filename = file.getAbsolutePath();
+				if (!filename.endsWith(PdfFileFilter.PDF_EXTENSION)) {
+					filename += PdfFileFilter.PDF_EXTENSION;
+					file = new File(filename);
+				}
+			}
+			return file;
+		}
+		return null;
+	}
+
 	private class OpenFileTask extends SwingWorker<Void, Void> {
 		// TODO disable/enable ui
 		// TODO allow cancel
-		private List<File> files;
+		private final List<File> files;
 
 		public OpenFileTask(List<File> files) {
 			this.files = files;
@@ -309,6 +362,35 @@ public class PermissionManager {
 		protected Void doInBackground() throws Exception {
 			for (File file : files) {
 				insertFile(file);
+			}
+			return null;
+		}
+	}
+
+	private static class SaveUnit {
+		final PdfFile pdfFile;
+		final File target;
+
+		public SaveUnit(PdfFile pdfFile, File target) {
+			this.pdfFile = pdfFile;
+			this.target = target;
+		}
+	}
+
+	private class SaveFileTask extends SwingWorker<Void, Void> {
+		// TODO progess & cancel
+		// TODO disable ui
+		private final List<SaveUnit> files;
+
+		public SaveFileTask(List<SaveUnit> files) {
+			this.files = files;
+		}
+
+		protected Void doInBackground() throws Exception {
+			for (SaveUnit unit : files) {
+				File source = new File(unit.pdfFile.getSourcePath());
+				File target = unit.target;
+				PdfPermissionManager.processFile(source, target, unit.pdfFile, PdfPermissionManager.PASSWORD);
 			}
 			return null;
 		}
