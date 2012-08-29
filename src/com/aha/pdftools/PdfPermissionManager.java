@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 
+import com.aha.pdftools.model.PdfPermissions;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.pdf.PdfEncryption;
 import com.itextpdf.text.pdf.PdfReader;

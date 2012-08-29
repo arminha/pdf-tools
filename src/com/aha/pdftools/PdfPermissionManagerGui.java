@@ -1,6 +1,7 @@
 package com.aha.pdftools;
 
 import com.aha.pdftools.gui.PdfFileFilter;
+import com.aha.pdftools.model.PdfPermissions;
 import com.itextpdf.text.DocumentException;
 import java.awt.Component;
 import java.awt.Container;
@@ -419,26 +420,26 @@ public class PdfPermissionManagerGui extends JFrame {
         }
 
         public void setPermissions(PdfPermissions perms) {
-            assemblyBox.setSelected(perms.allowAssembly);
-            copyBox.setSelected(perms.allowCopy);
-            degradedPrintingBox.setSelected(perms.allowDegradedPrinting);
-            printingBox.setSelected(perms.allowPrinting);
-            screenReadersBox.setSelected(perms.allowScreenReaders);
-            fillInBox.setSelected(perms.allowFillIn);
-            modifyContentsBox.setSelected(perms.allowModifyContents);
-            modifyAnnotationsBox.setSelected(perms.allowModifyAnnotations);
+            assemblyBox.setSelected(perms.isAllowAssembly());
+            copyBox.setSelected(perms.isAllowCopy());
+            degradedPrintingBox.setSelected(perms.isAllowDegradedPrinting());
+            printingBox.setSelected(perms.isAllowPrinting());
+            screenReadersBox.setSelected(perms.isAllowScreenReaders());
+            fillInBox.setSelected(perms.isAllowFillIn());
+            modifyContentsBox.setSelected(perms.isAllowModifyContents());
+            modifyAnnotationsBox.setSelected(perms.isAllowModifyAnnotations());
         }
 
         public PdfPermissions getPermissions() {
             PdfPermissions perms = new PdfPermissions();
-            perms.allowAssembly = assemblyBox.isSelected();
-            perms.allowCopy = copyBox.isSelected();
-            perms.allowDegradedPrinting = degradedPrintingBox.isSelected();
-            perms.allowFillIn = fillInBox.isSelected();
-            perms.allowModifyAnnotations = modifyAnnotationsBox.isSelected();
-            perms.allowModifyContents = modifyContentsBox.isSelected();
-            perms.allowPrinting = printingBox.isSelected();
-            perms.allowScreenReaders = screenReadersBox.isSelected();
+            perms.setAllowAssembly(assemblyBox.isSelected());
+            perms.setAllowCopy(copyBox.isSelected());
+            perms.setAllowDegradedPrinting(degradedPrintingBox.isSelected());
+            perms.setAllowFillIn(fillInBox.isSelected());
+            perms.setAllowModifyAnnotations(modifyAnnotationsBox.isSelected());
+            perms.setAllowModifyContents(modifyContentsBox.isSelected());
+            perms.setAllowPrinting(printingBox.isSelected());
+            perms.setAllowScreenReaders(screenReadersBox.isSelected());
             return perms;
         }
 

@@ -1,17 +1,17 @@
-package com.aha.pdftools;
+package com.aha.pdftools.model;
 
 import com.itextpdf.text.pdf.PdfWriter;
 
-public class PdfPermissions {
+public class PdfPermissions extends AbstractModelObject {
 
-    public boolean allowAssembly = true;
-    public boolean allowCopy = true;
-    public boolean allowDegradedPrinting = true;
-    public boolean allowPrinting = true;
-    public boolean allowScreenReaders = true;
-    public boolean allowFillIn = true;
-    public boolean allowModifyContents = true;
-    public boolean allowModifyAnnotations = true;
+    private boolean allowAssembly = true;
+    private boolean allowCopy = true;
+    private boolean allowDegradedPrinting = true;
+    private boolean allowPrinting = true;
+    private boolean allowScreenReaders = true;
+    private boolean allowFillIn = true;
+    private boolean allowModifyContents = true;
+    private boolean allowModifyAnnotations = true;
 
     public PdfPermissions() {
     }
@@ -26,8 +26,72 @@ public class PdfPermissions {
         allowModifyContents = (perms & PdfWriter.ALLOW_MODIFY_CONTENTS) != 0;
         allowModifyAnnotations = (perms & PdfWriter.ALLOW_MODIFY_ANNOTATIONS) != 0;
     }
+    
+    public boolean isAllowAssembly() {
+		return allowAssembly;
+	}
 
-    public int getPermissions() {
+	public void setAllowAssembly(boolean allowAssembly) {
+		this.allowAssembly = allowAssembly;
+	}
+
+	public boolean isAllowCopy() {
+		return allowCopy;
+	}
+
+	public void setAllowCopy(boolean allowCopy) {
+		this.allowCopy = allowCopy;
+	}
+
+	public boolean isAllowDegradedPrinting() {
+		return allowDegradedPrinting;
+	}
+
+	public void setAllowDegradedPrinting(boolean allowDegradedPrinting) {
+		this.allowDegradedPrinting = allowDegradedPrinting;
+	}
+
+	public boolean isAllowPrinting() {
+		return allowPrinting;
+	}
+
+	public void setAllowPrinting(boolean allowPrinting) {
+		this.allowPrinting = allowPrinting;
+	}
+
+	public boolean isAllowScreenReaders() {
+		return allowScreenReaders;
+	}
+
+	public void setAllowScreenReaders(boolean allowScreenReaders) {
+		this.allowScreenReaders = allowScreenReaders;
+	}
+
+	public boolean isAllowFillIn() {
+		return allowFillIn;
+	}
+
+	public void setAllowFillIn(boolean allowFillIn) {
+		this.allowFillIn = allowFillIn;
+	}
+
+	public boolean isAllowModifyContents() {
+		return allowModifyContents;
+	}
+
+	public void setAllowModifyContents(boolean allowModifyContents) {
+		this.allowModifyContents = allowModifyContents;
+	}
+
+	public boolean isAllowModifyAnnotations() {
+		return allowModifyAnnotations;
+	}
+
+	public void setAllowModifyAnnotations(boolean allowModifyAnnotations) {
+		this.allowModifyAnnotations = allowModifyAnnotations;
+	}
+
+	public int getPermissions() {
         // as per User access permissions table in the pdf specification
         int perms = 0xFFFFF0C0;
         if (allowAssembly)
