@@ -1,5 +1,6 @@
 package com.aha.pdftools;
 
+import com.aha.pdftools.gui.PdfFileFilter;
 import com.itextpdf.text.DocumentException;
 import java.awt.Component;
 import java.awt.Container;
@@ -37,7 +38,6 @@ import javax.swing.JTextArea;
 import javax.swing.ProgressMonitor;
 import javax.swing.SwingWorker;
 import javax.swing.UIManager;
-import javax.swing.filechooser.FileFilter;
 
 import org.jdesktop.layout.GroupLayout;
 
@@ -453,26 +453,6 @@ public class PdfPermissionManagerGui extends JFrame {
             fillInBox.setEnabled(enabled);
             modifyContentsBox.setEnabled(enabled);
             modifyAnnotationsBox.setEnabled(enabled);
-        }
-
-    }
-
-    private static class PdfFileFilter extends FileFilter implements java.io.FileFilter {
-
-        public PdfFileFilter() {
-        }
-
-        @Override
-        public boolean accept(File f) {
-            if (f.isFile()) {
-                return (f.getName().endsWith(PDF_EXTENSION));
-            }
-            return f.isDirectory();
-        }
-
-        @Override
-        public String getDescription() {
-            return Messages.getString("PdfPermissionManagerGui.PdfFiles"); //$NON-NLS-1$
         }
 
     }
