@@ -420,26 +420,26 @@ public class PdfPermissionManagerGui extends JFrame {
         }
 
         public void setPermissions(PdfPermissions perms) {
-            assemblyBox.setSelected(perms.isAllowAssembly());
-            copyBox.setSelected(perms.isAllowCopy());
-            degradedPrintingBox.setSelected(perms.isAllowDegradedPrinting());
-            printingBox.setSelected(perms.isAllowPrinting());
-            screenReadersBox.setSelected(perms.isAllowScreenReaders());
-            fillInBox.setSelected(perms.isAllowFillIn());
-            modifyContentsBox.setSelected(perms.isAllowModifyContents());
-            modifyAnnotationsBox.setSelected(perms.isAllowModifyAnnotations());
+            assemblyBox.setSelected(perms.isAssembly());
+            copyBox.setSelected(perms.isCopy());
+            degradedPrintingBox.setSelected(perms.isDegradedPrinting());
+            printingBox.setSelected(perms.isPrinting());
+            screenReadersBox.setSelected(perms.isScreenReaders());
+            fillInBox.setSelected(perms.isFillIn());
+            modifyContentsBox.setSelected(perms.isModifyContents());
+            modifyAnnotationsBox.setSelected(perms.isModifyAnnotations());
         }
 
         public PdfPermissions getPermissions() {
             PdfPermissions perms = new PdfPermissions();
-            perms.setAllowAssembly(assemblyBox.isSelected());
-            perms.setAllowCopy(copyBox.isSelected());
-            perms.setAllowDegradedPrinting(degradedPrintingBox.isSelected());
-            perms.setAllowFillIn(fillInBox.isSelected());
-            perms.setAllowModifyAnnotations(modifyAnnotationsBox.isSelected());
-            perms.setAllowModifyContents(modifyContentsBox.isSelected());
-            perms.setAllowPrinting(printingBox.isSelected());
-            perms.setAllowScreenReaders(screenReadersBox.isSelected());
+            perms.setAssembly(assemblyBox.isSelected());
+            perms.setCopy(copyBox.isSelected());
+            perms.setDegradedPrinting(degradedPrintingBox.isSelected());
+            perms.setFillIn(fillInBox.isSelected());
+            perms.setModifyAnnotations(modifyAnnotationsBox.isSelected());
+            perms.setModifyContents(modifyContentsBox.isSelected());
+            perms.setPrinting(printingBox.isSelected());
+            perms.setScreenReaders(screenReadersBox.isSelected());
             return perms;
         }
 

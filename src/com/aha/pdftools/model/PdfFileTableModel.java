@@ -30,21 +30,21 @@ public class PdfFileTableModel extends AbstractTableAdapter<PdfFile> {
 		case 0:
 			return pdfFile.getSourcePath();
 		case 1:
-			return pdfFile.isAllowAssembly();
+			return pdfFile.isAssembly();
 		case 2:
-			return pdfFile.isAllowCopy();
+			return pdfFile.isCopy();
 		case 3:
-			return pdfFile.isAllowDegradedPrinting();
+			return pdfFile.isDegradedPrinting();
 		case 4:
-			return pdfFile.isAllowPrinting();
+			return pdfFile.isPrinting();
 		case 5:
-			return pdfFile.isAllowScreenReaders();
+			return pdfFile.isScreenReaders();
 		case 6:
-			return pdfFile.isAllowFillIn();
+			return pdfFile.isFillIn();
 		case 7:
-			return pdfFile.isAllowModifyAnnotations();
+			return pdfFile.isModifyAnnotations();
 		case 8:
-			return pdfFile.isAllowModifyContents();
+			return pdfFile.isModifyContents();
 		default:
 			return null;
 		}
@@ -55,28 +55,28 @@ public class PdfFileTableModel extends AbstractTableAdapter<PdfFile> {
 		PdfFile pdfFile = getRow(rowIndex);
 		switch (columnIndex) {
 		case 1:
-			pdfFile.setAllowAssembly((Boolean)aValue);
+			pdfFile.setAssembly((Boolean)aValue);
 			break;
 		case 2:
-			pdfFile.setAllowCopy((Boolean)aValue);
+			pdfFile.setCopy((Boolean)aValue);
 			break;
 		case 3:
-			pdfFile.setAllowDegradedPrinting((Boolean)aValue);
+			pdfFile.setDegradedPrinting((Boolean)aValue);
 			break;
 		case 4:
-			pdfFile.setAllowPrinting((Boolean)aValue);
+			pdfFile.setPrinting((Boolean)aValue);
 			break;
 		case 5:
-			pdfFile.setAllowScreenReaders((Boolean)aValue);
+			pdfFile.setScreenReaders((Boolean)aValue);
 			break;
 		case 6:
-			pdfFile.setAllowFillIn((Boolean)aValue);
+			pdfFile.setFillIn((Boolean)aValue);
 			break;
 		case 7:
-			pdfFile.setAllowModifyAnnotations((Boolean)aValue);
+			pdfFile.setModifyAnnotations((Boolean)aValue);
 			break;
 		case 8:
-			pdfFile.setAllowModifyContents((Boolean)aValue);
+			pdfFile.setModifyContents((Boolean)aValue);
 			break;
 		default:
 			super.setValueAt(aValue, rowIndex, columnIndex);
