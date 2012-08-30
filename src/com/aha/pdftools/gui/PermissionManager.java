@@ -45,6 +45,8 @@ import javax.swing.Action;
 
 public class PermissionManager {
 
+	// TODO open Pdf file on double click
+
 	private JFrame frame;
 	private JTable table;
 	private SelectionInList<PdfFile> openFiles;
@@ -53,6 +55,7 @@ public class PermissionManager {
 	private final Action openFolderAction = new OpenFolderAction();
 	private final Action saveAction = new SaveAction();
 	private final Action deleteAction = new DeleteAction();
+	private StatusPanel statusPanel;
 
 	/**
 	 * Launch the application.
@@ -181,6 +184,9 @@ public class PermissionManager {
 
 		JButton btnDelete = new JButton(deleteAction);
 		toolBar.add(btnDelete);
+
+		statusPanel = new StatusPanel();
+		frame.getContentPane().add(statusPanel, BorderLayout.SOUTH);
 	}
 
 	private void openFiles() {
@@ -249,7 +255,7 @@ public class PermissionManager {
 		}
 
 		if (!saveUnits.isEmpty()) {
-			new SaveFileTask(saveUnits).execute();
+			new SaveFileTask(saveUnits, statusPanel).execute();
 		}
 	}
 
@@ -258,7 +264,7 @@ public class PermissionManager {
 	}
 
 	void insertFiles(List<File> files) {
-		new OpenFileTask(files).execute();
+		new OpenFileTask(files, statusPanel).execute();
 	}
 
 	private synchronized void insertFile(File file) {
@@ -325,18 +331,27 @@ public class PermissionManager {
 
 	private class OpenFileTask extends SwingWorker<Void, Void> {
 		// TODO disable/enable ui
-		// TODO allow cancel
 		private final List<File> files;
+		private final ProgressDisplay progress;
 
-		public OpenFileTask(List<File> files) {
+		public OpenFileTask(List<File> files, ProgressDisplay progress) {
 			this.files = files;
+			this.progress = progress;
 		}
 
 		@Override
 		protected Void doInBackground() throws Exception {
+			progress.startTask("Open file(s)", files.size(), true);
+			int i = 0;
 			for (File file : files) {
+				if (progress.isCanceled()) {
+					break;
+				}
+				progress.setNote(file.getName());
 				insertFile(file);
+				progress.setProgress(++i);
 			}
+			progress.endTask();
 			return null;
 		}
 	}
@@ -352,20 +367,29 @@ public class PermissionManager {
 	}
 
 	private class SaveFileTask extends SwingWorker<Void, Void> {
-		// TODO progess & cancel
 		// TODO disable ui
 		private final List<SaveUnit> files;
+		private final ProgressDisplay progress;
 
-		public SaveFileTask(List<SaveUnit> files) {
+		public SaveFileTask(List<SaveUnit> files, ProgressDisplay progress) {
 			this.files = files;
+			this.progress = progress;
 		}
 
 		protected Void doInBackground() throws Exception {
+			progress.startTask("Saving..", files.size(), true);
+			int i = 0;
 			for (SaveUnit unit : files) {
+				if (progress.isCanceled()) {
+					break;
+				}
+				progress.setNote(unit.pdfFile.getName());
 				File source = unit.pdfFile.getSourceFile();
 				File target = unit.target;
 				PdfPermissionManager.processFile(source, target, unit.pdfFile, PdfPermissionManager.PASSWORD);
+				progress.setProgress(++i);
 			}
+			progress.endTask();
 			return null;
 		}
 	}
