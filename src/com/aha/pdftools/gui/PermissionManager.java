@@ -11,9 +11,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.SwingWorker;
 
+import com.aha.pdftools.FileUtils;
 import com.aha.pdftools.Messages;
 import com.aha.pdftools.PdfPermissionManager;
-import com.aha.pdftools.PdfPermissionManagerGui;
 import com.aha.pdftools.model.PdfFileTableModel;
 import com.aha.pdftools.model.PdfFile;
 import com.jgoodies.binding.list.SelectionInList;
@@ -25,15 +25,10 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Queue;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
@@ -254,33 +249,7 @@ public class PermissionManager {
 	}
 
 	static List<File> filesInFolder(File folder) {
-		ArrayList<File> files = new ArrayList<File>();
-		if (folder.isDirectory()) {
-			Queue<File> dirsToProcess = new ArrayDeque<File>();
-			Set<String> processedDirs = new HashSet<String>();
-			dirsToProcess.add(folder);
-			java.io.FileFilter filter = new PdfFileFilter();
-			while (!dirsToProcess.isEmpty()) {
-				File dir = dirsToProcess.remove();
-				for (File file : dir.listFiles(filter)) {
-					if (file.isDirectory()) {
-						try {
-							String path = file.getCanonicalPath();
-							if (!processedDirs.contains(path)) {
-								dirsToProcess.add(file);
-								processedDirs.add(path);
-							}
-						} catch (IOException e) {
-							Logger.getLogger(PdfPermissionManagerGui.class.getName())
-							.log(Level.WARNING, null, e);
-						}
-					} else {
-						files.add(file);
-					}
-				}
-			}
-		}
-		return files;
+		return FileUtils.listFiles(folder, true, new PdfFileFilter());
 	}
 
 	void insertFiles(List<File> files) {

@@ -1,12 +1,10 @@
 package com.aha.pdftools;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
-import java.nio.channels.FileChannel;
 
 import org.bouncycastle.crypto.digests.MD5Digest;
 import org.bouncycastle.util.encoders.Base64;
@@ -64,7 +62,7 @@ public class PdfPermissionManager {
 		FileOutputStream fout = new FileOutputStream(outputFile);
 		changePermissions(reader, fout, permissions, password);
 		if (createTempFile) {
-			moveFile(outputFile, output);
+			FileUtils.moveFile(outputFile, output);
 		}
 	}
 
@@ -79,44 +77,6 @@ public class PdfPermissionManager {
 		digest.update(input, 0, input.length);
 		digest.doFinal(output, 0);
 		return new String(Base64.encode(output));
-	}
-
-	private static void moveFile(File source, File target) throws IOException {
-		if (!source.renameTo(target)) {
-			// copy and delete file
-			copyFile(source, target);
-			deleteFile(source);
-		}
-	}
-
-	private static void copyFile(File sourceFile, File destFile) throws IOException {
-		if(!destFile.exists()) {
-			destFile.createNewFile();
-		}
-
-		FileInputStream sourceStream = null;
-		FileOutputStream destinationStream = null;
-		try {
-			sourceStream = new FileInputStream(sourceFile);
-			FileChannel source = sourceStream.getChannel();
-			destinationStream = new FileOutputStream(destFile);
-			FileChannel destination = destinationStream.getChannel();
-			long amount = destination.transferFrom(source, 0, source.size());
-			// TODO check return value
-		} finally {
-			if (sourceStream != null) {
-				sourceStream.close();
-			}
-			if(destinationStream != null) {
-				destinationStream.close();
-			}
-		}
-	}
-
-	private static void deleteFile(File file) {
-		if (!file.delete()) {
-			file.deleteOnExit();
-		}
 	}
 
 	public static void main(String[] args) {
