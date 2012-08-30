@@ -9,6 +9,7 @@ public class PdfFileTableModel extends AbstractTableAdapter<PdfFile> {
 	SelectionInList<PdfFile> listModel = new SelectionInList<PdfFile>();
 
 	public PdfFileTableModel(SelectionInList<PdfFile> listModel) {
+		// TODO translate
 		super(listModel, new String [] {
 				"Name",
 				"Path",

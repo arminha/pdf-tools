@@ -10,6 +10,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.SwingWorker;
+import javax.swing.UIManager;
 
 import com.aha.pdftools.FileUtils;
 import com.aha.pdftools.Messages;
@@ -36,6 +37,9 @@ import javax.swing.KeyStroke;
 import java.awt.event.KeyEvent;
 import java.awt.event.InputEvent;
 import javax.swing.JSeparator;
+import javax.swing.JToolBar;
+import javax.swing.JButton;
+import javax.swing.ImageIcon;
 
 public class PermissionManager {
 
@@ -51,6 +55,7 @@ public class PermissionManager {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
 					PermissionManager window = new PermissionManager();
 					window.frame.setVisible(true);
 					new DropTarget(window.frame, new PermissionManagerDropTarget(window));
@@ -73,7 +78,8 @@ public class PermissionManager {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 450, 300);
+		frame.setTitle("Pdf Permissions");
+		frame.setBounds(100, 100, 622, 410);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		JMenuBar menuBar = new JMenuBar();
@@ -176,6 +182,22 @@ public class PermissionManager {
 		table.setModel(new PdfFileTableModel(openFiles));
 		JScrollPane scrollPane = new JScrollPane(table);
 		frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
+
+		JToolBar toolBar = new JToolBar();
+		toolBar.setFloatable(false);
+		frame.getContentPane().add(toolBar, BorderLayout.NORTH);
+
+		JButton btnOpenFileButton = new JButton("");
+		btnOpenFileButton.setIcon(new ImageIcon(PermissionManager.class.getResource("/com/aha/pdftools/icons/document-open.png")));
+		toolBar.add(btnOpenFileButton);
+
+		JButton btnSave = new JButton("Save");
+		btnSave.setIcon(new ImageIcon(PermissionManager.class.getResource("/com/aha/pdftools/icons/document-save.png")));
+		toolBar.add(btnSave);
+
+		JButton btnDelete = new JButton("");
+		btnDelete.setIcon(new ImageIcon(PermissionManager.class.getResource("/com/aha/pdftools/icons/edit-delete.png")));
+		toolBar.add(btnDelete);
 	}
 
 	private void openFiles() {
