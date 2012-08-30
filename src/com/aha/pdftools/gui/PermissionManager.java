@@ -64,7 +64,13 @@ public class PermissionManager {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+					String os = System.getProperty("os.name");
+					if (os.equals("Linux")) {
+						UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+					} else if (os.equals("Windows")) {
+						UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+					}
+
 					PermissionManager window = new PermissionManager();
 					window.frame.setVisible(true);
 					new DropTarget(window.frame, new PermissionManagerDropTarget(window));
