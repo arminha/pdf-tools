@@ -40,6 +40,8 @@ import javax.swing.JSeparator;
 import javax.swing.JToolBar;
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 
 public class PermissionManager {
 
@@ -47,6 +49,10 @@ public class PermissionManager {
 	private JTable table;
 	private SelectionInList<PdfFile> openFiles;
 	private HashSet<String> openFileSet = new HashSet<String>();
+	private final Action openFilesAction = new OpenFilesAction();
+	private final Action openFolderAction = new OpenFolderAction();
+	private final Action saveAction = new SaveAction();
+	private final Action deleteAction = new DeleteAction();
 
 	/**
 	 * Launch the application.
@@ -89,34 +95,19 @@ public class PermissionManager {
 		mnFile.setMnemonic('F');
 		menuBar.add(mnFile);
 
-		JMenuItem mntmOpenFile = new JMenuItem("Open File(s)..");
-		mntmOpenFile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK));
+		JMenuItem mntmOpenFile = new JMenuItem(openFilesAction);
 		mntmOpenFile.setMnemonic(KeyEvent.VK_O);
-		mntmOpenFile.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				openFiles();
-			}
-		});
+		mntmOpenFile.setText("Open File(s)..");
 		mnFile.add(mntmOpenFile);
 
-		JMenuItem mntmOpenFolder = new JMenuItem("Open Folder..");
+		JMenuItem mntmOpenFolder = new JMenuItem(openFolderAction);
+		mntmOpenFolder.setText("Open Folder..");
 		mntmOpenFolder.setMnemonic(KeyEvent.VK_F);
-		mntmOpenFolder.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK));
-		mntmOpenFolder.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				openFolder();
-			}
-		});
 		mnFile.add(mntmOpenFolder);
 
-		JMenuItem mntmSave = new JMenuItem("Save..");
-		mntmSave.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK));
+		JMenuItem mntmSave = new JMenuItem(saveAction);
+		mntmSave.setText("Save..");
 		mntmSave.setMnemonic(KeyEvent.VK_S);
-		mntmSave.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				saveSelected();
-			}
-		});
 
 		JSeparator separator_1 = new JSeparator();
 		mnFile.add(separator_1);
@@ -149,14 +140,9 @@ public class PermissionManager {
 		mnEdit.setMnemonic('E');
 		menuBar.add(mnEdit);
 
-		JMenuItem mntmDelete = new JMenuItem("Delete");
+		JMenuItem mntmDelete = new JMenuItem(deleteAction);
+		mntmDelete.setText("Delete");
 		mntmDelete.setMnemonic(KeyEvent.VK_D);
-		mntmDelete.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				removeSelected();
-			}
-		});
-		mntmDelete.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
 		mnEdit.add(mntmDelete);
 
 		JMenuItem mntmSelectAll = new JMenuItem("Select All");
@@ -187,16 +173,13 @@ public class PermissionManager {
 		toolBar.setFloatable(false);
 		frame.getContentPane().add(toolBar, BorderLayout.NORTH);
 
-		JButton btnOpenFileButton = new JButton("");
-		btnOpenFileButton.setIcon(new ImageIcon(PermissionManager.class.getResource("/com/aha/pdftools/icons/document-open.png")));
+		JButton btnOpenFileButton = new JButton(openFilesAction);
 		toolBar.add(btnOpenFileButton);
 
-		JButton btnSave = new JButton("Save");
-		btnSave.setIcon(new ImageIcon(PermissionManager.class.getResource("/com/aha/pdftools/icons/document-save.png")));
+		JButton btnSave = new JButton(saveAction);
 		toolBar.add(btnSave);
 
-		JButton btnDelete = new JButton("");
-		btnDelete.setIcon(new ImageIcon(PermissionManager.class.getResource("/com/aha/pdftools/icons/edit-delete.png")));
+		JButton btnDelete = new JButton(deleteAction);
 		toolBar.add(btnDelete);
 	}
 
@@ -384,6 +367,62 @@ public class PermissionManager {
 				PdfPermissionManager.processFile(source, target, unit.pdfFile, PdfPermissionManager.PASSWORD);
 			}
 			return null;
+		}
+	}
+
+	@SuppressWarnings("serial")
+	private class OpenFilesAction extends AbstractAction {
+		public OpenFilesAction() {
+			putValue(LARGE_ICON_KEY, new ImageIcon(PermissionManager.class.getResource("/com/aha/pdftools/icons/document-open.png")));
+			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK));
+			putValue(SHORT_DESCRIPTION, "Open one or more PDF files");
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			openFiles();
+		}
+	}
+
+	@SuppressWarnings("serial")
+	private class OpenFolderAction extends AbstractAction {
+		public OpenFolderAction() {
+			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK));
+			putValue(SHORT_DESCRIPTION, "Open all PDF files in a folder");
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			openFolder();
+		}
+	}
+
+	@SuppressWarnings("serial")
+	private class SaveAction extends AbstractAction {
+		public SaveAction() {
+			putValue(LARGE_ICON_KEY, new ImageIcon(PermissionManager.class.getResource("/com/aha/pdftools/icons/document-save.png")));
+			putValue(SHORT_DESCRIPTION, "Save selected files");
+			putValue(NAME, "Save");
+			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK));
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			saveSelected();
+		}
+	}
+
+	@SuppressWarnings("serial")
+	private class DeleteAction extends AbstractAction {
+		public DeleteAction() {
+			putValue(LARGE_ICON_KEY, new ImageIcon(PermissionManager.class.getResource("/com/aha/pdftools/icons/edit-delete.png")));
+			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
+			putValue(SHORT_DESCRIPTION, "Remove selected files");
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			removeSelected();
 		}
 	}
 }
