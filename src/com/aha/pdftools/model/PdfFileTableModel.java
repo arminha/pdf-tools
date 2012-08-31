@@ -24,7 +24,7 @@ public class PdfFileTableModel extends AbstractTableAdapter<PdfFile> {
 				});
 	    this.listModel = listModel;
 	}
-	
+
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		PdfFile pdfFile = getRow(rowIndex);
@@ -94,7 +94,7 @@ public class PdfFileTableModel extends AbstractTableAdapter<PdfFile> {
 		}
 		return super.isCellEditable(rowIndex, columnIndex);
 	}
-	
+
 	@Override
 	public Class<?> getColumnClass(int columnIndex) {
 		if (columnIndex == 0) {

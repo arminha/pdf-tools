@@ -57,6 +57,7 @@ public class PermissionManager {
 	private final Action openFolderAction = new OpenFolderAction();
 	private final Action saveAction = new SaveAction();
 	private final Action deleteAction = new DeleteAction();
+	private final Action allPermissionsAction = new AllPermissionsAction();
 	private StatusPanel statusPanel;
 
 	/**
@@ -171,13 +172,19 @@ public class PermissionManager {
 		mnEdit.add(separator_2);
 
 		JMenuItem mntmClearList = new JMenuItem("Clear List");
+		mntmClearList.setMnemonic(KeyEvent.VK_C);
 		mntmClearList.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, InputEvent.SHIFT_MASK));
-		mnEdit.add(mntmClearList);
 		mntmClearList.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				clearFiles();
 			}
 		});
+		mnEdit.add(mntmClearList);
+
+		JMenuItem mntmAllPermissions = new JMenuItem(allPermissionsAction);
+		mntmAllPermissions.setText("Set All Permissions");
+		mntmAllPermissions.setMnemonic(KeyEvent.VK_P);
+		mnEdit.add(mntmAllPermissions);
 
 		openFiles = new SelectionInList<PdfFile>();
 		table = new JTable();
@@ -198,6 +205,9 @@ public class PermissionManager {
 
 		JButton btnDelete = new JButton(deleteAction);
 		toolBar.add(btnDelete);
+		
+		JButton btnAllPermissions = new JButton(allPermissionsAction);
+		toolBar.add(btnAllPermissions);
 
 		statusPanel = new StatusPanel();
 		frame.getContentPane().add(statusPanel, BorderLayout.SOUTH);
@@ -314,6 +324,14 @@ public class PermissionManager {
 	private void clearFiles() {
 		openFileSet.clear();
 		openFiles.getList().clear();
+	}
+
+	private void setAllPermissions() {
+		for (PdfFile pdfFile : openFiles.getList()) {
+			pdfFile.setAllowAll(true);
+		}
+		// update table
+		((PdfFileTableModel)table.getModel()).fireTableDataChanged();
 	}
 
 	private JFileChooser getFileChooser() {
@@ -462,6 +480,19 @@ public class PermissionManager {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			removeSelected();
+		}
+	}
+
+	@SuppressWarnings("serial")
+	private class AllPermissionsAction extends AbstractAction {
+		public AllPermissionsAction() {
+			putValue(LARGE_ICON_KEY, new ImageIcon(PermissionManager.class.getResource("/com/aha/pdftools/icons/stock_calc-accept.png")));
+			putValue(SHORT_DESCRIPTION, "Set all permissions on all files");
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			setAllPermissions();
 		}
 	}
 }

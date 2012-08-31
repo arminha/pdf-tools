@@ -22,4 +22,15 @@ public class PdfFile extends PdfPermissions {
 	public String getName() {
 		return mSourceFile.getName();
 	}
+
+	public void setAllowAll(boolean allow) {
+		setAssembly(allow);
+		setCopy(allow);
+		setDegradedPrinting(allow);
+		setFillIn(allow);
+		setModifyAnnotations(allow);
+		setModifyContents(allow);
+		setPrinting(allow);
+		setScreenReaders(allow);
+	}
 }
