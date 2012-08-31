@@ -1,14 +1,16 @@
 package com.aha.pdftools.gui;
 
 import javax.swing.JPanel;
-import javax.swing.BoxLayout;
 import javax.swing.JProgressBar;
 import javax.swing.JLabel;
-import java.awt.Component;
-import javax.swing.Box;
+import javax.swing.SwingConstants;
+
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
 
 @SuppressWarnings("serial")
 public class StatusPanel extends JPanel implements ProgressDisplay {
@@ -22,18 +24,11 @@ public class StatusPanel extends JPanel implements ProgressDisplay {
 	 * Create the panel.
 	 */
 	public StatusPanel() {
-		// TODO improve layout
-		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
 		lblStatus = new JLabel();
-		add(lblStatus);
-
-		Component horizontalGlue = Box.createHorizontalGlue();
-		add(horizontalGlue);
 
 		progressBar = new JProgressBar();
 		progressBar.setEnabled(false);
-		add(progressBar);
 
 		btnCancel = new JButton("Cancel");
 		btnCancel.addActionListener(new ActionListener() {
@@ -42,7 +37,24 @@ public class StatusPanel extends JPanel implements ProgressDisplay {
 			}
 		});
 		btnCancel.setEnabled(false);
-		add(btnCancel);
+		
+		GroupLayout groupLayout = new GroupLayout(this);
+		groupLayout.linkSize(SwingConstants.VERTICAL, progressBar, btnCancel, lblStatus);
+		groupLayout.setHorizontalGroup(
+			groupLayout.createSequentialGroup()
+				.addGap(8)
+				.addComponent(lblStatus)
+				.addPreferredGap(ComponentPlacement.RELATED, 0, Short.MAX_VALUE)
+				.addComponent(progressBar, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE)
+				.addComponent(btnCancel)
+		);
+		groupLayout.setVerticalGroup(
+			groupLayout.createParallelGroup(Alignment.CENTER)
+				.addComponent(lblStatus)
+				.addComponent(progressBar)
+				.addComponent(btnCancel)
+		);
+		setLayout(groupLayout);
 	}
 
 	@Override
