@@ -21,8 +21,8 @@ public class PdfFileTableModel extends AbstractTableAdapter<PdfFile> {
 				"Fill In",
 				"Modify Annotations",
 				"Modify Contents",
-				});
-	    this.listModel = listModel;
+		});
+		this.listModel = listModel;
 	}
 
 	@Override
@@ -53,7 +53,7 @@ public class PdfFileTableModel extends AbstractTableAdapter<PdfFile> {
 			return null;
 		}
 	}
-	
+
 	@Override
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 		PdfFile pdfFile = getRow(rowIndex);

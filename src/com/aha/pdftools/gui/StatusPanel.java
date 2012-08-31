@@ -38,23 +38,23 @@ public class StatusPanel extends JPanel implements ProgressDisplay {
 			}
 		});
 		btnCancel.setEnabled(false);
-		
+
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.linkSize(SwingConstants.VERTICAL, progressBar, btnCancel, lblStatus);
 		groupLayout.setHorizontalGroup(
-			groupLayout.createSequentialGroup()
+				groupLayout.createSequentialGroup()
 				.addGap(8)
 				.addComponent(lblStatus)
 				.addPreferredGap(ComponentPlacement.RELATED, 0, Short.MAX_VALUE)
 				.addComponent(progressBar, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE)
 				.addComponent(btnCancel)
-		);
+				);
 		groupLayout.setVerticalGroup(
-			groupLayout.createParallelGroup(Alignment.CENTER)
+				groupLayout.createParallelGroup(Alignment.CENTER)
 				.addComponent(lblStatus)
 				.addComponent(progressBar)
 				.addComponent(btnCancel)
-		);
+				);
 		setLayout(groupLayout);
 	}
 

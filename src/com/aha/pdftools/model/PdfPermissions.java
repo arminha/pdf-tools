@@ -4,30 +4,30 @@ import com.itextpdf.text.pdf.PdfWriter;
 
 public class PdfPermissions extends AbstractModelObject {
 
-    private boolean mAssembly = true;
-    private boolean mCopy = true;
-    private boolean mDegradedPrinting = true;
-    private boolean mPrinting = true;
-    private boolean mScreenReaders = true;
-    private boolean mFillIn = true;
-    private boolean mModifyContents = true;
-    private boolean mModifyAnnotations = true;
+	private boolean mAssembly = true;
+	private boolean mCopy = true;
+	private boolean mDegradedPrinting = true;
+	private boolean mPrinting = true;
+	private boolean mScreenReaders = true;
+	private boolean mFillIn = true;
+	private boolean mModifyContents = true;
+	private boolean mModifyAnnotations = true;
 
-    public PdfPermissions() {
-    }
+	public PdfPermissions() {
+	}
 
-    public PdfPermissions(int perms) {
-        mAssembly = (perms & PdfWriter.ALLOW_ASSEMBLY) != 0;
-        mCopy = (perms & PdfWriter.ALLOW_COPY) != 0;
-        mDegradedPrinting = (perms & PdfWriter.ALLOW_DEGRADED_PRINTING) != 0;
-        mPrinting = (perms & PdfWriter.ALLOW_PRINTING) != 0;
-        mScreenReaders = (perms & PdfWriter.ALLOW_SCREENREADERS) != 0;
-        mFillIn = (perms & PdfWriter.ALLOW_FILL_IN) != 0;
-        mModifyContents = (perms & PdfWriter.ALLOW_MODIFY_CONTENTS) != 0;
-        mModifyAnnotations = (perms & PdfWriter.ALLOW_MODIFY_ANNOTATIONS) != 0;
-    }
-    
-    public boolean isAssembly() {
+	public PdfPermissions(int perms) {
+		mAssembly = (perms & PdfWriter.ALLOW_ASSEMBLY) != 0;
+		mCopy = (perms & PdfWriter.ALLOW_COPY) != 0;
+		mDegradedPrinting = (perms & PdfWriter.ALLOW_DEGRADED_PRINTING) != 0;
+		mPrinting = (perms & PdfWriter.ALLOW_PRINTING) != 0;
+		mScreenReaders = (perms & PdfWriter.ALLOW_SCREENREADERS) != 0;
+		mFillIn = (perms & PdfWriter.ALLOW_FILL_IN) != 0;
+		mModifyContents = (perms & PdfWriter.ALLOW_MODIFY_CONTENTS) != 0;
+		mModifyAnnotations = (perms & PdfWriter.ALLOW_MODIFY_ANNOTATIONS) != 0;
+	}
+
+	public boolean isAssembly() {
 		return mAssembly;
 	}
 
@@ -108,54 +108,54 @@ public class PdfPermissions extends AbstractModelObject {
 	}
 
 	public int getPermissions() {
-        // as per User access permissions table in the pdf specification
-        int perms = 0xFFFFF0C0;
-        if (mAssembly)
-            perms = perms | PdfWriter.ALLOW_ASSEMBLY;
-        if (mCopy)
-            perms = perms | PdfWriter.ALLOW_COPY;
-        if (mDegradedPrinting)
-            perms = perms | PdfWriter.ALLOW_DEGRADED_PRINTING;
-        if (mPrinting)
-            perms = perms | PdfWriter.ALLOW_PRINTING;
-        if (mScreenReaders)
-            perms = perms | PdfWriter.ALLOW_SCREENREADERS;
-        if (mFillIn)
-            perms = perms | PdfWriter.ALLOW_FILL_IN;
-        if (mModifyContents)
-            perms = perms | PdfWriter.ALLOW_MODIFY_CONTENTS;
-        if (mModifyAnnotations)
-            perms = perms | PdfWriter.ALLOW_MODIFY_ANNOTATIONS;
-        return perms;
-    }
+		// as per User access permissions table in the pdf specification
+		int perms = 0xFFFFF0C0;
+		if (mAssembly)
+			perms = perms | PdfWriter.ALLOW_ASSEMBLY;
+		if (mCopy)
+			perms = perms | PdfWriter.ALLOW_COPY;
+		if (mDegradedPrinting)
+			perms = perms | PdfWriter.ALLOW_DEGRADED_PRINTING;
+		if (mPrinting)
+			perms = perms | PdfWriter.ALLOW_PRINTING;
+		if (mScreenReaders)
+			perms = perms | PdfWriter.ALLOW_SCREENREADERS;
+		if (mFillIn)
+			perms = perms | PdfWriter.ALLOW_FILL_IN;
+		if (mModifyContents)
+			perms = perms | PdfWriter.ALLOW_MODIFY_CONTENTS;
+		if (mModifyAnnotations)
+			perms = perms | PdfWriter.ALLOW_MODIFY_ANNOTATIONS;
+		return perms;
+	}
 
-    public String getPermissionsAsString() {
-        String permissions = "";
-        if (mPrinting) {
-            permissions += "AllowPrinting ";
-        }
-        if (mAssembly) {
-            permissions += "AllowAssembly";
-        }
-        if (mCopy) {
-            permissions += "AllowCopy";
-        }
-        if (mDegradedPrinting) {
-            permissions += "AllowDegradedPrinting";
-        }
-        if (mScreenReaders) {
-            permissions += "AllowScreenReaders";
-        }
-        if (mFillIn) {
-            permissions += "AllowFillIn";
-        }
-        if (mModifyContents) {
-            permissions += "AllowModifyContents";
-        }
-        if (mModifyAnnotations) {
-            permissions += "AllowModifyAnnotations";
-        }
-        return permissions;
-    }
+	public String getPermissionsAsString() {
+		String permissions = "";
+		if (mPrinting) {
+			permissions += "AllowPrinting ";
+		}
+		if (mAssembly) {
+			permissions += "AllowAssembly";
+		}
+		if (mCopy) {
+			permissions += "AllowCopy";
+		}
+		if (mDegradedPrinting) {
+			permissions += "AllowDegradedPrinting";
+		}
+		if (mScreenReaders) {
+			permissions += "AllowScreenReaders";
+		}
+		if (mFillIn) {
+			permissions += "AllowFillIn";
+		}
+		if (mModifyContents) {
+			permissions += "AllowModifyContents";
+		}
+		if (mModifyAnnotations) {
+			permissions += "AllowModifyAnnotations";
+		}
+		return permissions;
+	}
 
 }
