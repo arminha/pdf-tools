@@ -1,5 +1,6 @@
 package com.aha.pdftools.gui;
 
+import java.awt.Desktop;
 import java.awt.EventQueue;
 
 import javax.swing.JFileChooser;
@@ -23,6 +24,8 @@ import java.awt.BorderLayout;
 import java.awt.dnd.DropTarget;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
@@ -46,8 +49,6 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 
 public class PermissionManager {
-
-	// TODO open Pdf file on double click
 
 	private JFrame frame;
 	private JTable table;
@@ -190,6 +191,19 @@ public class PermissionManager {
 		table = new JTable();
 		table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		table.setModel(new PdfFileTableModel(openFiles));
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				if (e.getClickCount() == 2) {
+					JTable target = (JTable)e.getSource();
+					int row = target.rowAtPoint(e.getPoint());
+					int column = target.columnAtPoint(e.getPoint());
+					if (row >= 0 && column >= 0 && column <= 1) {
+						openPdf(openFiles.getElementAt(row));
+					}
+				}
+			}
+		});
 		JScrollPane scrollPane = new JScrollPane(table);
 		frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
 
@@ -205,7 +219,7 @@ public class PermissionManager {
 
 		JButton btnDelete = new JButton(deleteAction);
 		toolBar.add(btnDelete);
-		
+
 		JButton btnAllPermissions = new JButton(allPermissionsAction);
 		toolBar.add(btnAllPermissions);
 
@@ -220,6 +234,14 @@ public class PermissionManager {
 		int result = chooser.showOpenDialog(frame);
 		if (result == JFileChooser.APPROVE_OPTION) {
 			insertFiles(Arrays.asList(chooser.getSelectedFiles()));
+		}
+	}
+
+	private void openPdf(PdfFile pdfFile) {
+		try {
+			Desktop.getDesktop().open(pdfFile.getSourceFile());
+		} catch (IOException e) {
+			Logger.getLogger(PermissionManager.class.getName()).log(Level.WARNING, "Failed to open Pdf file", e);
 		}
 	}
 
