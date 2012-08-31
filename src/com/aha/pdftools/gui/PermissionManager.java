@@ -157,6 +157,12 @@ public class PermissionManager {
 		JMenuItem mntmSelectAll = new JMenuItem("Select All");
 		mntmSelectAll.setMnemonic(KeyEvent.VK_A);
 		mntmSelectAll.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, InputEvent.CTRL_MASK));
+		mntmSelectAll.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				table.selectAll();
+			}
+		});
 		mnEdit.add(mntmSelectAll);
 
 		JSeparator separator_2 = new JSeparator();
