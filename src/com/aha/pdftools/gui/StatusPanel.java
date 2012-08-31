@@ -20,6 +20,7 @@ public class StatusPanel extends JPanel implements ProgressDisplay {
 	private JProgressBar progressBar;
 	private JLabel lblStatus;
 	private String message;
+	private boolean taskStarted;
 
 	/**
 	 * Create the panel.
@@ -59,6 +60,10 @@ public class StatusPanel extends JPanel implements ProgressDisplay {
 
 	@Override
 	public void startTask(String message, int max, boolean cancelable) {
+		if (taskStarted) {
+			throw new IllegalStateException("already running a task");
+		}
+		taskStarted = true;
 		canceled = false;
 		btnCancel.setEnabled(cancelable);
 		progressBar.setEnabled(true);
@@ -74,6 +79,7 @@ public class StatusPanel extends JPanel implements ProgressDisplay {
 		progressBar.setEnabled(false);
 		progressBar.setValue(0);
 		lblStatus.setText("");
+		taskStarted = false;
 	}
 
 	@Override
