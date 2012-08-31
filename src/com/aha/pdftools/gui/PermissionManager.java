@@ -50,6 +50,8 @@ import javax.swing.Action;
 
 public class PermissionManager {
 
+	// TODO table headers line wrap
+
 	private JFrame frame;
 	private JTable table;
 	private SelectionInList<PdfFile> openFiles;
@@ -68,10 +70,10 @@ public class PermissionManager {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					String os = System.getProperty("os.name");
-					if (os.equals("Linux")) {
+					String os = System.getProperty("os.name"); //$NON-NLS-1$
+					if (os.equals("Linux")) { //$NON-NLS-1$
 						UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-					} else if (os.equals("Windows")) {
+					} else if (os.equals("Windows")) { //$NON-NLS-1$
 						UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 					}
 
@@ -97,36 +99,36 @@ public class PermissionManager {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setTitle("Pdf Permissions");
+		frame.setTitle(Messages.getString("PermissionManager.Title")); //$NON-NLS-1$
 		frame.setBounds(100, 100, 622, 410);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		JMenuBar menuBar = new JMenuBar();
 		frame.setJMenuBar(menuBar);
 
-		JMenu mnFile = new JMenu("File");
+		JMenu mnFile = new JMenu(Messages.getString("PermissionManager.FileMenu")); //$NON-NLS-1$
 		mnFile.setMnemonic('F');
 		menuBar.add(mnFile);
 
 		JMenuItem mntmOpenFile = new JMenuItem(openFilesAction);
 		mntmOpenFile.setMnemonic(KeyEvent.VK_O);
-		mntmOpenFile.setText("Open File(s)..");
+		mntmOpenFile.setText(Messages.getString("PermissionManager.OpenFiles")); //$NON-NLS-1$
 		mnFile.add(mntmOpenFile);
 
 		JMenuItem mntmOpenFolder = new JMenuItem(openFolderAction);
-		mntmOpenFolder.setText("Open Folder..");
+		mntmOpenFolder.setText(Messages.getString("PermissionManager.OpenFolder")); //$NON-NLS-1$
 		mntmOpenFolder.setMnemonic(KeyEvent.VK_F);
 		mnFile.add(mntmOpenFolder);
 
 		JMenuItem mntmSave = new JMenuItem(saveAction);
-		mntmSave.setText("Save..");
+		mntmSave.setText(Messages.getString("PermissionManager.Save..")); //$NON-NLS-1$
 		mntmSave.setMnemonic(KeyEvent.VK_S);
 
 		JSeparator separator_1 = new JSeparator();
 		mnFile.add(separator_1);
 		mnFile.add(mntmSave);
 
-		JMenuItem mntmSaveAll = new JMenuItem("Save All..");
+		JMenuItem mntmSaveAll = new JMenuItem(Messages.getString("PermissionManager.SaveAll")); //$NON-NLS-1$
 		mntmSaveAll.setMnemonic(KeyEvent.VK_A);
 		mntmSaveAll.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK));
 		mntmSaveAll.addActionListener(new ActionListener() {
@@ -136,7 +138,7 @@ public class PermissionManager {
 		});
 		mnFile.add(mntmSaveAll);
 
-		JMenuItem mntmQuit = new JMenuItem("Quit");
+		JMenuItem mntmQuit = new JMenuItem(Messages.getString("PermissionManager.Quit")); //$NON-NLS-1$
 		mntmQuit.setMnemonic(KeyEvent.VK_Q);
 		mntmQuit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.CTRL_MASK));
 		mntmQuit.addActionListener(new ActionListener() {
@@ -149,16 +151,16 @@ public class PermissionManager {
 		mnFile.add(separator);
 		mnFile.add(mntmQuit);
 
-		JMenu mnEdit = new JMenu("Edit");
+		JMenu mnEdit = new JMenu(Messages.getString("PermissionManager.EditMenu")); //$NON-NLS-1$
 		mnEdit.setMnemonic('E');
 		menuBar.add(mnEdit);
 
 		JMenuItem mntmDelete = new JMenuItem(deleteAction);
-		mntmDelete.setText("Delete");
+		mntmDelete.setText(Messages.getString("PermissionManager.Delete")); //$NON-NLS-1$
 		mntmDelete.setMnemonic(KeyEvent.VK_D);
 		mnEdit.add(mntmDelete);
 
-		JMenuItem mntmSelectAll = new JMenuItem("Select All");
+		JMenuItem mntmSelectAll = new JMenuItem(Messages.getString("PermissionManager.SelectAll")); //$NON-NLS-1$
 		mntmSelectAll.setMnemonic(KeyEvent.VK_A);
 		mntmSelectAll.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, InputEvent.CTRL_MASK));
 		mntmSelectAll.addActionListener(new ActionListener() {
@@ -172,7 +174,7 @@ public class PermissionManager {
 		JSeparator separator_2 = new JSeparator();
 		mnEdit.add(separator_2);
 
-		JMenuItem mntmClearList = new JMenuItem("Clear List");
+		JMenuItem mntmClearList = new JMenuItem(Messages.getString("PermissionManager.ClearList")); //$NON-NLS-1$
 		mntmClearList.setMnemonic(KeyEvent.VK_C);
 		mntmClearList.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, InputEvent.SHIFT_MASK));
 		mntmClearList.addActionListener(new ActionListener() {
@@ -241,7 +243,7 @@ public class PermissionManager {
 		try {
 			Desktop.getDesktop().open(pdfFile.getSourceFile());
 		} catch (IOException e) {
-			Logger.getLogger(PermissionManager.class.getName()).log(Level.WARNING, "Failed to open Pdf file", e);
+			Logger.getLogger(PermissionManager.class.getName()).log(Level.WARNING, "Failed to open Pdf file", e); //$NON-NLS-1$
 		}
 	}
 
@@ -275,11 +277,11 @@ public class PermissionManager {
 			if (f != null) {
 				if (f.exists()) {
 					// ask if the file should be overwritten
-					String msg = MessageFormat.format(Messages.getString("PdfPermissionManagerGui.AskOverwriteFile"), f.getAbsolutePath()); //$NON-NLS-1$
+					String msg = MessageFormat.format(Messages.getString("PermissionManager.AskOverwriteFile"), f.getAbsolutePath()); //$NON-NLS-1$
 					int resultVal = JOptionPane.showConfirmDialog(
 							frame,
 							msg,
-							Messages.getString("PdfPermissionManagerGui.SaveAs"), //$NON-NLS-1$
+							Messages.getString("PermissionManager.SaveAs"), //$NON-NLS-1$
 							JOptionPane.YES_NO_OPTION);
 					if (resultVal == JOptionPane.NO_OPTION) {
 						return;
@@ -394,7 +396,7 @@ public class PermissionManager {
 		@Override
 		protected Void doInBackground() throws Exception {
 			synchronized (progress) {
-				progress.startTask("Loading", files.size(), true);
+				progress.startTask(Messages.getString("PermissionManager.Loading"), files.size(), true); //$NON-NLS-1$
 				int i = 0;
 				for (File file : files) {
 					if (progress.isCanceled()) {
@@ -431,7 +433,7 @@ public class PermissionManager {
 
 		protected Void doInBackground() throws Exception {
 			synchronized (progress) {
-				progress.startTask("Saving", files.size(), true);
+				progress.startTask(Messages.getString("PermissionManager.Saving"), files.size(), true); //$NON-NLS-1$
 				int i = 0;
 				for (SaveUnit unit : files) {
 					if (progress.isCanceled()) {
@@ -452,9 +454,9 @@ public class PermissionManager {
 	@SuppressWarnings("serial")
 	private class OpenFilesAction extends AbstractAction {
 		public OpenFilesAction() {
-			putValue(LARGE_ICON_KEY, new ImageIcon(PermissionManager.class.getResource("/com/aha/pdftools/icons/document-open.png")));
+			putValue(LARGE_ICON_KEY, new ImageIcon(PermissionManager.class.getResource("/com/aha/pdftools/icons/document-open.png"))); //$NON-NLS-1$
 			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK));
-			putValue(SHORT_DESCRIPTION, "Open one or more PDF files");
+			putValue(SHORT_DESCRIPTION, Messages.getString("PermissionManager.OpenFilesDesc")); //$NON-NLS-1$
 		}
 
 		@Override
@@ -467,7 +469,7 @@ public class PermissionManager {
 	private class OpenFolderAction extends AbstractAction {
 		public OpenFolderAction() {
 			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK));
-			putValue(SHORT_DESCRIPTION, "Open all PDF files in a folder");
+			putValue(SHORT_DESCRIPTION, Messages.getString("PermissionManager.OpenFolderDesc")); //$NON-NLS-1$
 		}
 
 		@Override
@@ -479,9 +481,9 @@ public class PermissionManager {
 	@SuppressWarnings("serial")
 	private class SaveAction extends AbstractAction {
 		public SaveAction() {
-			putValue(LARGE_ICON_KEY, new ImageIcon(PermissionManager.class.getResource("/com/aha/pdftools/icons/document-save.png")));
-			putValue(SHORT_DESCRIPTION, "Save selected files");
-			putValue(NAME, "Save");
+			putValue(LARGE_ICON_KEY, new ImageIcon(PermissionManager.class.getResource("/com/aha/pdftools/icons/document-save.png"))); //$NON-NLS-1$
+			putValue(SHORT_DESCRIPTION, Messages.getString("PermissionManager.SaveDesc")); //$NON-NLS-1$
+			putValue(NAME, Messages.getString("PermissionManager.Save")); //$NON-NLS-1$
 			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK));
 		}
 
@@ -494,9 +496,9 @@ public class PermissionManager {
 	@SuppressWarnings("serial")
 	private class DeleteAction extends AbstractAction {
 		public DeleteAction() {
-			putValue(LARGE_ICON_KEY, new ImageIcon(PermissionManager.class.getResource("/com/aha/pdftools/icons/edit-delete.png")));
+			putValue(LARGE_ICON_KEY, new ImageIcon(PermissionManager.class.getResource("/com/aha/pdftools/icons/edit-delete.png"))); //$NON-NLS-1$
 			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
-			putValue(SHORT_DESCRIPTION, "Remove selected files");
+			putValue(SHORT_DESCRIPTION, Messages.getString("PermissionManager.DeleteDesc")); //$NON-NLS-1$
 		}
 
 		@Override
@@ -508,7 +510,7 @@ public class PermissionManager {
 	@SuppressWarnings("serial")
 	private class AllPermissionsAction extends AbstractAction {
 		public AllPermissionsAction() {
-			putValue(LARGE_ICON_KEY, new ImageIcon(PermissionManager.class.getResource("/com/aha/pdftools/icons/stock_calc-accept.png")));
+			putValue(LARGE_ICON_KEY, new ImageIcon(PermissionManager.class.getResource("/com/aha/pdftools/icons/stock_calc-accept.png"))); //$NON-NLS-1$
 			putValue(SHORT_DESCRIPTION, "Set all permissions on all files");
 		}
 

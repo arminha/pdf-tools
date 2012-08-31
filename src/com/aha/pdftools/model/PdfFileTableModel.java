@@ -1,5 +1,6 @@
 package com.aha.pdftools.model;
 
+import com.aha.pdftools.Messages;
 import com.jgoodies.binding.adapter.AbstractTableAdapter;
 import com.jgoodies.binding.list.SelectionInList;
 
@@ -9,18 +10,17 @@ public class PdfFileTableModel extends AbstractTableAdapter<PdfFile> {
 	SelectionInList<PdfFile> listModel = new SelectionInList<PdfFile>();
 
 	public PdfFileTableModel(SelectionInList<PdfFile> listModel) {
-		// TODO translate
 		super(listModel, new String [] {
-				"Name",
-				"Path",
-				"Assembly",
-				"Copy",
-				"Degraded Printing",
-				"Printing",
-				"Screen Readers",
-				"Fill In",
-				"Modify Annotations",
-				"Modify Contents",
+				Messages.getString("PdfFileTableModel.Name"), //$NON-NLS-1$
+				Messages.getString("PdfFileTableModel.Path"), //$NON-NLS-1$
+				Messages.getString("PdfFileTableModel.Assembly"), //$NON-NLS-1$
+				Messages.getString("PdfFileTableModel.Copy"), //$NON-NLS-1$
+				Messages.getString("PdfFileTableModel.DegradedPrinting"), //$NON-NLS-1$
+				Messages.getString("PdfFileTableModel.Printing"), //$NON-NLS-1$
+				Messages.getString("PdfFileTableModel.ScreenReaders"), //$NON-NLS-1$
+				Messages.getString("PdfFileTableModel.FillIn"), //$NON-NLS-1$
+				Messages.getString("PdfFileTableModel.ModifyAnnotations"), //$NON-NLS-1$
+				Messages.getString("PdfFileTableModel.ModifyContents"), //$NON-NLS-1$
 		});
 		this.listModel = listModel;
 	}

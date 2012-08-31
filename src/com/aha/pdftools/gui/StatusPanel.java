@@ -12,6 +12,8 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
+import com.aha.pdftools.Messages;
+
 @SuppressWarnings("serial")
 public class StatusPanel extends JPanel implements ProgressDisplay {
 
@@ -31,7 +33,7 @@ public class StatusPanel extends JPanel implements ProgressDisplay {
 		progressBar = new JProgressBar();
 		progressBar.setEnabled(false);
 
-		btnCancel = new JButton("Cancel");
+		btnCancel = new JButton(Messages.getString("StatusPanel.Cancel")); //$NON-NLS-1$
 		btnCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				canceled = true;
@@ -61,7 +63,7 @@ public class StatusPanel extends JPanel implements ProgressDisplay {
 	@Override
 	public void startTask(String message, int max, boolean cancelable) {
 		if (taskStarted) {
-			throw new IllegalStateException("already running a task");
+			throw new IllegalStateException("already running a task"); //$NON-NLS-1$
 		}
 		taskStarted = true;
 		canceled = false;
@@ -78,7 +80,7 @@ public class StatusPanel extends JPanel implements ProgressDisplay {
 		btnCancel.setEnabled(false);
 		progressBar.setEnabled(false);
 		progressBar.setValue(0);
-		lblStatus.setText("");
+		lblStatus.setText(""); //$NON-NLS-1$
 		taskStarted = false;
 	}
 
@@ -89,7 +91,7 @@ public class StatusPanel extends JPanel implements ProgressDisplay {
 
 	@Override
 	public void setNote(String note) {
-		lblStatus.setText(message + " " + note);
+		lblStatus.setText(message + " " + note); //$NON-NLS-1$
 	}
 
 	@Override
