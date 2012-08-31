@@ -19,12 +19,12 @@ public class StatusPanel extends JPanel implements ProgressDisplay {
 	private JButton btnCancel;
 	private JProgressBar progressBar;
 	private JLabel lblStatus;
+	private String message;
 
 	/**
 	 * Create the panel.
 	 */
 	public StatusPanel() {
-
 		lblStatus = new JLabel();
 
 		progressBar = new JProgressBar();
@@ -64,8 +64,8 @@ public class StatusPanel extends JPanel implements ProgressDisplay {
 		progressBar.setEnabled(true);
 		progressBar.setMaximum(max);
 		progressBar.setValue(0);
-		
-		// TODO show message
+		this.message = message;
+		lblStatus.setText(message);
 	}
 
 	@Override
@@ -83,7 +83,7 @@ public class StatusPanel extends JPanel implements ProgressDisplay {
 
 	@Override
 	public void setNote(String note) {
-		lblStatus.setText(note);
+		lblStatus.setText(message + " " + note);
 	}
 
 	@Override
