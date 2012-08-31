@@ -36,7 +36,9 @@ public class FileUtils {
 			destinationStream = new FileOutputStream(destFile);
 			FileChannel destination = destinationStream.getChannel();
 			long amount = destination.transferFrom(source, 0, source.size());
-			// TODO check return value
+			if (amount != source.size()) {
+				// XXX transfer rest of file
+			}
 		} finally {
 			if (sourceStream != null) {
 				sourceStream.close();

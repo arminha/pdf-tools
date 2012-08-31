@@ -30,6 +30,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
@@ -290,8 +292,7 @@ public class PermissionManager {
 			openFiles.getList().add(pdfFile);
 			openFileSet.add(path);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Logger.getLogger(PermissionManager.class.getName()).log(Level.WARNING, null, e);
 		}
 	}
 
@@ -342,7 +343,6 @@ public class PermissionManager {
 	}
 
 	private class OpenFileTask extends SwingWorker<Void, Void> {
-		// TODO disable/enable ui
 		private final List<File> files;
 		private final ProgressDisplay progress;
 
@@ -381,7 +381,6 @@ public class PermissionManager {
 	}
 
 	private class SaveFileTask extends SwingWorker<Void, Void> {
-		// TODO disable ui
 		private final List<SaveUnit> files;
 		private final ProgressDisplay progress;
 

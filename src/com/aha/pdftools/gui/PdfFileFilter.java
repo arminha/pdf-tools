@@ -20,8 +20,7 @@ public class PdfFileFilter extends FileFilter implements java.io.FileFilter {
 
     @Override
     public String getDescription() {
-    	// TODO rename
-        return Messages.getString("PdfPermissionManagerGui.PdfFiles"); //$NON-NLS-1$
+        return Messages.getString("PdfFileFilter.PdfFiles"); //$NON-NLS-1$
     }
 
 }
