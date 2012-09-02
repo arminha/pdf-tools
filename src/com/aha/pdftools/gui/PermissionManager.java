@@ -613,6 +613,7 @@ public class PermissionManager {
 	@SuppressWarnings("serial")
 	private class MergeAction extends AbstractAction {
 		public MergeAction() {
+			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_M, InputEvent.CTRL_MASK));
 			putValue(LARGE_ICON_KEY, new ImageIcon(PermissionManager.class.getResource("/com/aha/pdftools/icons/stock_save-pdf.png")));
 			putValue(SHORT_DESCRIPTION, Messages.getString("PermissionManager.CombineFilesDesc")); //$NON-NLS-1$
 			putValue(NAME, Messages.getString("PermissionManager.Combine")); //$NON-NLS-1$
