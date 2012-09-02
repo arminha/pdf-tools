@@ -321,11 +321,26 @@ public class PermissionManager {
 			File f = chooseSaveFile("file name will be ignored", false);
 			if (f != null) {
 				File targetDirectory = f.getParentFile();
+				List<File> overwrittenFiles = new ArrayList<File>();
 				for (PdfFile pdfFile : files) {
-					// TODO check source exists and target is not overwriting
 					String name = pdfFile.getName();
 					File target = new File(targetDirectory.getAbsolutePath() + File.separator + name);
+					if (target.exists()) {
+						overwrittenFiles.add(target);
+					}
 					saveUnits.add(new SaveUnit(pdfFile, target));
+				}
+				if (!overwrittenFiles.isEmpty()) {
+					String format = "{0} file(s) in {1} will be overwritten.\nWould you like to continue?";
+					String msg = MessageFormat.format(format, overwrittenFiles.size(), targetDirectory.getAbsolutePath());
+					int result = JOptionPane.showConfirmDialog(
+							frame,
+							msg,
+							Messages.getString("PermissionManager.SaveAs"), //$NON-NLS-1$
+							JOptionPane.YES_NO_OPTION);
+					if (result == JOptionPane.NO_OPTION) {
+						return;
+					}
 				}
 			}
 		}
