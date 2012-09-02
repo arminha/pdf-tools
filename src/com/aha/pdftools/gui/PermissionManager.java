@@ -404,7 +404,8 @@ public class PermissionManager {
 		JFileChooser chooser = getFileChooser();
 		chooser.setFileFilter(new PdfFileFilter());
 		if (initalName != null) {
-			chooser.setName(initalName);
+			File f = new File(chooser.getCurrentDirectory().getAbsolutePath() + File.separator + initalName);
+			chooser.setSelectedFile(f);
 		}
 		int result = chooser.showSaveDialog(frame);
 		if (result == JFileChooser.APPROVE_OPTION) {
