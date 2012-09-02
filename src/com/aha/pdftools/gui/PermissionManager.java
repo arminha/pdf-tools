@@ -74,11 +74,9 @@ public class PermissionManager {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					String os = System.getProperty("os.name"); //$NON-NLS-1$
-					if (os.equals("Linux")) { //$NON-NLS-1$
+					String os = System.getProperty("os.name").toLowerCase(); //$NON-NLS-1$
+					if (os.equals("linux")) { //$NON-NLS-1$
 						UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-					} else if (os.equals("Windows")) { //$NON-NLS-1$
-						UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 					}
 
 					PermissionManager window = new PermissionManager();
