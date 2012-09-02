@@ -64,6 +64,7 @@ public class PermissionManager {
 	private final Action allPermissionsAction = new AllPermissionsAction();
 	private final Action mergeAction = new MergeAction();
 	private StatusPanel statusPanel;
+	private JFileChooser fileChooser;
 
 	/**
 	 * Launch the application.
@@ -387,8 +388,12 @@ public class PermissionManager {
 	}
 
 	private JFileChooser getFileChooser() {
-		// TODO remember directory
-		return new JFileChooser();
+		JFileChooser chooser = new JFileChooser();
+		if (fileChooser != null) {
+			chooser.setCurrentDirectory(fileChooser.getCurrentDirectory());
+		}
+		fileChooser = chooser;
+		return chooser;
 	}
 
 	private File chooseSaveFile(String initalName, boolean addExtension) {
