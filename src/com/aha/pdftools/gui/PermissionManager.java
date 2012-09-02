@@ -285,30 +285,36 @@ public class PermissionManager {
 
 	private void mergeSelected() {
 		File file = chooseSaveFile(null, true);
-		List<File> sourceFiles = new ArrayList<File>();
-		for (int row : table.getSelectedRows()) {
-			sourceFiles.add(openFiles.getList().get(row).getSourceFile());
+		if (file != null && checkOverwriteFile(file)) {
+			List<File> sourceFiles = new ArrayList<File>();
+			for (int row : table.getSelectedRows()) {
+				sourceFiles.add(openFiles.getList().get(row).getSourceFile());
+			}
+			new MergeFilesTask(file, sourceFiles, statusPanel).execute();
 		}
-		new MergeFilesTask(file, sourceFiles, statusPanel).execute();
+	}
+
+	private boolean checkOverwriteFile(File f) {
+		if (f.exists()) {
+			// ask if the file should be overwritten
+			String msg = MessageFormat.format(Messages.getString("PermissionManager.AskOverwriteFile"), f.getAbsolutePath()); //$NON-NLS-1$
+			int resultVal = JOptionPane.showConfirmDialog(
+					frame,
+					msg,
+					Messages.getString("PermissionManager.SaveAs"), //$NON-NLS-1$
+					JOptionPane.YES_NO_OPTION);
+			if (resultVal == JOptionPane.NO_OPTION) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	private void save(List<PdfFile> files) {
 		List<SaveUnit> saveUnits = new ArrayList<SaveUnit>();
 		if (files.size() == 1) {
 			File f = chooseSaveFile(null, true);
-			if (f != null) {
-				if (f.exists()) {
-					// ask if the file should be overwritten
-					String msg = MessageFormat.format(Messages.getString("PermissionManager.AskOverwriteFile"), f.getAbsolutePath()); //$NON-NLS-1$
-					int resultVal = JOptionPane.showConfirmDialog(
-							frame,
-							msg,
-							Messages.getString("PermissionManager.SaveAs"), //$NON-NLS-1$
-							JOptionPane.YES_NO_OPTION);
-					if (resultVal == JOptionPane.NO_OPTION) {
-						return;
-					}
-				}
+			if (f != null && checkOverwriteFile(f)) {
 				saveUnits.add(new SaveUnit(files.get(0), f));
 			}
 		} else if (files.size() > 1) {
