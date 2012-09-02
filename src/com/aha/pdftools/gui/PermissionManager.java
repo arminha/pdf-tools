@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -51,7 +52,7 @@ import javax.swing.Action;
 
 public class PermissionManager {
 
-	// TODO table headers line wrap
+	// XXX table headers line wrap
 
 	private JFrame frame;
 	private JTable table;
@@ -396,6 +397,11 @@ public class PermissionManager {
 		return chooser;
 	}
 
+	private void showErrorMessage(Throwable throwable) {
+		String message = throwable.getMessage();
+		JOptionPane.showMessageDialog(frame, message, "Error", JOptionPane.ERROR_MESSAGE);
+	}
+
 	private File chooseSaveFile(String initalName, boolean addExtension) {
 		JFileChooser chooser = getFileChooser();
 		chooser.setFileFilter(new PdfFileFilter());
@@ -468,7 +474,6 @@ public class PermissionManager {
 		}
 
 		protected Void doInBackground() throws Exception {
-			// TODO handle exceptions
 			synchronized (progress) {
 				progress.startTask(Messages.getString("PermissionManager.Saving"), files.size(), true); //$NON-NLS-1$
 				int i = 0;
@@ -489,6 +494,19 @@ public class PermissionManager {
 			}
 			return null;
 		}
+
+		@Override
+		protected void done() {
+			try {
+				get();
+			} catch (InterruptedException e) {
+				Logger.getLogger(getClass().getName()).log(Level.WARNING, null, e);
+			} catch (ExecutionException e) {
+				Throwable cause = e.getCause();
+				Logger.getLogger(getClass().getName()).log(Level.WARNING, null, cause);
+				showErrorMessage(cause);
+			}
+		}
 	}
 
 	private class MergeFilesTask extends SwingWorker<Void, Void> {
@@ -505,11 +523,23 @@ public class PermissionManager {
 
 		@Override
 		protected Void doInBackground() throws Exception {
-			// TODO handle exceptions
 			synchronized (progress) {
 				PdfPermissionManager.merge(outputFile, sourceFiles, progress);
 			}
 			return null;
+		}
+
+		@Override
+		protected void done() {
+			try {
+				get();
+			} catch (InterruptedException e) {
+				Logger.getLogger(getClass().getName()).log(Level.WARNING, null, e);
+			} catch (ExecutionException e) {
+				Throwable cause = e.getCause();
+				Logger.getLogger(getClass().getName()).log(Level.WARNING, null, cause);
+				showErrorMessage(cause);
+			}
 		}
 	}
 
