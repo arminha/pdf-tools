@@ -13,6 +13,7 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
 import com.aha.pdftools.Messages;
+import com.aha.pdftools.ProgressDisplay;
 
 @SuppressWarnings("serial")
 public class StatusPanel extends JPanel implements ProgressDisplay {

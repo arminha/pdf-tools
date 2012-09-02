@@ -16,6 +16,7 @@ import javax.swing.UIManager;
 import com.aha.pdftools.FileUtils;
 import com.aha.pdftools.Messages;
 import com.aha.pdftools.PdfPermissionManager;
+import com.aha.pdftools.ProgressDisplay;
 import com.aha.pdftools.model.PdfFileTableModel;
 import com.aha.pdftools.model.PdfFile;
 import com.jgoodies.binding.list.SelectionInList;
@@ -61,6 +62,7 @@ public class PermissionManager {
 	private final Action saveAction = new SaveAction();
 	private final Action deleteAction = new DeleteAction();
 	private final Action allPermissionsAction = new AllPermissionsAction();
+	private final Action mergeAction = new MergeAction();
 	private StatusPanel statusPanel;
 
 	/**
@@ -132,6 +134,7 @@ public class PermissionManager {
 		mntmSaveAll.setMnemonic(KeyEvent.VK_A);
 		mntmSaveAll.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK));
 		mntmSaveAll.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				saveAll();
 			}
@@ -142,10 +145,16 @@ public class PermissionManager {
 		mntmQuit.setMnemonic(KeyEvent.VK_Q);
 		mntmQuit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.CTRL_MASK));
 		mntmQuit.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				System.exit(0);
 			}
 		});
+
+		JMenuItem mntmMergeFiles = new JMenuItem(mergeAction);
+		mntmMergeFiles.setText(Messages.getString("PermissionManager.CombineFiles")); //$NON-NLS-1$
+		mntmMergeFiles.setMnemonic(KeyEvent.VK_C);
+		mnFile.add(mntmMergeFiles);
 
 		JSeparator separator = new JSeparator();
 		mnFile.add(separator);
@@ -178,6 +187,7 @@ public class PermissionManager {
 		mntmClearList.setMnemonic(KeyEvent.VK_C);
 		mntmClearList.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, InputEvent.SHIFT_MASK));
 		mntmClearList.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				clearFiles();
 			}
@@ -218,6 +228,9 @@ public class PermissionManager {
 
 		JButton btnSave = new JButton(saveAction);
 		toolBar.add(btnSave);
+
+		JButton btnMerge = new JButton(mergeAction);
+		toolBar.add(btnMerge);
 
 		JButton btnDelete = new JButton(deleteAction);
 		toolBar.add(btnDelete);
@@ -268,6 +281,15 @@ public class PermissionManager {
 
 	private void saveAll() {
 		save(openFiles.getList());
+	}
+
+	private void mergeSelected() {
+		File file = chooseSaveFile(null, true);
+		List<File> sourceFiles = new ArrayList<File>();
+		for (int row : table.getSelectedRows()) {
+			sourceFiles.add(openFiles.getList().get(row).getSourceFile());
+		}
+		new MergeFilesTask(file, sourceFiles, statusPanel).execute();
 	}
 
 	private void save(List<PdfFile> files) {
@@ -432,6 +454,7 @@ public class PermissionManager {
 		}
 
 		protected Void doInBackground() throws Exception {
+			// TODO handle exceptions
 			synchronized (progress) {
 				progress.startTask(Messages.getString("PermissionManager.Saving"), files.size(), true); //$NON-NLS-1$
 				int i = 0;
@@ -446,6 +469,28 @@ public class PermissionManager {
 					progress.setProgress(++i);
 				}
 				progress.endTask();
+			}
+			return null;
+		}
+	}
+
+	private class MergeFilesTask extends SwingWorker<Void, Void> {
+		private final File outputFile;
+		private final List<File> sourceFiles;
+		private final ProgressDisplay progress;
+
+		public MergeFilesTask(File outputFile, List<File> sourceFiles,
+				ProgressDisplay progress) {
+			this.outputFile = outputFile;
+			this.sourceFiles = sourceFiles;
+			this.progress = progress;
+		}
+
+		@Override
+		protected Void doInBackground() throws Exception {
+			// TODO handle exceptions
+			synchronized (progress) {
+				PdfPermissionManager.merge(outputFile, sourceFiles, progress);
 			}
 			return null;
 		}
@@ -515,8 +560,22 @@ public class PermissionManager {
 		}
 
 		@Override
-		public void actionPerformed(ActionEvent arg0) {
+		public void actionPerformed(ActionEvent e) {
 			setAllPermissions();
+		}
+	}
+
+	@SuppressWarnings("serial")
+	private class MergeAction extends AbstractAction {
+		public MergeAction() {
+			putValue(LARGE_ICON_KEY, new ImageIcon(PermissionManager.class.getResource("/com/aha/pdftools/icons/stock_save-pdf.png")));
+			putValue(SHORT_DESCRIPTION, Messages.getString("PermissionManager.CombineFilesDesc")); //$NON-NLS-1$
+			putValue(NAME, Messages.getString("PermissionManager.Combine")); //$NON-NLS-1$
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			mergeSelected();
 		}
 	}
 }

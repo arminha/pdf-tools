@@ -1,17 +1,22 @@
 package com.aha.pdftools;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
+import java.util.List;
 
 import org.bouncycastle.crypto.digests.MD5Digest;
 import org.bouncycastle.util.encoders.Base64;
 
 import com.aha.pdftools.model.PdfPermissions;
+import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.pdf.PdfCopy;
 import com.itextpdf.text.pdf.PdfEncryption;
+import com.itextpdf.text.pdf.PdfImportedPage;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
 
@@ -63,6 +68,53 @@ public class PdfPermissionManager {
 		changePermissions(reader, fout, permissions, password);
 		if (createTempFile) {
 			FileUtils.moveFile(outputFile, output);
+		}
+	}
+
+	public static void merge(File output, List<File> inputFiles, ProgressDisplay progress) throws IOException, DocumentException {
+		progress.startTask("Merge", inputFiles.size(), false);
+		FileOutputStream outputStream = null;
+		PdfCopy copy = null;
+		try {
+			Document document = new Document();
+			outputStream = new FileOutputStream(output);
+			copy = new PdfCopy(document, outputStream);
+			document.open();
+
+			int n = 0;
+			for (File file : inputFiles) {
+				progress.setNote(file.getName());
+				FileInputStream inputStream = null;
+				PdfReader reader = null;
+				try {
+					inputStream = new FileInputStream(file);
+					reader = new PdfReader(inputStream);
+					for (int i = 1; i <= reader.getNumberOfPages(); i++) {
+						document.newPage();
+						// import the page from source pdf
+						PdfImportedPage page = copy.getImportedPage(reader, i);
+						copy.addPage(page);
+					}
+				} finally {
+					if (reader != null) {
+						reader.close();
+					}
+					if (inputStream != null) {
+						inputStream.close();
+					}
+					progress.setProgress(++n);
+				}
+			}
+			outputStream.flush();
+			document.close();
+		} finally {
+			if (copy != null) {
+				copy.close();
+			}
+			if (outputStream != null) {
+				outputStream.close();
+			}
+			progress.endTask();
 		}
 	}
 

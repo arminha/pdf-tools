@@ -1,4 +1,4 @@
-package com.aha.pdftools.gui;
+package com.aha.pdftools;
 
 public interface ProgressDisplay {
 	void startTask(String message, int max, boolean cancelable);
