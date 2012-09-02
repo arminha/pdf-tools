@@ -22,8 +22,8 @@ import com.itextpdf.text.pdf.PdfStamper;
 
 public class PdfPermissionManager {
 
-	public static final String PDF_EXTENSION = ".pdf";
-	public static final String PASSWORD = "changeit";
+	public static final String PDF_EXTENSION = ".pdf"; //$NON-NLS-1$
+	public static final String PASSWORD = "changeit"; //$NON-NLS-1$
 
 	private PdfPermissionManager() {
 	}
@@ -45,7 +45,7 @@ public class PdfPermissionManager {
 					throws DocumentException, IOException {
 		try {
 			Class<? extends PdfReader> readerClass = reader.getClass();
-			Field pwField = readerClass.getDeclaredField("ownerPasswordUsed");
+			Field pwField = readerClass.getDeclaredField("ownerPasswordUsed"); //$NON-NLS-1$
 			pwField.setAccessible(true);
 			pwField.set(reader, new Boolean(true));
 		} catch (Exception e) {
@@ -72,7 +72,7 @@ public class PdfPermissionManager {
 	}
 
 	public static void merge(File output, List<File> inputFiles, ProgressDisplay progress) throws IOException, DocumentException {
-		progress.startTask("Combine", inputFiles.size(), true);
+		progress.startTask(Messages.getString("PdfPermissionManager.Combine"), inputFiles.size(), true); //$NON-NLS-1$
 		FileOutputStream outputStream = null;
 		PdfCopy copy = null;
 		try {

@@ -195,7 +195,7 @@ public class PermissionManager {
 		mnEdit.add(mntmClearList);
 
 		JMenuItem mntmAllPermissions = new JMenuItem(allPermissionsAction);
-		mntmAllPermissions.setText("Set All Permissions");
+		mntmAllPermissions.setText(Messages.getString("PermissionManager.SetAllPermissions")); //$NON-NLS-1$
 		mntmAllPermissions.setMnemonic(KeyEvent.VK_P);
 		mnEdit.add(mntmAllPermissions);
 
@@ -262,7 +262,7 @@ public class PermissionManager {
 
 	private void openFolder() {
 		JFileChooser chooser = getFileChooser();
-		chooser.setDialogTitle("Choose folder");
+		chooser.setDialogTitle(Messages.getString("PermissionManager.ChooseFolder")); //$NON-NLS-1$
 		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		int returnVal = chooser.showOpenDialog(frame);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -318,7 +318,7 @@ public class PermissionManager {
 				saveUnits.add(new SaveUnit(files.get(0), f));
 			}
 		} else if (files.size() > 1) {
-			File f = chooseSaveFile("file name will be ignored", false);
+			File f = chooseSaveFile(Messages.getString("PermissionManager.FileNameWillBeIgnored"), false); //$NON-NLS-1$
 			if (f != null) {
 				File targetDirectory = f.getParentFile();
 				List<File> overwrittenFiles = new ArrayList<File>();
@@ -331,7 +331,7 @@ public class PermissionManager {
 					saveUnits.add(new SaveUnit(pdfFile, target));
 				}
 				if (!overwrittenFiles.isEmpty()) {
-					String format = "{0} file(s) in {1} will be overwritten.\nWould you like to continue?";
+					String format = Messages.getString("PermissionManager.AskOverwriteFiles"); //$NON-NLS-1$
 					String msg = MessageFormat.format(format, overwrittenFiles.size(), targetDirectory.getAbsolutePath());
 					int result = JOptionPane.showConfirmDialog(
 							frame,
@@ -412,7 +412,7 @@ public class PermissionManager {
 
 	private void showErrorMessage(Throwable throwable) {
 		String message = throwable.getMessage();
-		JOptionPane.showMessageDialog(frame, message, "Error", JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(frame, message, Messages.getString("PermissionManager.Error"), JOptionPane.ERROR_MESSAGE); //$NON-NLS-1$
 	}
 
 	private File chooseSaveFile(String initalName, boolean addExtension) {
@@ -617,7 +617,7 @@ public class PermissionManager {
 	private class AllPermissionsAction extends AbstractAction {
 		public AllPermissionsAction() {
 			putValue(LARGE_ICON_KEY, new ImageIcon(PermissionManager.class.getResource("/com/aha/pdftools/icons/stock_calc-accept.png"))); //$NON-NLS-1$
-			putValue(SHORT_DESCRIPTION, "Set all permissions on all files");
+			putValue(SHORT_DESCRIPTION, Messages.getString("PermissionManager.SetAllPermissionsDesc")); //$NON-NLS-1$
 		}
 
 		@Override
@@ -630,7 +630,7 @@ public class PermissionManager {
 	private class MergeAction extends AbstractAction {
 		public MergeAction() {
 			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_M, InputEvent.CTRL_MASK));
-			putValue(LARGE_ICON_KEY, new ImageIcon(PermissionManager.class.getResource("/com/aha/pdftools/icons/stock_save-pdf.png")));
+			putValue(LARGE_ICON_KEY, new ImageIcon(PermissionManager.class.getResource("/com/aha/pdftools/icons/stock_save-pdf.png"))); //$NON-NLS-1$
 			putValue(SHORT_DESCRIPTION, Messages.getString("PermissionManager.CombineFilesDesc")); //$NON-NLS-1$
 			putValue(NAME, Messages.getString("PermissionManager.Combine")); //$NON-NLS-1$
 		}
