@@ -72,7 +72,7 @@ public class PdfPermissionManager {
 	}
 
 	public static void merge(File output, List<File> inputFiles, ProgressDisplay progress) throws IOException, DocumentException {
-		progress.startTask("Merge", inputFiles.size(), false);
+		progress.startTask("Combine", inputFiles.size(), true);
 		FileOutputStream outputStream = null;
 		PdfCopy copy = null;
 		try {
@@ -83,6 +83,9 @@ public class PdfPermissionManager {
 
 			int n = 0;
 			for (File file : inputFiles) {
+				if (progress.isCanceled()) {
+					break;
+				}
 				progress.setNote(file.getName());
 				FileInputStream inputStream = null;
 				PdfReader reader = null;
@@ -90,6 +93,9 @@ public class PdfPermissionManager {
 					inputStream = new FileInputStream(file);
 					reader = new PdfReader(inputStream);
 					for (int i = 1; i <= reader.getNumberOfPages(); i++) {
+						if (progress.isCanceled()) {
+							break;
+						}
 						document.newPage();
 						// import the page from source pdf
 						PdfImportedPage page = copy.getImportedPage(reader, i);
