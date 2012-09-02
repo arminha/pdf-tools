@@ -426,15 +426,18 @@ public class PermissionManager {
 			synchronized (progress) {
 				progress.startTask(Messages.getString("PermissionManager.Loading"), files.size(), true); //$NON-NLS-1$
 				int i = 0;
-				for (File file : files) {
-					if (progress.isCanceled()) {
-						break;
+				try {
+					for (File file : files) {
+						if (progress.isCanceled()) {
+							break;
+						}
+						progress.setNote(file.getName());
+						insertFile(file);
+						progress.setProgress(++i);
 					}
-					progress.setNote(file.getName());
-					insertFile(file);
-					progress.setProgress(++i);
+				} finally {
+					progress.endTask();
 				}
-				progress.endTask();
 			}
 			return null;
 		}
@@ -464,17 +467,20 @@ public class PermissionManager {
 			synchronized (progress) {
 				progress.startTask(Messages.getString("PermissionManager.Saving"), files.size(), true); //$NON-NLS-1$
 				int i = 0;
-				for (SaveUnit unit : files) {
-					if (progress.isCanceled()) {
-						break;
+				try {
+					for (SaveUnit unit : files) {
+						if (progress.isCanceled()) {
+							break;
+						}
+						progress.setNote(unit.pdfFile.getName());
+						File source = unit.pdfFile.getSourceFile();
+						File target = unit.target;
+						PdfPermissionManager.processFile(source, target, unit.pdfFile, PdfPermissionManager.PASSWORD);
+						progress.setProgress(++i);
 					}
-					progress.setNote(unit.pdfFile.getName());
-					File source = unit.pdfFile.getSourceFile();
-					File target = unit.target;
-					PdfPermissionManager.processFile(source, target, unit.pdfFile, PdfPermissionManager.PASSWORD);
-					progress.setProgress(++i);
+				} finally {
+					progress.endTask();
 				}
-				progress.endTask();
 			}
 			return null;
 		}
