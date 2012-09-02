@@ -9,7 +9,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 import org.bouncycastle.crypto.digests.MD5Digest;
-import org.bouncycastle.util.encoders.Base64;
+import org.bouncycastle.util.encoders.Hex;
 
 import com.aha.pdftools.model.PdfPermissions;
 import com.itextpdf.text.Document;
@@ -134,7 +134,7 @@ public class PdfPermissionManager {
 		byte[] input = name.getBytes();
 		digest.update(input, 0, input.length);
 		digest.doFinal(output, 0);
-		return new String(Base64.encode(output));
+		return new String(Hex.encode(output));
 	}
 
 	public static void main(String[] args) {
