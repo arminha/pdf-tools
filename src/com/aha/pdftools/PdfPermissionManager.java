@@ -43,6 +43,15 @@ public class PdfPermissionManager {
 	private static void changePermissions(PdfReader reader, OutputStream os,
 			PdfPermissions permissions, String password)
 					throws DocumentException, IOException {
+		unlockReader(reader);
+		PdfStamper stp = new PdfStamper(reader, os, '\0');
+		int perms = permissions.getPermissions();
+		stp.setEncryption(null, password.getBytes(), perms,
+				PdfEncryption.STANDARD_ENCRYPTION_40);
+		stp.close();
+	}
+
+	private static void unlockReader(PdfReader reader) {
 		try {
 			Class<? extends PdfReader> readerClass = reader.getClass();
 			Field pwField = readerClass.getDeclaredField("ownerPasswordUsed"); //$NON-NLS-1$
@@ -51,12 +60,6 @@ public class PdfPermissionManager {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
-
-		PdfStamper stp = new PdfStamper(reader, os, '\0');
-		int perms = permissions.getPermissions();
-		stp.setEncryption(null, password.getBytes(), perms,
-				PdfEncryption.STANDARD_ENCRYPTION_40);
-		stp.close();
 	}
 
 	public static void processFile(File inputFile, File output, PdfPermissions permissions, String password)
@@ -75,6 +78,7 @@ public class PdfPermissionManager {
 		progress.startTask(Messages.getString("PdfPermissionManager.Combine"), inputFiles.size(), true); //$NON-NLS-1$
 		FileOutputStream outputStream = null;
 		PdfCopy copy = null;
+		int pageCount = 0;
 		try {
 			Document document = new Document();
 			outputStream = new FileOutputStream(output);
@@ -92,11 +96,13 @@ public class PdfPermissionManager {
 				try {
 					inputStream = new FileInputStream(file);
 					reader = new PdfReader(inputStream);
+					unlockReader(reader); 
 					for (int i = 1; i <= reader.getNumberOfPages(); i++) {
 						if (progress.isCanceled()) {
 							break;
 						}
 						document.newPage();
+						pageCount++;
 						// import the page from source pdf
 						PdfImportedPage page = copy.getImportedPage(reader, i);
 						copy.addPage(page);
@@ -114,7 +120,8 @@ public class PdfPermissionManager {
 			outputStream.flush();
 			document.close();
 		} finally {
-			if (copy != null) {
+			// check if any page was written.
+			if (copy != null && pageCount > 0) {
 				copy.close();
 			}
 			if (outputStream != null) {
