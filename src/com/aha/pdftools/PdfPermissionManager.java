@@ -96,7 +96,7 @@ public class PdfPermissionManager {
 				try {
 					inputStream = new FileInputStream(file);
 					reader = new PdfReader(inputStream);
-					unlockReader(reader); 
+					unlockReader(reader);
 					for (int i = 1; i <= reader.getNumberOfPages(); i++) {
 						if (progress.isCanceled()) {
 							break;
@@ -143,17 +143,4 @@ public class PdfPermissionManager {
 		digest.doFinal(output, 0);
 		return new String(Hex.encode(output));
 	}
-
-	public static void main(String[] args) {
-		try {
-			File input = new File(args[0]);
-			File output = new File(args[1]);
-			processFile(input, output, new PdfPermissions(), PASSWORD);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (DocumentException e) {
-			e.printStackTrace();
-		}
-	}
-
 }
