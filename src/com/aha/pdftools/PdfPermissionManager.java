@@ -11,6 +11,7 @@ import java.util.List;
 import org.bouncycastle.crypto.digests.MD5Digest;
 import org.bouncycastle.util.encoders.Hex;
 
+import com.aha.pdftools.model.PdfPages;
 import com.aha.pdftools.model.PdfPermissions;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -120,6 +121,7 @@ public class PdfPermissionManager {
 			outputStream.flush();
 			document.close();
 		} finally {
+			progress.endTask();
 			// check if any page was written.
 			if (copy != null && pageCount > 0) {
 				copy.close();
@@ -127,7 +129,67 @@ public class PdfPermissionManager {
 			if (outputStream != null) {
 				outputStream.close();
 			}
+		}
+	}
+
+	public static void mergePages(File output, List<PdfPages> pages, ProgressDisplay progress) throws IOException, DocumentException {
+		int totalPageCount = 0;
+		for (PdfPages pdfPages : pages) {
+			totalPageCount += pdfPages.getPageCount();
+		}
+
+		progress.startTask(Messages.getString("PdfPermissionManager.Combine"), totalPageCount, true); //$NON-NLS-1$
+		FileOutputStream outputStream = null;
+		PdfCopy copy = null;
+		int pageCount = 0;
+		try {
+			Document document = new Document();
+			outputStream = new FileOutputStream(output);
+			copy = new PdfCopy(document, outputStream);
+			document.open();
+			for (PdfPages pdfPages : pages) {
+				if (progress.isCanceled()) {
+					break;
+				}
+				progress.setNote(pdfPages.getName());
+				FileInputStream inputStream = null;
+				PdfReader reader = null;
+				try {
+					inputStream = new FileInputStream(pdfPages.getSourceFile());
+					reader = new PdfReader(inputStream);
+					unlockReader(reader);
+					int[] pageIndices = pdfPages.getPages();
+					for (int i = 0; i < pageIndices.length; i++) {
+						if (progress.isCanceled()) {
+							break;
+						}
+						document.newPage();
+						pageCount++;
+						// import the page from source pdf
+						PdfImportedPage page = copy.getImportedPage(reader, pageIndices[i]);
+						copy.addPage(page);
+						progress.setProgress(pageCount);
+					}
+				} finally {
+					if (reader != null) {
+						reader.close();
+					}
+					if (inputStream != null) {
+						inputStream.close();
+					}
+				}
+			}
+			outputStream.flush();
+			document.close();
+		} finally {
 			progress.endTask();
+			// check if any page was written.
+			if (copy != null && pageCount > 0) {
+				copy.close();
+			}
+			if (outputStream != null) {
+				outputStream.close();
+			}
 		}
 	}
 
