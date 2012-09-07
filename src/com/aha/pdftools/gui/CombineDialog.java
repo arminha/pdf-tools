@@ -3,6 +3,7 @@ package com.aha.pdftools.gui;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.FlowLayout;
+import java.awt.Frame;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -38,8 +39,10 @@ public class CombineDialog extends JDialog {
 
 	/**
 	 * Create the dialog.
+	 * @param frame 
 	 */
-	public CombineDialog(FileSelection fileSelection, ProgressDisplay progress) {
+	public CombineDialog(Frame frame, FileSelection fileSelection, ProgressDisplay progress) {
+		super(frame, true);
 		this.fileSelection = fileSelection;
 		this.progress = progress;
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);

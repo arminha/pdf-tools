@@ -486,7 +486,7 @@ public class PermissionManager implements FileSelection {
 			files.add(openFiles.getElementAt(selectedRows[i]));
 		}
 		if (!files.isEmpty()) {
-			CombineDialog dialog = new CombineDialog(this, statusPanel);
+			CombineDialog dialog = new CombineDialog(frame, this, statusPanel);
 			dialog.show(files);
 		}
 	}
