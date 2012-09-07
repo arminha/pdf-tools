@@ -33,4 +33,15 @@ public class PdfFile extends PdfPermissions {
 		setPrinting(allow);
 		setScreenReaders(allow);
 	}
+
+	public boolean isAllowAll() {
+		return isAssembly()
+				&& isCopy()
+				&& isDegradedPrinting()
+				&& isFillIn()
+				&& isModifyAnnotations()
+				&& isModifyContents()
+				&& isPrinting()
+				&& isScreenReaders();
+	}
 }

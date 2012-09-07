@@ -394,8 +394,16 @@ public class PermissionManager {
 	}
 
 	private void setAllPermissions() {
+		boolean allowAll = true;
 		for (PdfFile pdfFile : openFiles.getList()) {
-			pdfFile.setAllowAll(true);
+			if (!allowAll) {
+				break;
+			}
+			allowAll = allowAll && pdfFile.isAllowAll();
+		}
+
+		for (PdfFile pdfFile : openFiles.getList()) {
+			pdfFile.setAllowAll(!allowAll);
 		}
 		// update table
 		((PdfFileTableModel)table.getModel()).fireTableDataChanged();
