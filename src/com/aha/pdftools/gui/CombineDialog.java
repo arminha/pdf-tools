@@ -170,6 +170,9 @@ public class CombineDialog extends JDialog {
 	}
 
 	private void save() {
+		if (table.getCellEditor() != null) {
+			table.getCellEditor().stopCellEditing();
+		}
 		setVisible(false);
 		File file = fileSelection.chooseSaveFile(null, true);
 		if (file != null && fileSelection.checkOverwriteFile(file)) {
