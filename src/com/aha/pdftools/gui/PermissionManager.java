@@ -321,13 +321,15 @@ public class PermissionManager implements FileSelection {
 	}
 
 	private void mergeSelected() {
-		File file = chooseSaveFile(null, true);
-		if (file != null && checkOverwriteFile(file)) {
-			List<File> sourceFiles = new ArrayList<File>();
-			for (int row : table.getSelectedRows()) {
-				sourceFiles.add(openFiles.getList().get(row).getSourceFile());
+		List<File> sourceFiles = new ArrayList<File>();
+		for (int row : table.getSelectedRows()) {
+			sourceFiles.add(openFiles.getList().get(row).getSourceFile());
+		}
+		if (!sourceFiles.isEmpty()) {
+			File file = chooseSaveFile(null, true);
+			if (file != null && checkOverwriteFile(file)) {
+				new MergeFilesTask(file, sourceFiles, statusPanel).execute();
 			}
-			new MergeFilesTask(file, sourceFiles, statusPanel).execute();
 		}
 	}
 
