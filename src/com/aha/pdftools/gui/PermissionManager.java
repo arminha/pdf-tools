@@ -11,7 +11,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
-import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 
 import com.aha.pdftools.FileUtils;
@@ -35,7 +34,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -449,11 +447,6 @@ public class PermissionManager {
 		return chooser;
 	}
 
-	private void showErrorMessage(Throwable throwable) {
-		String message = throwable.getMessage();
-		JOptionPane.showMessageDialog(frame, message, Messages.getString("PermissionManager.Error"), JOptionPane.ERROR_MESSAGE); //$NON-NLS-1$
-	}
-
 	private File chooseSaveFile(String initalName, boolean addExtension) {
 		JFileChooser chooser = getFileChooser();
 		chooser.setFileFilter(new PdfFileFilter());
@@ -476,11 +469,12 @@ public class PermissionManager {
 		return null;
 	}
 
-	private class OpenFileTask extends SwingWorker<Void, Void> {
+	private class OpenFileTask extends ReportingWorker<Void, Void> {
 		private final List<File> files;
 		private final ProgressDisplay progress;
 
 		public OpenFileTask(List<File> files, ProgressDisplay progress) {
+			super(frame);
 			this.files = files;
 			this.progress = progress;
 		}
@@ -517,11 +511,12 @@ public class PermissionManager {
 		}
 	}
 
-	private class SaveFileTask extends SwingWorker<Void, Void> {
+	private class SaveFileTask extends ReportingWorker<Void, Void> {
 		private final List<SaveUnit> files;
 		private final ProgressDisplay progress;
 
 		public SaveFileTask(List<SaveUnit> files, ProgressDisplay progress) {
+			super(frame);
 			this.files = files;
 			this.progress = progress;
 		}
@@ -547,28 +542,16 @@ public class PermissionManager {
 			}
 			return null;
 		}
-
-		@Override
-		protected void done() {
-			try {
-				get();
-			} catch (InterruptedException e) {
-				Logger.getLogger(getClass().getName()).log(Level.WARNING, null, e);
-			} catch (ExecutionException e) {
-				Throwable cause = e.getCause();
-				Logger.getLogger(getClass().getName()).log(Level.WARNING, null, cause);
-				showErrorMessage(cause);
-			}
-		}
 	}
 
-	private class MergeFilesTask extends SwingWorker<Void, Void> {
+	private class MergeFilesTask extends ReportingWorker<Void, Void> {
 		private final File outputFile;
 		private final List<File> sourceFiles;
 		private final ProgressDisplay progress;
 
 		public MergeFilesTask(File outputFile, List<File> sourceFiles,
 				ProgressDisplay progress) {
+			super(frame);
 			this.outputFile = outputFile;
 			this.sourceFiles = sourceFiles;
 			this.progress = progress;
@@ -580,19 +563,6 @@ public class PermissionManager {
 				PdfPermissionManager.merge(outputFile, sourceFiles, progress);
 			}
 			return null;
-		}
-
-		@Override
-		protected void done() {
-			try {
-				get();
-			} catch (InterruptedException e) {
-				Logger.getLogger(getClass().getName()).log(Level.WARNING, null, e);
-			} catch (ExecutionException e) {
-				Throwable cause = e.getCause();
-				Logger.getLogger(getClass().getName()).log(Level.WARNING, null, cause);
-				showErrorMessage(cause);
-			}
 		}
 	}
 
