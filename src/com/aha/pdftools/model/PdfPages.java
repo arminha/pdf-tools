@@ -5,9 +5,16 @@ import java.io.File;
 public class PdfPages extends AbstractModelObject {
 
 	private final File mSourceFile;
+	private final int mSourcePageCount;
+	private int[] mPages;
 
-	public PdfPages(File sourceFile) {
+	public PdfPages(File sourceFile, int sourcePageCount) {
 		mSourceFile = sourceFile;
+		mSourcePageCount = sourcePageCount;
+		mPages = new int[sourcePageCount];
+		for (int i = 0; i < sourcePageCount; i++) {
+			mPages[i] = i + 1;
+		}
 	}
 
 	public String getSourcePath() {
@@ -23,13 +30,23 @@ public class PdfPages extends AbstractModelObject {
 	}
 
 	public int[] getPages() {
-		// TODO
-		return new int[] { 1 };
+		return mPages;
 	}
 
 	public int getPageCount() {
-		// TODO
-		return 1;
+		return mPages.length;
 	}
 
+	public int getSourcePageCount() {
+		return mSourcePageCount;
+	}
+
+	public String getPagesString() {
+		// TODO
+		return "";
+	}
+	
+	public void setPagesString(String pagesAsString) {
+		// TODO
+	}
 }
