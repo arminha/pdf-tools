@@ -51,7 +51,7 @@ import javax.swing.Action;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 
-public class PermissionManager {
+public class PermissionManager implements FileSelection {
 
 	// XXX table headers line wrap
 
@@ -323,7 +323,8 @@ public class PermissionManager {
 		}
 	}
 
-	private boolean checkOverwriteFile(File f) {
+	@Override
+	public boolean checkOverwriteFile(File f) {
 		if (f.exists()) {
 			// ask if the file should be overwritten
 			String msg = MessageFormat.format(Messages.getString("PermissionManager.AskOverwriteFile"), f.getAbsolutePath()); //$NON-NLS-1$
@@ -447,7 +448,8 @@ public class PermissionManager {
 		return chooser;
 	}
 
-	private File chooseSaveFile(String initalName, boolean addExtension) {
+	@Override
+	public File chooseSaveFile(String initalName, boolean addExtension) {
 		JFileChooser chooser = getFileChooser();
 		chooser.setFileFilter(new PdfFileFilter());
 		if (initalName != null) {
