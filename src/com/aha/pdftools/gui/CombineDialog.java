@@ -2,6 +2,7 @@ package com.aha.pdftools.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Desktop;
 import java.awt.FlowLayout;
 import java.awt.Frame;
 
@@ -23,9 +24,15 @@ import com.aha.pdftools.model.PdfPagesTableModel;
 import com.jgoodies.binding.list.SelectionInList;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.swing.ListSelectionModel;
 
 @SuppressWarnings("serial")
@@ -61,6 +68,19 @@ public class CombineDialog extends JDialog {
 				table.setModel(new PdfPagesTableModel(sourcePages));
 				table.getColumnModel().getColumn(0).setPreferredWidth(120);
 				table.getColumnModel().getColumn(1).setPreferredWidth(125);
+				table.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mousePressed(MouseEvent e) {
+						if (e.getClickCount() == 2) {
+							JTable target = (JTable)e.getSource();
+							int row = target.rowAtPoint(e.getPoint());
+							int column = target.columnAtPoint(e.getPoint());
+							if (row >= 0 && column == 0) {
+								openPdf(sourcePages.getElementAt(row));
+							}
+						}
+					}
+				});
 				scrollPane.setViewportView(table);
 			}
 		}
@@ -126,7 +146,7 @@ public class CombineDialog extends JDialog {
 			table.getSelectionModel().setSelectionInterval(selectionIdx + 1, selectionIdx + 1);
 		}
 	}
-	
+
 	public void show(List<PdfFile> files) {
 		ArrayList<PdfPages> pages = new ArrayList<PdfPages>(files.size());
 		for (PdfFile pdfFile : files) {
@@ -156,7 +176,15 @@ public class CombineDialog extends JDialog {
 			new MergePagesTask(this.getParent(), file, sourcePages.getList(), progress).execute();
 		}
 	}
-	
+
+	private void openPdf(PdfPages pdfPages) {
+		try {
+			Desktop.getDesktop().open(pdfPages.getSourceFile());
+		} catch (IOException e) {
+			Logger.getLogger(CombineDialog.class.getName()).log(Level.WARNING, "Failed to open Pdf file", e); //$NON-NLS-1$
+		}
+	}
+
 	private static class MergePagesTask extends ReportingWorker<Void, Void> {
 		private final File outputFile;
 		private final List<PdfPages> pages;
