@@ -156,6 +156,14 @@ public class PermissionManager implements FileSelection {
 		mntmMergeFiles.setText(Messages.getString("PermissionManager.CombineFiles")); //$NON-NLS-1$
 		mntmMergeFiles.setMnemonic(KeyEvent.VK_C);
 		mnFile.add(mntmMergeFiles);
+		
+		JMenuItem mntmMergePages = new JMenuItem(Messages.getString("PermissionManager.CombinePages")); //$NON-NLS-1$
+		mntmMergePages.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				mergePages();
+			}
+		});
+		mnFile.add(mntmMergePages);
 
 		JSeparator separator = new JSeparator();
 		mnFile.add(separator);
@@ -467,6 +475,18 @@ public class PermissionManager implements FileSelection {
 			return file;
 		}
 		return null;
+	}
+
+	private void mergePages() {
+		int[] selectedRows = table.getSelectedRows();
+		List<PdfFile> files = new ArrayList<PdfFile>();
+		for (int i = 0; i < selectedRows.length; i++) {
+			files.add(openFiles.getElementAt(selectedRows[i]));
+		}
+		if (!files.isEmpty()) {
+			CombineDialog dialog = new CombineDialog(this, statusPanel);
+			dialog.show(files);
+		}
 	}
 
 	private class OpenFileTask extends ReportingWorker<Void, Void> {
