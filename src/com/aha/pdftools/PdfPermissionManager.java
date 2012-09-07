@@ -29,15 +29,13 @@ public class PdfPermissionManager {
 	private PdfPermissionManager() {
 	}
 
-	public static int getPermissions(File inputFile) throws IOException {
-		PdfReader reader = new PdfReader(inputFile.getAbsolutePath());
+	public static int getPermissions(PdfReader reader) {
 		int permissions;
 		if (!reader.isEncrypted()) {
 			permissions = 0xFFFFFFFF;
 		} else {
 			permissions = reader.getPermissions();
 		}
-		reader.close();
 		return permissions;
 	}
 

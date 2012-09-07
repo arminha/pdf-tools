@@ -394,9 +394,7 @@ public class PermissionManager implements FileSelection {
 			if (openFileSet.contains(path)) {
 				return;
 			}
-			int perm = PdfPermissionManager.getPermissions(file);
-			PdfFile pdfFile = new PdfFile(file, perm);
-			openFiles.getList().add(pdfFile);
+			openFiles.getList().add(PdfFile.openFile(file));
 			openFileSet.add(path);
 		} catch (IOException e) {
 			Logger.getLogger(PermissionManager.class.getName()).log(Level.WARNING, null, e);

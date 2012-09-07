@@ -1,14 +1,28 @@
 package com.aha.pdftools.model;
 
 import java.io.File;
+import java.io.IOException;
+
+import com.aha.pdftools.PdfPermissionManager;
+import com.itextpdf.text.pdf.PdfReader;
 
 public class PdfFile extends PdfPermissions {
 
 	private final File mSourceFile;
+	private final int mPageCount;
 
-	public PdfFile(File sourceFile, int perm) {
+	public static final PdfFile openFile(File file) throws IOException {
+		PdfReader reader = new PdfReader(file.getAbsolutePath());
+		int perm = PdfPermissionManager.getPermissions(reader);
+		int pageCount = reader.getNumberOfPages();
+		reader.close();
+		return new PdfFile(file, perm, pageCount);
+	}
+
+	public PdfFile(File sourceFile, int perm, int pageCount) {
 		super(perm);
 		mSourceFile = sourceFile;
+		mPageCount = pageCount;
 	}
 
 	public String getSourcePath() {
@@ -21,6 +35,10 @@ public class PdfFile extends PdfPermissions {
 
 	public String getName() {
 		return mSourceFile.getName();
+	}
+
+	public int getPageCount() {
+		return mPageCount;
 	}
 
 	public void setAllowAll(boolean allow) {
