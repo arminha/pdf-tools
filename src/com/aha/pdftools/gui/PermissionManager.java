@@ -406,7 +406,7 @@ public class PermissionManager {
 			pdfFile.setAllowAll(!allowAll);
 		}
 		// update table
-		((PdfFileTableModel)table.getModel()).fireTableDataChanged();
+		((PdfFileTableModel)table.getModel()).firePermissionsUpdated();
 	}
 
 	private JFileChooser getFileChooser() {

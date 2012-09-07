@@ -7,6 +7,9 @@ import com.jgoodies.binding.list.SelectionInList;
 @SuppressWarnings("serial")
 public class PdfFileTableModel extends AbstractTableAdapter<PdfFile> {
 
+	private final int FIRST_PERMISSION_COLUMN = 2;
+	private final int LAST_PERMISSION_COLUMN = 9;
+
 	SelectionInList<PdfFile> listModel = new SelectionInList<PdfFile>();
 
 	public PdfFileTableModel(SelectionInList<PdfFile> listModel) {
@@ -89,7 +92,7 @@ public class PdfFileTableModel extends AbstractTableAdapter<PdfFile> {
 
 	@Override
 	public boolean isCellEditable(int rowIndex, int columnIndex) {
-		if (columnIndex >= 2 && columnIndex <= 9) {
+		if (columnIndex >= FIRST_PERMISSION_COLUMN && columnIndex <= LAST_PERMISSION_COLUMN) {
 			return true;
 		}
 		return super.isCellEditable(rowIndex, columnIndex);
@@ -97,11 +100,20 @@ public class PdfFileTableModel extends AbstractTableAdapter<PdfFile> {
 
 	@Override
 	public Class<?> getColumnClass(int columnIndex) {
-		if (columnIndex == 0) {
+		if (columnIndex < FIRST_PERMISSION_COLUMN) {
 			return String.class;
-		} else if (columnIndex >= 2 && columnIndex <= 9) {
+		} else if (columnIndex >= FIRST_PERMISSION_COLUMN && columnIndex <= LAST_PERMISSION_COLUMN) {
 			return Boolean.class;
 		}
 		return super.getColumnClass(columnIndex);
+	}
+
+	public void firePermissionsUpdated() {
+		int n = getRowCount();
+		for (int row = 0; row < n; row++) {
+			for (int column = FIRST_PERMISSION_COLUMN; column <= LAST_PERMISSION_COLUMN; column++) {
+				fireTableCellUpdated(row, column);
+			}
+		}
 	}
 }
