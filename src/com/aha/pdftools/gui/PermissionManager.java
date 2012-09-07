@@ -406,6 +406,9 @@ public class PermissionManager implements FileSelection {
 			}
 			openFiles.getList().add(PdfFile.openFile(file));
 			openFileSet.add(path);
+			// add file to selection
+			int index = openFiles.getSize() - 1;
+			table.getSelectionModel().addSelectionInterval(index, index);
 		} catch (IOException e) {
 			Logger.getLogger(PermissionManager.class.getName()).log(Level.WARNING, null, e);
 		}
