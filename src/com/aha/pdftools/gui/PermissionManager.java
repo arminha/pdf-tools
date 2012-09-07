@@ -2,6 +2,7 @@ package com.aha.pdftools.gui;
 
 import java.awt.Desktop;
 import java.awt.EventQueue;
+import java.awt.Rectangle;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -49,6 +50,8 @@ import javax.swing.JButton;
 import javax.swing.ImageIcon;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumnModel;
 
 public class PermissionManager {
 
@@ -213,6 +216,34 @@ public class PermissionManager {
 					if (row >= 0 && column >= 0 && column <= 1) {
 						openPdf(openFiles.getElementAt(row));
 					}
+				}
+			}
+		});
+		table.getTableHeader().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				JTable table = ((JTableHeader)e.getSource()).getTable();
+				TableColumnModel colModel = table.getColumnModel();
+
+				// The index of the column whose header was clicked
+				int vColIndex = colModel.getColumnIndexAtX(e.getX());
+
+				// Return if not clicked on any column header
+				if (vColIndex == -1) {
+					return;
+				}
+
+				// Determine if mouse was clicked between column heads
+				Rectangle headerRect = table.getTableHeader().getHeaderRect(vColIndex);
+				if (vColIndex == 0) {
+					headerRect.width -= 3;    // Hard-coded constant
+				} else {
+					headerRect.grow(-3, 0);   // Hard-coded constant
+				}
+				if (headerRect.contains(e.getX(), e.getY())) {
+					// toggle column values
+					int mColIndex = table.convertColumnIndexToModel(vColIndex);
+					((PdfFileTableModel)table.getModel()).toggleColumn(mColIndex);
 				}
 			}
 		});

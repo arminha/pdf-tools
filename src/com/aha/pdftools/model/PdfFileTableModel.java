@@ -108,6 +108,29 @@ public class PdfFileTableModel extends AbstractTableAdapter<PdfFile> {
 		return super.getColumnClass(columnIndex);
 	}
 
+	/**
+	 * 
+	 * @param columnIndex Index of the column
+	 * @return The new value of the column
+	 */
+	public void toggleColumn(int columnIndex) {
+		if (getColumnClass(columnIndex) != Boolean.class) {
+			return;
+		}
+
+		int n = getRowCount();
+		boolean value = true;
+		for (int i = 0; i < n; i++) {
+			if (!value) {
+				break;
+			}
+			value = value && (Boolean)getValueAt(i, columnIndex);
+		}
+		for (int i = 0; i < n; i++) {
+			setValueAt(!value, i, columnIndex);
+		}
+	}
+
 	public void firePermissionsUpdated() {
 		int n = getRowCount();
 		for (int row = 0; row < n; row++) {
