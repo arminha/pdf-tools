@@ -65,6 +65,7 @@ public class PermissionManager implements FileSelection {
 	private final Action deleteAction = new DeleteAction();
 	private final Action allPermissionsAction = new AllPermissionsAction();
 	private final Action mergeAction = new MergeAction();
+	private final Action mergePagesAction = new MergePagesAction();
 	private StatusPanel statusPanel;
 	private JFileChooser fileChooser;
 
@@ -156,13 +157,10 @@ public class PermissionManager implements FileSelection {
 		mntmMergeFiles.setText(Messages.getString("PermissionManager.CombineFiles")); //$NON-NLS-1$
 		mntmMergeFiles.setMnemonic(KeyEvent.VK_C);
 		mnFile.add(mntmMergeFiles);
-		
-		JMenuItem mntmMergePages = new JMenuItem(Messages.getString("PermissionManager.CombinePages")); //$NON-NLS-1$
-		mntmMergePages.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				mergePages();
-			}
-		});
+
+		JMenuItem mntmMergePages = new JMenuItem(mergePagesAction);
+		mntmMergePages.setMnemonic(KeyEvent.VK_P);
+		mntmMergePages.setText(Messages.getString("PermissionManager.CombinePages")); //$NON-NLS-1$
 		mnFile.add(mntmMergePages);
 
 		JSeparator separator = new JSeparator();
@@ -672,6 +670,19 @@ public class PermissionManager implements FileSelection {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			mergeSelected();
+		}
+	}
+
+	@SuppressWarnings("serial")
+	private class MergePagesAction extends AbstractAction {
+		public MergePagesAction() {
+			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_M, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK));
+			putValue(SHORT_DESCRIPTION, Messages.getString("PermissionManager.CombinePagesDesc")); //$NON-NLS-1$
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			mergePages();
 		}
 	}
 }
