@@ -3,7 +3,6 @@ package com.aha.pdftools.gui;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Desktop;
-import java.awt.FlowLayout;
 import java.awt.Frame;
 
 import javax.swing.JButton;
@@ -34,6 +33,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.ListSelectionModel;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
 
 @SuppressWarnings("serial")
 public class CombineDialog extends JDialog {
@@ -66,8 +67,6 @@ public class CombineDialog extends JDialog {
 				table = new JTable();
 				table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 				table.setModel(new PdfPagesTableModel(sourcePages));
-				table.getColumnModel().getColumn(0).setPreferredWidth(120);
-				table.getColumnModel().getColumn(1).setPreferredWidth(125);
 				table.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mousePressed(MouseEvent e) {
@@ -110,27 +109,40 @@ public class CombineDialog extends JDialog {
 		}
 		{
 			JPanel buttonPane = new JPanel();
-			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
-			{
-				JButton saveButton = new JButton("Save");
-				saveButton.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						save();
-					}
-				});
-				buttonPane.add(saveButton);
-				getRootPane().setDefaultButton(saveButton);
-			}
-			{
-				JButton cancelButton = new JButton("Cancel");
-				cancelButton.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						setVisible(false);
-					}
-				});
-				buttonPane.add(cancelButton);
-			}
+			JButton saveButton = new JButton("Save");
+			saveButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					save();
+				}
+			});
+			getRootPane().setDefaultButton(saveButton);
+			JButton cancelButton = new JButton("Cancel");
+			cancelButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					setVisible(false);
+				}
+			});
+			GroupLayout gl_buttonPane = new GroupLayout(buttonPane);
+			int containerGap = 6;
+			gl_buttonPane.setAutoCreateGaps(true);
+			gl_buttonPane.linkSize(saveButton, cancelButton);
+			gl_buttonPane.setHorizontalGroup(
+					gl_buttonPane.createSequentialGroup()
+					.addGap(containerGap)
+					.addGap(0, 0, Short.MAX_VALUE)
+					.addComponent(saveButton)
+					.addComponent(cancelButton)
+					.addGap(containerGap)
+					);
+			gl_buttonPane.setVerticalGroup(
+					gl_buttonPane.createSequentialGroup()
+					.addGroup(gl_buttonPane.createParallelGroup(Alignment.LEADING)
+							.addComponent(saveButton)
+							.addComponent(cancelButton))
+							.addGap(containerGap)
+					);
+			buttonPane.setLayout(gl_buttonPane);
 		}
 	}
 
