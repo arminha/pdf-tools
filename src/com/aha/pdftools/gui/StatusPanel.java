@@ -34,7 +34,7 @@ public class StatusPanel extends JPanel implements ProgressDisplay {
 		progressBar = new JProgressBar();
 		progressBar.setEnabled(false);
 
-		btnCancel = new JButton(Messages.getString("StatusPanel.Cancel")); //$NON-NLS-1$
+		btnCancel = new JButton(Messages.getString("PermissionManager.Cancel")); //$NON-NLS-1$
 		btnCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				canceled = true;

@@ -15,6 +15,7 @@ import javax.swing.BoxLayout;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 
+import com.aha.pdftools.Messages;
 import com.aha.pdftools.PdfPermissionManager;
 import com.aha.pdftools.ProgressDisplay;
 import com.aha.pdftools.model.PdfFile;
@@ -54,7 +55,7 @@ public class CombineDialog extends JDialog {
 		this.fileSelection = fileSelection;
 		this.progress = progress;
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		setTitle("Combine");
+		setTitle(Messages.getString("PermissionManager.Combine")); //$NON-NLS-1$
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -93,7 +94,7 @@ public class CombineDialog extends JDialog {
 						moveUp();
 					}
 				});
-				upButton.setIcon(new ImageIcon(CombineDialog.class.getResource("/com/aha/pdftools/icons/go-up.png")));
+				upButton.setIcon(new ImageIcon(CombineDialog.class.getResource("/com/aha/pdftools/icons/go-up.png"))); //$NON-NLS-1$
 				verticalBox.add(upButton);
 			}
 			{
@@ -103,21 +104,21 @@ public class CombineDialog extends JDialog {
 						moveDown();
 					}
 				});
-				downButton.setIcon(new ImageIcon(CombineDialog.class.getResource("/com/aha/pdftools/icons/go-down.png")));
+				downButton.setIcon(new ImageIcon(CombineDialog.class.getResource("/com/aha/pdftools/icons/go-down.png"))); //$NON-NLS-1$
 				verticalBox.add(downButton);
 			}
 		}
 		{
 			JPanel buttonPane = new JPanel();
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
-			JButton saveButton = new JButton("Save");
+			JButton saveButton = new JButton(Messages.getString("PermissionManager.Save")); //$NON-NLS-1$
 			saveButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					save();
 				}
 			});
 			getRootPane().setDefaultButton(saveButton);
-			JButton cancelButton = new JButton("Cancel");
+			JButton cancelButton = new JButton(Messages.getString("PermissionManager.Cancel")); //$NON-NLS-1$
 			cancelButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					setVisible(false);
