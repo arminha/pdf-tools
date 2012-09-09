@@ -9,6 +9,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.DropMode;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.BoxLayout;
@@ -68,6 +69,9 @@ public class CombineDialog extends JDialog {
 				table = new JTable();
 				table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 				table.setModel(new PdfPagesTableModel(sourcePages));
+				table.setDragEnabled(true);
+				table.setDropMode(DropMode.INSERT_ROWS);
+				table.setTransferHandler(new TableRowTransferHandler(table));
 				table.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mousePressed(MouseEvent e) {

@@ -1,10 +1,12 @@
 package com.aha.pdftools.model;
 
+import java.util.List;
+
 import com.jgoodies.binding.adapter.AbstractTableAdapter;
 import com.jgoodies.binding.list.SelectionInList;
 
 @SuppressWarnings("serial")
-public class PdfPagesTableModel extends AbstractTableAdapter<PdfPages> {
+public class PdfPagesTableModel extends AbstractTableAdapter<PdfPages> implements Reorderable {
 
 	SelectionInList<PdfPages> listModel = new SelectionInList<PdfPages>();
 
@@ -53,5 +55,16 @@ public class PdfPagesTableModel extends AbstractTableAdapter<PdfPages> {
 			super.setValueAt(aValue, rowIndex, columnIndex);
 			break;
 		}
+	}
+
+	@Override
+	public void reorder(int fromIndex, int toIndex) {
+		PdfPages row = getRow(fromIndex);
+		List<PdfPages> list = listModel.getList();
+		if (toIndex > fromIndex) {
+			toIndex = toIndex - 1;
+		}
+		list.remove(fromIndex);
+		list.add(toIndex, row);
 	}
 }

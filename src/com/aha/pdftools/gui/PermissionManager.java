@@ -4,6 +4,7 @@ import java.awt.Desktop;
 import java.awt.EventQueue;
 import java.awt.Rectangle;
 
+import javax.swing.DropMode;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
@@ -210,6 +211,9 @@ public class PermissionManager implements FileSelection {
 		table = new JTable();
 		table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		table.setModel(new PdfFileTableModel(openFiles));
+		table.setDragEnabled(true);
+		table.setDropMode(DropMode.INSERT_ROWS);
+		table.setTransferHandler(new TableRowTransferHandler(table));
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {

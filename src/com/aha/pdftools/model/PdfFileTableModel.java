@@ -1,11 +1,13 @@
 package com.aha.pdftools.model;
 
+import java.util.List;
+
 import com.aha.pdftools.Messages;
 import com.jgoodies.binding.adapter.AbstractTableAdapter;
 import com.jgoodies.binding.list.SelectionInList;
 
 @SuppressWarnings("serial")
-public class PdfFileTableModel extends AbstractTableAdapter<PdfFile> {
+public class PdfFileTableModel extends AbstractTableAdapter<PdfFile> implements Reorderable {
 
 	private final int FIRST_PERMISSION_COLUMN = 2;
 	private final int LAST_PERMISSION_COLUMN = 9;
@@ -138,5 +140,16 @@ public class PdfFileTableModel extends AbstractTableAdapter<PdfFile> {
 				fireTableCellUpdated(row, column);
 			}
 		}
+	}
+
+	@Override
+	public void reorder(int fromIndex, int toIndex) {
+		PdfFile row = getRow(fromIndex);
+		List<PdfFile> list = listModel.getList();
+		if (toIndex > fromIndex) {
+			toIndex = toIndex - 1;
+		}
+		list.remove(fromIndex);
+		list.add(toIndex, row);
 	}
 }
