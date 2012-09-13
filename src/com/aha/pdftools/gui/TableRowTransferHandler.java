@@ -4,6 +4,8 @@ import java.awt.Cursor;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.dnd.DragSource;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.activation.ActivationDataFlavor;
 import javax.activation.DataHandler;
@@ -62,7 +64,7 @@ public class TableRowTransferHandler extends TransferHandler {
 				return true;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			Logger.getLogger(getClass().getName()).log(Level.WARNING, e.getMessage(), e);
 		}
 		return false;
 	}
