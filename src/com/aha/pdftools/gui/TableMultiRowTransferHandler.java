@@ -12,21 +12,18 @@ import javax.swing.JComponent;
 import javax.swing.JTable;
 import javax.swing.TransferHandler;
 
-import com.aha.pdftools.model.Reorderable;
+import com.aha.pdftools.model.MultiReorderable;
 
-/**
- * Handles drag & drop row reordering
- */
 @SuppressWarnings("serial")
-public class TableRowTransferHandler extends AbstractTableRowTransferHandler {
-	public TableRowTransferHandler(JTable table) {
-		super(table, new ActivationDataFlavor(Integer.class, DataFlavor.javaJVMLocalObjectMimeType, "Integer Row Index"));
+public class TableMultiRowTransferHandler extends AbstractTableRowTransferHandler {
+	public TableMultiRowTransferHandler(JTable table) {
+		super(table, new ActivationDataFlavor(int[].class, DataFlavor.javaJVMLocalObjectMimeType, "Integer Row Indices"));
 	}
 
 	@Override
 	protected Transferable createTransferable(JComponent c) {
 		assert (c == table);
-		return new DataHandler(new Integer(table.getSelectedRow()), localObjectFlavor.getMimeType());
+		return new DataHandler(table.getSelectedRows(), localObjectFlavor.getMimeType());
 	}
 
 	@Override
@@ -39,12 +36,10 @@ public class TableRowTransferHandler extends AbstractTableRowTransferHandler {
 			index = max;
 		target.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		try {
-			Integer rowFrom = (Integer) info.getTransferable().getTransferData(localObjectFlavor);
-			if (rowFrom != -1 && rowFrom != index) {
-				((Reorderable)table.getModel()).reorder(rowFrom, index);
-				if (index > rowFrom)
-					index--;
-				target.getSelectionModel().addSelectionInterval(index, index);
+			int[] rowsFrom = (int[]) info.getTransferable().getTransferData(localObjectFlavor);
+			if (rowsFrom.length > 0) {
+				index = ((MultiReorderable)table.getModel()).reorder(rowsFrom, index);
+				target.getSelectionModel().addSelectionInterval(index, index + rowsFrom.length - 1);
 				return true;
 			}
 		} catch (Exception e) {

@@ -213,7 +213,7 @@ public class PermissionManager implements FileSelection {
 		table.setModel(new PdfFileTableModel(openFiles));
 		table.setDragEnabled(true);
 		table.setDropMode(DropMode.INSERT_ROWS);
-		table.setTransferHandler(new TableRowTransferHandler(table));
+		table.setTransferHandler(new TableMultiRowTransferHandler(table));
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {

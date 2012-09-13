@@ -1,5 +1,6 @@
 package com.aha.pdftools.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.aha.pdftools.Messages;
@@ -7,7 +8,7 @@ import com.jgoodies.binding.adapter.AbstractTableAdapter;
 import com.jgoodies.binding.list.SelectionInList;
 
 @SuppressWarnings("serial")
-public class PdfFileTableModel extends AbstractTableAdapter<PdfFile> implements Reorderable {
+public class PdfFileTableModel extends AbstractTableAdapter<PdfFile> implements Reorderable, MultiReorderable {
 
 	private final int FIRST_PERMISSION_COLUMN = 2;
 	private final int LAST_PERMISSION_COLUMN = 9;
@@ -151,5 +152,26 @@ public class PdfFileTableModel extends AbstractTableAdapter<PdfFile> implements 
 		}
 		list.remove(fromIndex);
 		list.add(toIndex, row);
+	}
+
+	@Override
+	public int reorder(int[] fromIndices, int toIndex) {
+		List<PdfFile> insert = new ArrayList<PdfFile>();
+		List<PdfFile> list = listModel.getList();
+		for (int i = fromIndices.length - 1; i >= 0; i--) {
+			int index = fromIndices[i];
+			PdfFile row = getRow(index);
+			insert.add(0, row);
+			list.remove(index);
+			if (index < toIndex) {
+				toIndex--;
+			}
+		}
+		int nextIndex = toIndex;
+		for (PdfFile pdfFile : insert) {
+			list.add(nextIndex, pdfFile);
+			nextIndex++;
+		}
+		return toIndex;
 	}
 }
