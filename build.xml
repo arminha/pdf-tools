@@ -95,5 +95,16 @@
         classpath="${launch4j.dir}/launch4j.jar:${launch4j.dir}/lib/xstream.jar" />
     <target name="-post-jar">
         <launch4j configFile="./launch4j_config.xml" />
+        <chmod file="${dist.dir}/PdfTool.jar" perm="a+x" />
+    </target>
+
+    <target depends="jar" name="release">
+        <exec executable="git" outputproperty="describe.version" failonerror="true">
+            <arg value="describe"/>
+            <arg value="--abbrev=6"/>
+        </exec>
+        <zip destfile="${dist.dir}/PdfTool-${describe.version}.zip">
+            <zipfileset dir="${dist.dir}" prefix="PdfTool" includes="PdfTool.exe, PdfTool.jar, lib/**" />
+        </zip>
     </target>
 </project>
