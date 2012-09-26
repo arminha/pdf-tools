@@ -6,11 +6,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bouncycastle.crypto.digests.MD5Digest;
 import org.bouncycastle.util.encoders.Hex;
 
+import com.aha.pdftools.model.PdfFile;
 import com.aha.pdftools.model.PdfPages;
 import com.aha.pdftools.model.PdfPermissions;
 import com.itextpdf.text.Document;
@@ -63,6 +65,12 @@ public class PdfPermissionManager {
 
 	public static void processFile(File inputFile, File output, PdfPermissions permissions, String password)
 			throws IOException, DocumentException {
+		if (permissions instanceof PdfFile && ((PdfFile)permissions).isAllowAll()) {
+			ArrayList<File> inputFiles = new ArrayList<File>();
+			inputFiles.add(inputFile);
+			merge(output, inputFiles, new NullProgressDisplay());
+			return;
+		}
 		boolean createTempFile = inputFile.equals(output);
 		File outputFile = createTempFile ? createTempFile(output.getAbsolutePath()) : output;
 		PdfReader reader = new PdfReader(inputFile.getAbsolutePath());
