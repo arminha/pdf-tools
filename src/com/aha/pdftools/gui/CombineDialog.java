@@ -217,7 +217,7 @@ public class CombineDialog extends JDialog {
 		try {
 			Desktop.getDesktop().open(pdfPages.getSourceFile());
 		} catch (IOException e) {
-			Logger.getLogger(CombineDialog.class.getName()).log(Level.WARNING, "Failed to open Pdf file", e); //$NON-NLS-1$
+			Logger.getLogger(CombineDialog.class.getName()).log(Level.WARNING, "Failed to open PDF file", e); //$NON-NLS-1$
 		}
 	}
 

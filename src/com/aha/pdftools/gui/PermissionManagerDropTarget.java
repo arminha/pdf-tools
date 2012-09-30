@@ -34,8 +34,8 @@ class PermissionManagerDropTarget extends DropTargetAdapter {
 	static {
 		try {
 			uriListFlavor = new DataFlavor("text/uri-list; class=java.lang.String");
-		} catch (ClassNotFoundException ex) {
-			Logger.getLogger(PermissionManagerDropTarget.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (ClassNotFoundException e) {
+			Logger.getLogger(PermissionManagerDropTarget.class.getName()).log(Level.SEVERE, e.getMessage(), e);
 		}
 	}
 

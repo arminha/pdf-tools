@@ -98,13 +98,30 @@
         <chmod file="${dist.dir}/PdfTool.jar" perm="a+x" />
     </target>
 
-    <target depends="jar" name="release">
+    <target name="-pre-compile" depends="update-about" />
+
+    <target name="set-version">
         <exec executable="git" outputproperty="describe.version" failonerror="true">
             <arg value="describe"/>
             <arg value="--abbrev=6"/>
         </exec>
-        <zip destfile="${dist.dir}/PdfTool-${describe.version}.zip">
-            <zipfileset dir="${dist.dir}" prefix="PdfTool" includes="PdfTool.exe, PdfTool.jar, lib/**" />
+    </target>
+
+    <target name="update-about" depends="set-version">
+        <!-- set version nr -->
+        <echo message=".. |version-nr| replace:: ${describe.version}" file="doc/version.rst" />
+        <exec executable="rst2html" failonerror="true">
+            <arg value="--no-xml-declaration"/>
+            <arg value="--stylesheet=doc/html4css1.css,doc/about.css"/>
+            <arg value="doc/about.rst"/>
+            <arg value="src/com/aha/pdftools/gui/about.html"/>
+        </exec>
+    </target>
+
+    <target name="release" depends="jar, set-version">
+        <zip destfile="${dist.dir}/PdfTool-v${describe.version}.zip">
+            <zipfileset dir="${dist.dir}" filemode="755" prefix="PdfTool" includes="PdfTool.jar" />
+            <zipfileset dir="${dist.dir}" prefix="PdfTool" includes="PdfTool.exe, lib/**" />
         </zip>
     </target>
 </project>

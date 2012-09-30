@@ -102,7 +102,7 @@ public class PermissionManager implements FileSelection {
 					window.frame.setVisible(true);
 					new DropTarget(window.frame, new PermissionManagerDropTarget(window));
 				} catch (Exception e) {
-					e.printStackTrace();
+					Logger.getLogger(PermissionManager.class.getName()).log(Level.SEVERE, e.getMessage(), e);
 				}
 			}
 		});
@@ -182,6 +182,14 @@ public class PermissionManager implements FileSelection {
 
 		JSeparator separator = new JSeparator();
 		mnFile.add(separator);
+
+		JMenuItem mntmAbout = new JMenuItem(Messages.getString("PermissionManager.About")); //$NON-NLS-1$
+		mntmAbout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new AboutDialog().setVisible(true);
+			}
+		});
+		mnFile.add(mntmAbout);
 		mnFile.add(mntmQuit);
 
 		JMenu mnEdit = new JMenu(Messages.getString("PermissionManager.EditMenu")); //$NON-NLS-1$
@@ -428,7 +436,7 @@ public class PermissionManager implements FileSelection {
 			int index = openFiles.getSize() - 1;
 			table.getSelectionModel().addSelectionInterval(index, index);
 		} catch (IOException e) {
-			Logger.getLogger(PermissionManager.class.getName()).log(Level.WARNING, null, e);
+			Logger.getLogger(PermissionManager.class.getName()).log(Level.WARNING, e.getMessage(), e);
 		}
 	}
 

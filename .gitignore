@@ -2,3 +2,6 @@ bin/
 build/
 dist/
 nbproject/private/
+
+doc/version.rst
+src/com/aha/pdftools/gui/about.html

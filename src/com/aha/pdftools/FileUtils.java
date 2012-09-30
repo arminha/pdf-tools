@@ -91,7 +91,7 @@ public class FileUtils {
 									processedDirs.add(path);
 								}
 							} catch (IOException e) {
-								Logger.getLogger(FileUtils.class.getName()).log(Level.WARNING, null, e);
+								Logger.getLogger(FileUtils.class.getName()).log(Level.WARNING, e.getMessage(), e);
 							}
 						}
 					} else {

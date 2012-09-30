@@ -37,10 +37,10 @@ public abstract class ReportingWorker<T, V> extends SwingWorker<T, V> {
 		try {
 			get();
 		} catch (InterruptedException e) {
-			Logger.getLogger(getClass().getName()).log(Level.WARNING, null, e);
+			Logger.getLogger(getClass().getName()).log(Level.WARNING, e.getMessage(), e);
 		} catch (ExecutionException e) {
 			Throwable cause = e.getCause();
-			Logger.getLogger(getClass().getName()).log(Level.WARNING, null, cause);
+			Logger.getLogger(getClass().getName()).log(Level.WARNING, cause.getMessage(), cause);
 			showErrorMessage(cause);
 		}
 	}
