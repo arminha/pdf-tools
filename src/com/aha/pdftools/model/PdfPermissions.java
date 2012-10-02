@@ -17,14 +17,18 @@ public class PdfPermissions extends AbstractModelObject {
 	}
 
 	public PdfPermissions(int perms) {
-		mAssembly = (perms & PdfWriter.ALLOW_ASSEMBLY) != 0;
-		mCopy = (perms & PdfWriter.ALLOW_COPY) != 0;
-		mDegradedPrinting = (perms & PdfWriter.ALLOW_DEGRADED_PRINTING) != 0;
-		mPrinting = (perms & PdfWriter.ALLOW_PRINTING) != 0;
-		mScreenReaders = (perms & PdfWriter.ALLOW_SCREENREADERS) != 0;
-		mFillIn = (perms & PdfWriter.ALLOW_FILL_IN) != 0;
-		mModifyContents = (perms & PdfWriter.ALLOW_MODIFY_CONTENTS) != 0;
-		mModifyAnnotations = (perms & PdfWriter.ALLOW_MODIFY_ANNOTATIONS) != 0;
+		mAssembly = isFlagSet(perms, PdfWriter.ALLOW_ASSEMBLY);
+		mCopy = isFlagSet(perms, PdfWriter.ALLOW_COPY);
+		mDegradedPrinting = isFlagSet(perms, PdfWriter.ALLOW_DEGRADED_PRINTING);
+		mPrinting = isFlagSet(perms, PdfWriter.ALLOW_PRINTING);
+		mScreenReaders = isFlagSet(perms, PdfWriter.ALLOW_SCREENREADERS);
+		mFillIn = isFlagSet(perms, PdfWriter.ALLOW_FILL_IN);
+		mModifyContents = isFlagSet(perms, PdfWriter.ALLOW_MODIFY_CONTENTS);
+		mModifyAnnotations = isFlagSet(perms, PdfWriter.ALLOW_MODIFY_ANNOTATIONS);
+	}
+
+	private static boolean isFlagSet(int value, int flag) {
+		return (value & flag) == flag;
 	}
 
 	public boolean isAssembly() {
