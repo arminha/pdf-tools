@@ -95,7 +95,7 @@
         classpath="${launch4j.dir}/launch4j.jar:${launch4j.dir}/lib/xstream.jar" />
     <target name="-post-jar">
         <launch4j configFile="./launch4j_config.xml" />
-        <chmod file="${dist.dir}/PdfTool.jar" perm="a+x" />
+        <chmod file="${dist.dir}/PdfTools.jar" perm="a+x" />
     </target>
 
     <target name="-pre-compile" depends="update-about" />
@@ -119,9 +119,9 @@
     </target>
 
     <target name="release" depends="jar, set-version">
-        <zip destfile="${dist.dir}/PdfTool-v${describe.version}.zip">
-            <zipfileset dir="${dist.dir}" filemode="755" prefix="PdfTool" includes="PdfTool.jar" />
-            <zipfileset dir="${dist.dir}" prefix="PdfTool" includes="PdfTool.exe, lib/**" />
+        <zip destfile="${dist.dir}/PdfTools-v${describe.version}.zip">
+            <zipfileset dir="${dist.dir}" filemode="755" prefix="PdfTools" includes="PdfTools.jar" />
+            <zipfileset dir="${dist.dir}" prefix="PdfTools" includes="PdfTools.exe, lib/**" />
         </zip>
     </target>
 </project>
