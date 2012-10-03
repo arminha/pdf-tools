@@ -1,7 +1,10 @@
 /bin/
 /build/
-/dist/
-/nbproject/private/
+/.gradle/
+/.project
+/.classpath
+/.settings/
 
 /doc/version.rst
-/src/com/aha/pdftools/gui/about.html
+/src/main/resources/com/aha/pdftools/gui/about.html
+

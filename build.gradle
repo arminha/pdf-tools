@@ -1,0 +1,144 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+apply plugin: 'launch4j'
+
+sourceCompatibility = 1.6
+
+ext {
+    mainClass = 'com.aha.pdftools.gui.PermissionManager'
+}
+
+///////////////////////////////////////////////////
+// Launch4j                                      //
+///////////////////////////////////////////////////
+
+launch4j {
+    mainClassName = mainClass
+    launch4jCmd = '../../lib/launch4j/launch4j'
+    dontWrapJar = true
+    jar = project.tasks[JavaPlugin.JAR_TASK_NAME].outputs.files.getSingleFile().name
+}
+
+copyL4jLib.doLast {
+    String jarName = project.tasks[JavaPlugin.JAR_TASK_NAME].outputs.files.getSingleFile().name
+    String destDir = buildDir.path + '/' + launch4j.outputDir
+    String srcFile = destDir + '/lib/' + jarName
+    String destFile = destDir + '/' + jarName
+    copy {
+        from srcFile
+        into destDir
+        fileMode = 0755
+    }
+    delete {
+        srcFile
+    }
+}
+
+buildscript {
+    repositories {
+        ivy {
+            artifactPattern 'http://gradle-launch4j.googlecode.com/files/[module]-[revision].[ext]'
+        }
+    }
+
+    dependencies {
+        classpath 'edu.sc.seis:gradle-launch4j:1.0.5'
+    }
+}
+
+///////////////////////////////////////////////////
+// Dependencies                                  //
+///////////////////////////////////////////////////
+
+repositories {
+    flatDir {
+        dirs 'lib'
+    }
+}
+
+dependencies{
+    compile group:'com.itextpdf', name:'itextpdf', version: '5.1.3'
+    compile group:'org.bouncycastle', name:'bcprov-jdk15', version:'1.46'
+    compile group:'com.jgoodies', name:'jgoodies-binding', version:'2.7.0'
+    compile group:'com.jgoodies', name:'jgoodies-common', version:'1.4.0'
+}
+
+///////////////////////////////////////////////////
+// About                                         //
+///////////////////////////////////////////////////
+
+String gitVersion() {
+    new ByteArrayOutputStream().withStream { os ->
+        def result = exec {
+            executable = 'git'
+            args = ['describe', '--abbrev=6']
+            standardOutput = os
+        }
+        return os.toString().trim()
+    }
+}
+
+task setVersion {
+    ext.version = gitVersion()
+    ext.destFile = file('doc/version.rst')
+    outputs.file destFile
+    destFile.write('.. |version-nr| replace:: ' + version)
+}
+
+task aboutPage(type:Exec, dependsOn:setVersion) {
+    ext.srcFile = 'doc/about.rst'
+    ext.destFile = 'src/main/resources/com/aha/pdftools/gui/about.html'
+    inputs.files srcFile, 'doc/license.rst', 'doc/about.css', 'doc/html4css1.css', 'doc/version.rst'
+    outputs.file destFile
+
+    commandLine 'rst2html', '--no-xml-declaration', '--stylesheet=doc/html4css1.css,doc/about.css', srcFile, destFile
+}
+
+processResources.dependsOn aboutPage
+
+///////////////////////////////////////////////////
+// Packaging                                     //
+///////////////////////////////////////////////////
+
+String manifestClassPath(FileCollection cp) {
+    def cpManifest = ''
+    cp.each {
+        File file ->
+            cpManifest += ' lib/' + file.name
+    }
+    return cpManifest.substring(1)
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': mainClass, 
+                   'Class-Path': manifestClassPath(sourceSets.main.compileClasspath)
+    }
+}
+
+task distZip(type: Zip, dependsOn: [setVersion, 'launch4j']) {
+    archiveName = project.name + '-v' + setVersion.version + '.zip'
+    destinationDir = buildDir
+    excludes = [launch4j.xmlFileName]
+    from(buildDir.path + '/' + launch4j.outputDir)
+    into project.name
+}
+
+///////////////////////////////////////////////////
+// Eclipse                                       //
+///////////////////////////////////////////////////
+
+eclipse.classpath.file {
+    whenMerged { classpath ->
+        classpath.entries.findAll { entry -> entry.kind == 'lib' || entry.kind == 'con' }*.exported = false
+    }
+    // use relative paths for libraries
+    whenMerged { classpath ->
+        classpath.entries.findAll { entry -> entry.kind == 'lib' && entry.path.startsWith(project.projectDir.path) }.each {
+             e -> 
+                e.path = e.path.substring(project.projectDir.path.length() + 1)
+        }
+    }
+}
+
