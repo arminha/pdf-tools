@@ -13,18 +13,20 @@ ext {
 // Launch4j                                      //
 ///////////////////////////////////////////////////
 
+ext {
+    jarName = project.tasks[JavaPlugin.JAR_TASK_NAME].outputs.files.getSingleFile().name
+}
+
 launch4j {
     mainClassName = mainClass
     launch4jCmd = '../../lib/launch4j/launch4j'
     dontWrapJar = true
-    jar = project.tasks[JavaPlugin.JAR_TASK_NAME].outputs.files.getSingleFile().name
+    jar = jarName
 }
 
 copyL4jLib.doLast {
-    String jarName = project.tasks[JavaPlugin.JAR_TASK_NAME].outputs.files.getSingleFile().name
     String destDir = buildDir.path + '/' + launch4j.outputDir
     String srcFile = destDir + '/lib/' + jarName
-    String destFile = destDir + '/' + jarName
     copy {
         from srcFile
         into destDir
