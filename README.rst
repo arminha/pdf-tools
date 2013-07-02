@@ -12,6 +12,6 @@ Features
 Download
 --------
 
-Get the `latest version <https://www.dropbox.com/s/5rk9avczz9wcueb/PdfTools-latest.zip>`__.
+Get the `latest version <https://github.com/arminha/pdf-tools/releases>`__.
 
 .. include:: doc/license.rst
