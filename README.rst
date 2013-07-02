@@ -12,6 +12,6 @@ Features
 Download
 --------
 
-Get the `latest version <https://github.com/arminha/pdf-tools/releases>`__.
+Get the `latest release <https://github.com/arminha/pdf-tools/releases>`__.
 
 .. include:: doc/license.rst
