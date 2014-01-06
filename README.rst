@@ -3,6 +3,9 @@ PDF Tools
 
 A set of tools for PDF files.
 
+.. image:: https://travis-ci.org/arminha/pdf-tools.png?branch=master
+   :target: https://travis-ci.org/arminha/pdf-tools
+
 Features
 --------
 
