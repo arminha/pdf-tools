@@ -18,20 +18,23 @@ package com.aha.pdftools.model;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class PdfPages extends AbstractModelObject {
 
 	private final File mSourceFile;
 	private final int mSourcePageCount;
-	private int[] mPages;
+	private List<Integer> mPages;
 
 	public PdfPages(File sourceFile, int sourcePageCount) {
 		mSourceFile = sourceFile;
 		mSourcePageCount = sourcePageCount;
-		mPages = new int[sourcePageCount];
+		mPages = new ArrayList<Integer>(sourcePageCount);
 		for (int i = 0; i < sourcePageCount; i++) {
-			mPages[i] = i + 1;
+			mPages.add(i + 1);
 		}
 	}
 
@@ -47,12 +50,12 @@ public class PdfPages extends AbstractModelObject {
 		return mSourceFile.getName();
 	}
 
-	public int[] getPages() {
-		return mPages;
+	public List<Integer> getPages() {
+		return Collections.unmodifiableList(mPages);
 	}
 
 	public int getPageCount() {
-		return mPages.length;
+		return mPages.size();
 	}
 
 	public int getSourcePageCount() {
@@ -62,8 +65,7 @@ public class PdfPages extends AbstractModelObject {
 	public String getPagesString() {
 		StringBuilder sb = new StringBuilder();
 		Interval interval = null;
-		for (int i = 0; i < mPages.length; i++) {
-			int curPage = mPages[i];
+		for (int curPage : mPages) {
 			if (interval != null) {
 				if (!interval.addPage(curPage)) {
 					if (sb.length() > 0) {
@@ -87,7 +89,7 @@ public class PdfPages extends AbstractModelObject {
 
 	public void setPagesString(String pagesAsString) {
 		String[] intervals = pagesAsString.split(",");
-		ArrayList<Integer> pages = new ArrayList<Integer>();
+		List<Integer> pages = new ArrayList<Integer>();
 		try {
 			for (String intervalAsString : intervals) {
 				int minusIndex = intervalAsString.indexOf('-');
@@ -101,18 +103,13 @@ public class PdfPages extends AbstractModelObject {
 					addInterval(pages, page, page);
 				}
 			}
-			int [] newPages = new int[pages.size()];
-			for (int i = 0; i < pages.size(); i++) {
-				newPages[i] = pages.get(i);
-			}
-			mPages = newPages;
+			mPages = pages;
 		} catch (NumberFormatException e) {
 			// do nothing
-		} catch (IllegalArgumentException e) {
-			// do nothing
+			Logger.getLogger(PdfPages.class.getName()).log(Level.WARNING, e.getMessage(), e);
 		}
 	}
-	
+
 	private void addInterval(List<Integer> pages, int start, int end) {
 		if (start < 1 || start > mSourcePageCount || start > end) {
 			throw new IllegalArgumentException();

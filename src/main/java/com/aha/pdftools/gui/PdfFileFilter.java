@@ -29,7 +29,7 @@ public class PdfFileFilter extends FileFilter implements java.io.FileFilter {
 	@Override
 	public boolean accept(File f) {
 		if (f.isFile()) {
-			return (f.getName().endsWith(PDF_EXTENSION));
+			return f.getName().endsWith(PDF_EXTENSION);
 		}
 		return f.isDirectory();
 	}

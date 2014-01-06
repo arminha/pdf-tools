@@ -40,8 +40,8 @@ public class FileUtils {
 	}
 
 	public static void copyFile(File sourceFile, File destFile) throws IOException {
-		if(!destFile.exists()) {
-			destFile.createNewFile();
+		if (!destFile.exists() && !destFile.createNewFile()) {
+			Logger.getLogger(FileUtils.class.getName()).log(Level.WARNING, "Could not create file " + destFile.getAbsolutePath());
 		}
 
 		FileInputStream sourceStream = null;
@@ -54,6 +54,7 @@ public class FileUtils {
 			long amount = destination.transferFrom(source, 0, source.size());
 			if (amount != source.size()) {
 				// XXX transfer rest of file
+				Logger.getLogger(FileUtils.class.getName()).log(Level.WARNING, "Could not transfer whole file " + sourceFile.getAbsolutePath());
 			}
 		} finally {
 			if (sourceStream != null) {

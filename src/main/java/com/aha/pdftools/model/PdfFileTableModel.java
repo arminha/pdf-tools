@@ -26,8 +26,8 @@ import com.jgoodies.binding.list.SelectionInList;
 @SuppressWarnings("serial")
 public class PdfFileTableModel extends AbstractTableAdapter<PdfFile> implements Reorderable, MultiReorderable {
 
-	private final int FIRST_PERMISSION_COLUMN = 2;
-	private final int LAST_PERMISSION_COLUMN = 9;
+	private static final int FIRST_PERMISSION_COLUMN = 2;
+	private static final int LAST_PERMISSION_COLUMN = 9;
 
 	SelectionInList<PdfFile> listModel = new SelectionInList<PdfFile>();
 

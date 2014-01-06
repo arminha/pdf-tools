@@ -38,7 +38,7 @@ public class TableMultiRowTransferHandler extends AbstractTableRowTransferHandle
 
 	@Override
 	protected Transferable createTransferable(JComponent c) {
-		assert (c == table);
+		assert c == table;
 		return new DataHandler(table.getSelectedRows(), localObjectFlavor.getMimeType());
 	}
 
