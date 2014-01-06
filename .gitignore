@@ -1,10 +1,18 @@
-/bin/
+# Gradle
 /build/
 /.gradle/
+
+# Eclipse
 /.project
 /.classpath
 /.settings/
+/bin/
 
+# IDEA
+/*.iml
+/.idea/
+/out/
+
+# Generated files
 /doc/version.rst
 /src/main/resources/com/aha/pdftools/gui/about.html
-
