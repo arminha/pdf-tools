@@ -2,6 +2,9 @@ apply plugin: 'java'
 
 apply plugin: 'launch4j'
 
+apply plugin: 'findbugs'
+apply plugin: 'pmd'
+
 sourceCompatibility = 1.6
 
 ext {
@@ -59,6 +62,24 @@ dependencies{
 
     testCompile 'junit:junit:4.10'
     testCompile 'pl.pragmatists:JUnitParams:0.5.0'
+}
+
+///////////////////////////////////////////////////
+// Code Quality
+
+findbugs {
+    toolVersion = '2.0.1'
+}
+
+tasks.withType(FindBugs) {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+}
+
+pmd {
+    toolVersion = '5.0.5'
 }
 
 ///////////////////////////////////////////////////
