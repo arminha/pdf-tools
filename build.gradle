@@ -10,8 +10,7 @@ ext {
 }
 
 ///////////////////////////////////////////////////
-// Launch4j                                      //
-///////////////////////////////////////////////////
+// Launch4j
 
 ext {
     jarName = project.tasks[JavaPlugin.JAR_TASK_NAME].outputs.files.getSingleFile().name
@@ -39,19 +38,16 @@ copyL4jLib.doLast {
 
 buildscript {
     repositories {
-        ivy {
-            artifactPattern 'http://gradle-launch4j.googlecode.com/files/[module]-[revision].[ext]'
-        }
+        mavenCentral()
     }
 
     dependencies {
-        classpath 'edu.sc.seis:gradle-launch4j:1.0.5'
+        classpath 'edu.sc.seis.gradle:launch4j:1.0.6'
     }
 }
 
 ///////////////////////////////////////////////////
-// Dependencies                                  //
-///////////////////////////////////////////////////
+// Dependencies
 
 repositories {
     flatDir {
@@ -70,8 +66,7 @@ dependencies{
 }
 
 ///////////////////////////////////////////////////
-// About                                         //
-///////////////////////////////////////////////////
+// About
 
 String gitVersion() {
     new ByteArrayOutputStream().withStream { os ->
@@ -103,8 +98,7 @@ task aboutPage(type:Exec, dependsOn:setVersion) {
 processResources.dependsOn aboutPage
 
 ///////////////////////////////////////////////////
-// Packaging                                     //
-///////////////////////////////////////////////////
+// Packaging
 
 String manifestClassPath(FileCollection cp) {
     def cpManifest = ''
@@ -131,8 +125,7 @@ task distZip(type: Zip, dependsOn: [setVersion, 'launch4j']) {
 }
 
 ///////////////////////////////////////////////////
-// Eclipse                                       //
-///////////////////////////////////////////////////
+// Eclipse
 
 eclipse.classpath.file {
     whenMerged { classpath ->
@@ -148,8 +141,7 @@ eclipse.classpath.file {
 }
 
 ///////////////////////////////////////////////////////
-// Wrapper                                           //
-///////////////////////////////////////////////////////
+// Wrapper
 
 task wrapper(type: Wrapper) {
     gradleVersion = '1.6'
