@@ -2,5 +2,8 @@ language: java
 jdk:
   - openjdk6
 
+env:
+  - TERM=dumb
+
 before_install:
   - sudo apt-get install -qq python-docutils
