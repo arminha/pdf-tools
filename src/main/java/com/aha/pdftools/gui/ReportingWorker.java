@@ -27,26 +27,28 @@ import javax.swing.SwingWorker;
 import com.aha.pdftools.Messages;
 
 public abstract class ReportingWorker<T, V> extends SwingWorker<T, V> {
-	private final Component parentComponent;
-	public ReportingWorker(Component parentComponent) {
-		this.parentComponent = parentComponent;
-	}
+    private final Component parentComponent;
 
-	@Override
-	protected void done() {
-		try {
-			get();
-		} catch (InterruptedException e) {
-			Logger.getLogger(getClass().getName()).log(Level.WARNING, e.getMessage(), e);
-		} catch (ExecutionException e) {
-			Throwable cause = e.getCause();
-			Logger.getLogger(getClass().getName()).log(Level.WARNING, cause.getMessage(), cause);
-			showErrorMessage(cause);
-		}
-	}
+    public ReportingWorker(Component parentComponent) {
+        this.parentComponent = parentComponent;
+    }
 
-	protected void showErrorMessage(Throwable throwable) {
-		String message = throwable.getMessage();
-		JOptionPane.showMessageDialog(parentComponent, message, Messages.getString("PermissionManager.Error"), JOptionPane.ERROR_MESSAGE); //$NON-NLS-1$
-	}
+    @Override
+    protected void done() {
+        try {
+            get();
+        } catch (InterruptedException e) {
+            Logger.getLogger(getClass().getName()).log(Level.WARNING, e.getMessage(), e);
+        } catch (ExecutionException e) {
+            Throwable cause = e.getCause();
+            Logger.getLogger(getClass().getName()).log(Level.WARNING, cause.getMessage(), cause);
+            showErrorMessage(cause);
+        }
+    }
+
+    protected void showErrorMessage(Throwable throwable) {
+        String message = throwable.getMessage();
+        JOptionPane.showMessageDialog(parentComponent, message,
+                Messages.getString("PermissionManager.Error"), JOptionPane.ERROR_MESSAGE); //$NON-NLS-1$
+    }
 }

@@ -20,162 +20,172 @@ import com.itextpdf.text.pdf.PdfWriter;
 
 public class PdfPermissions extends AbstractModelObject {
 
-	private boolean mAssembly = true;
-	private boolean mCopy = true;
-	private boolean mDegradedPrinting = true;
-	private boolean mPrinting = true;
-	private boolean mScreenReaders = true;
-	private boolean mFillIn = true;
-	private boolean mModifyContents = true;
-	private boolean mModifyAnnotations = true;
+    private static final int NO_PERMISSIONS = 0xFFFFF0C0;
 
-	public PdfPermissions() {
-	}
+    private boolean mAssembly = true;
+    private boolean mCopy = true;
+    private boolean mDegradedPrinting = true;
+    private boolean mPrinting = true;
+    private boolean mScreenReaders = true;
+    private boolean mFillIn = true;
+    private boolean mModifyContents = true;
+    private boolean mModifyAnnotations = true;
 
-	public PdfPermissions(int perms) {
-		mAssembly = isFlagSet(perms, PdfWriter.ALLOW_ASSEMBLY);
-		mCopy = isFlagSet(perms, PdfWriter.ALLOW_COPY);
-		mDegradedPrinting = isFlagSet(perms, PdfWriter.ALLOW_DEGRADED_PRINTING);
-		mPrinting = isFlagSet(perms, PdfWriter.ALLOW_PRINTING);
-		mScreenReaders = isFlagSet(perms, PdfWriter.ALLOW_SCREENREADERS);
-		mFillIn = isFlagSet(perms, PdfWriter.ALLOW_FILL_IN);
-		mModifyContents = isFlagSet(perms, PdfWriter.ALLOW_MODIFY_CONTENTS);
-		mModifyAnnotations = isFlagSet(perms, PdfWriter.ALLOW_MODIFY_ANNOTATIONS);
-	}
+    public PdfPermissions() {
+    }
 
-	private static boolean isFlagSet(int value, int flag) {
-		return (value & flag) == flag;
-	}
+    public PdfPermissions(int perms) {
+        mAssembly = isFlagSet(perms, PdfWriter.ALLOW_ASSEMBLY);
+        mCopy = isFlagSet(perms, PdfWriter.ALLOW_COPY);
+        mDegradedPrinting = isFlagSet(perms, PdfWriter.ALLOW_DEGRADED_PRINTING);
+        mPrinting = isFlagSet(perms, PdfWriter.ALLOW_PRINTING);
+        mScreenReaders = isFlagSet(perms, PdfWriter.ALLOW_SCREENREADERS);
+        mFillIn = isFlagSet(perms, PdfWriter.ALLOW_FILL_IN);
+        mModifyContents = isFlagSet(perms, PdfWriter.ALLOW_MODIFY_CONTENTS);
+        mModifyAnnotations = isFlagSet(perms, PdfWriter.ALLOW_MODIFY_ANNOTATIONS);
+    }
 
-	public boolean isAssembly() {
-		return mAssembly;
-	}
+    private static boolean isFlagSet(int value, int flag) {
+        return (value & flag) == flag;
+    }
 
-	public void setAssembly(boolean allowAssembly) {
-		boolean oldValue = mAssembly;
-		mAssembly = allowAssembly;
-		firePropertyChange("assembly", oldValue, mAssembly);
-	}
+    public boolean isAssembly() {
+        return mAssembly;
+    }
 
-	public boolean isCopy() {
-		return mCopy;
-	}
+    public void setAssembly(boolean allowAssembly) {
+        boolean oldValue = mAssembly;
+        mAssembly = allowAssembly;
+        firePropertyChange("assembly", oldValue, mAssembly);
+    }
 
-	public void setCopy(boolean allowCopy) {
-		boolean oldValue = mCopy;
-		mCopy = allowCopy;
-		firePropertyChange("copy", oldValue, mCopy);
-	}
+    public boolean isCopy() {
+        return mCopy;
+    }
 
-	public boolean isDegradedPrinting() {
-		return mDegradedPrinting;
-	}
+    public void setCopy(boolean allowCopy) {
+        boolean oldValue = mCopy;
+        mCopy = allowCopy;
+        firePropertyChange("copy", oldValue, mCopy);
+    }
 
-	public void setDegradedPrinting(boolean allowDegradedPrinting) {
-		boolean oldValue = mDegradedPrinting;
-		mDegradedPrinting = allowDegradedPrinting;
-		firePropertyChange("degradedPrinting", oldValue, mDegradedPrinting);
-	}
+    public boolean isDegradedPrinting() {
+        return mDegradedPrinting;
+    }
 
-	public boolean isPrinting() {
-		return mPrinting;
-	}
+    public void setDegradedPrinting(boolean allowDegradedPrinting) {
+        boolean oldValue = mDegradedPrinting;
+        mDegradedPrinting = allowDegradedPrinting;
+        firePropertyChange("degradedPrinting", oldValue, mDegradedPrinting);
+    }
 
-	public void setPrinting(boolean allowPrinting) {
-		boolean oldValue = mPrinting;
-		mPrinting = allowPrinting;
-		firePropertyChange("printing", oldValue, mPrinting);
-	}
+    public boolean isPrinting() {
+        return mPrinting;
+    }
 
-	public boolean isScreenReaders() {
-		return mScreenReaders;
-	}
+    public void setPrinting(boolean allowPrinting) {
+        boolean oldValue = mPrinting;
+        mPrinting = allowPrinting;
+        firePropertyChange("printing", oldValue, mPrinting);
+    }
 
-	public void setScreenReaders(boolean allowScreenReaders) {
-		boolean oldValue = mScreenReaders;
-		mScreenReaders = allowScreenReaders;
-		firePropertyChange("screenReaders", oldValue, mScreenReaders);
-	}
+    public boolean isScreenReaders() {
+        return mScreenReaders;
+    }
 
-	public boolean isFillIn() {
-		return mFillIn;
-	}
+    public void setScreenReaders(boolean allowScreenReaders) {
+        boolean oldValue = mScreenReaders;
+        mScreenReaders = allowScreenReaders;
+        firePropertyChange("screenReaders", oldValue, mScreenReaders);
+    }
 
-	public void setFillIn(boolean allowFillIn) {
-		boolean oldValue = mFillIn;
-		mFillIn = allowFillIn;
-		firePropertyChange("fillIn", oldValue, mFillIn);
-	}
+    public boolean isFillIn() {
+        return mFillIn;
+    }
 
-	public boolean isModifyContents() {
-		return mModifyContents;
-	}
+    public void setFillIn(boolean allowFillIn) {
+        boolean oldValue = mFillIn;
+        mFillIn = allowFillIn;
+        firePropertyChange("fillIn", oldValue, mFillIn);
+    }
 
-	public void setModifyContents(boolean allowModifyContents) {
-		boolean oldValue = mModifyContents;
-		mModifyContents = allowModifyContents;
-		firePropertyChange("modifyContents", oldValue, mModifyContents);
-	}
+    public boolean isModifyContents() {
+        return mModifyContents;
+    }
 
-	public boolean isModifyAnnotations() {
-		return mModifyAnnotations;
-	}
+    public void setModifyContents(boolean allowModifyContents) {
+        boolean oldValue = mModifyContents;
+        mModifyContents = allowModifyContents;
+        firePropertyChange("modifyContents", oldValue, mModifyContents);
+    }
 
-	public void setModifyAnnotations(boolean allowModifyAnnotations) {
-		boolean oldValue = mModifyAnnotations;
-		mModifyAnnotations = allowModifyAnnotations;
-		firePropertyChange("modifyAnnotations", oldValue, mModifyAnnotations);
-	}
+    public boolean isModifyAnnotations() {
+        return mModifyAnnotations;
+    }
 
-	public int getPermissions() {
-		// as per User access permissions table in the pdf specification
-		int perms = 0xFFFFF0C0;
-		if (mAssembly)
-			perms = perms | PdfWriter.ALLOW_ASSEMBLY;
-		if (mCopy)
-			perms = perms | PdfWriter.ALLOW_COPY;
-		if (mDegradedPrinting)
-			perms = perms | PdfWriter.ALLOW_DEGRADED_PRINTING;
-		if (mPrinting)
-			perms = perms | PdfWriter.ALLOW_PRINTING;
-		if (mScreenReaders)
-			perms = perms | PdfWriter.ALLOW_SCREENREADERS;
-		if (mFillIn)
-			perms = perms | PdfWriter.ALLOW_FILL_IN;
-		if (mModifyContents)
-			perms = perms | PdfWriter.ALLOW_MODIFY_CONTENTS;
-		if (mModifyAnnotations)
-			perms = perms | PdfWriter.ALLOW_MODIFY_ANNOTATIONS;
-		return perms;
-	}
+    public void setModifyAnnotations(boolean allowModifyAnnotations) {
+        boolean oldValue = mModifyAnnotations;
+        mModifyAnnotations = allowModifyAnnotations;
+        firePropertyChange("modifyAnnotations", oldValue, mModifyAnnotations);
+    }
 
-	public String getPermissionsAsString() {
-		String permissions = "";
-		if (mPrinting) {
-			permissions += "AllowPrinting ";
-		}
-		if (mAssembly) {
-			permissions += "AllowAssembly";
-		}
-		if (mCopy) {
-			permissions += "AllowCopy";
-		}
-		if (mDegradedPrinting) {
-			permissions += "AllowDegradedPrinting";
-		}
-		if (mScreenReaders) {
-			permissions += "AllowScreenReaders";
-		}
-		if (mFillIn) {
-			permissions += "AllowFillIn";
-		}
-		if (mModifyContents) {
-			permissions += "AllowModifyContents";
-		}
-		if (mModifyAnnotations) {
-			permissions += "AllowModifyAnnotations";
-		}
-		return permissions;
-	}
+    public int getPermissions() {
+        // as per User access permissions table in the pdf specification
+        int perms = NO_PERMISSIONS;
+        if (mAssembly) {
+            perms = perms | PdfWriter.ALLOW_ASSEMBLY;
+        }
+        if (mCopy) {
+            perms = perms | PdfWriter.ALLOW_COPY;
+        }
+        if (mDegradedPrinting) {
+            perms = perms | PdfWriter.ALLOW_DEGRADED_PRINTING;
+        }
+        if (mPrinting) {
+            perms = perms | PdfWriter.ALLOW_PRINTING;
+        }
+        if (mScreenReaders) {
+            perms = perms | PdfWriter.ALLOW_SCREENREADERS;
+        }
+        if (mFillIn) {
+            perms = perms | PdfWriter.ALLOW_FILL_IN;
+        }
+        if (mModifyContents) {
+            perms = perms | PdfWriter.ALLOW_MODIFY_CONTENTS;
+        }
+        if (mModifyAnnotations) {
+            perms = perms | PdfWriter.ALLOW_MODIFY_ANNOTATIONS;
+        }
+        return perms;
+    }
+
+    public String getPermissionsAsString() {
+        String permissions = "";
+        if (mPrinting) {
+            permissions += "AllowPrinting ";
+        }
+        if (mAssembly) {
+            permissions += "AllowAssembly";
+        }
+        if (mCopy) {
+            permissions += "AllowCopy";
+        }
+        if (mDegradedPrinting) {
+            permissions += "AllowDegradedPrinting";
+        }
+        if (mScreenReaders) {
+            permissions += "AllowScreenReaders";
+        }
+        if (mFillIn) {
+            permissions += "AllowFillIn";
+        }
+        if (mModifyContents) {
+            permissions += "AllowModifyContents";
+        }
+        if (mModifyAnnotations) {
+            permissions += "AllowModifyAnnotations";
+        }
+        return permissions;
+    }
 
 }

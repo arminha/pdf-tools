@@ -40,191 +40,191 @@ import com.itextpdf.text.pdf.PdfImportedPage;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
 
-public class PdfPermissionManager {
+public final class PdfPermissionManager {
 
-	public static final String PDF_EXTENSION = ".pdf"; //$NON-NLS-1$
-	public static final String PASSWORD = "changeit"; //$NON-NLS-1$
+    public static final String PDF_EXTENSION = ".pdf"; //$NON-NLS-1$
+    public static final String PASSWORD = "changeit"; //$NON-NLS-1$
 
-	private PdfPermissionManager() {
-	}
+    private PdfPermissionManager() {
+    }
 
-	public static int getPermissions(PdfReader reader) {
-		int permissions;
-		if (!reader.isEncrypted()) {
-			permissions = 0xFFFFFFFF;
-		} else {
-			permissions = reader.getPermissions();
-		}
-		return permissions;
-	}
+    public static int getPermissions(PdfReader reader) {
+        int permissions;
+        if (!reader.isEncrypted()) {
+            permissions = 0xFFFFFFFF;
+        } else {
+            permissions = reader.getPermissions();
+        }
+        return permissions;
+    }
 
-	private static void changePermissions(PdfReader reader, OutputStream os,
-			PdfPermissions permissions, String password)
-					throws DocumentException, IOException {
-		unlockReader(reader);
-		PdfStamper stp = new PdfStamper(reader, os, '\0');
-		int perms = permissions.getPermissions();
-		stp.setEncryption(null, password.getBytes("UTF-8"), perms,
-				PdfEncryption.STANDARD_ENCRYPTION_40);
-		stp.close();
-	}
+    private static void changePermissions(PdfReader reader, OutputStream os,
+            PdfPermissions permissions, String password)
+                    throws DocumentException, IOException {
+        unlockReader(reader);
+        PdfStamper stp = new PdfStamper(reader, os, '\0');
+        int perms = permissions.getPermissions();
+        stp.setEncryption(null, password.getBytes("UTF-8"), perms,
+                PdfEncryption.STANDARD_ENCRYPTION_40);
+        stp.close();
+    }
 
-	private static void unlockReader(PdfReader reader) {
-		try {
-			Class<? extends PdfReader> readerClass = reader.getClass();
-			Field pwField = readerClass.getDeclaredField("ownerPasswordUsed"); //$NON-NLS-1$
-			pwField.setAccessible(true);
-			pwField.set(reader, Boolean.TRUE);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
+    private static void unlockReader(PdfReader reader) {
+        try {
+            Class<? extends PdfReader> readerClass = reader.getClass();
+            Field pwField = readerClass.getDeclaredField("ownerPasswordUsed"); //$NON-NLS-1$
+            pwField.setAccessible(true);
+            pwField.set(reader, Boolean.TRUE);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-	public static void processFile(File inputFile, File output, PdfPermissions permissions, String password)
-			throws IOException, DocumentException {
-		if (permissions instanceof PdfFile && ((PdfFile)permissions).isAllowAll()) {
-			ArrayList<File> inputFiles = new ArrayList<File>();
-			inputFiles.add(inputFile);
-			merge(output, inputFiles, new NullProgressDisplay());
-			return;
-		}
-		boolean createTempFile = inputFile.equals(output);
-		File outputFile = createTempFile ? createTempFile(output.getAbsolutePath()) : output;
-		PdfReader reader = new PdfReader(inputFile.getAbsolutePath());
-		FileOutputStream fout = new FileOutputStream(outputFile);
-		changePermissions(reader, fout, permissions, password);
-		if (createTempFile) {
-			FileUtils.moveFile(outputFile, output);
-		}
-	}
+    public static void processFile(File inputFile, File output, PdfPermissions permissions, String password)
+            throws IOException, DocumentException {
+        if (permissions instanceof PdfFile && ((PdfFile) permissions).isAllowAll()) {
+            ArrayList<File> inputFiles = new ArrayList<File>();
+            inputFiles.add(inputFile);
+            merge(output, inputFiles, new NullProgressDisplay());
+            return;
+        }
+        boolean createTempFile = inputFile.equals(output);
+        File outputFile = createTempFile ? createTempFile(output.getAbsolutePath()) : output;
+        PdfReader reader = new PdfReader(inputFile.getAbsolutePath());
+        FileOutputStream fout = new FileOutputStream(outputFile);
+        changePermissions(reader, fout, permissions, password);
+        if (createTempFile) {
+            FileUtils.moveFile(outputFile, output);
+        }
+    }
 
-	public static void merge(File output, List<File> inputFiles, ProgressDisplay progress) throws IOException, DocumentException {
-		progress.startTask(Messages.getString("PdfPermissionManager.Combine"), inputFiles.size(), true); //$NON-NLS-1$
-		FileOutputStream outputStream = null;
-		PdfCopy copy = null;
-		int pageCount = 0;
-		try {
-			Document document = new Document();
-			outputStream = new FileOutputStream(output);
-			copy = new PdfCopy(document, outputStream);
-			document.open();
+    public static void merge(File output, List<File> inputFiles, ProgressDisplay progress) throws IOException, DocumentException {
+        progress.startTask(Messages.getString("PdfPermissionManager.Combine"), inputFiles.size(), true); //$NON-NLS-1$
+        FileOutputStream outputStream = null;
+        PdfCopy copy = null;
+        int pageCount = 0;
+        try {
+            Document document = new Document();
+            outputStream = new FileOutputStream(output);
+            copy = new PdfCopy(document, outputStream);
+            document.open();
 
-			int n = 0;
-			for (File file : inputFiles) {
-				if (progress.isCanceled()) {
-					break;
-				}
-				progress.setNote(file.getName());
-				FileInputStream inputStream = null;
-				PdfReader reader = null;
-				try {
-					inputStream = new FileInputStream(file);
-					reader = new PdfReader(inputStream);
-					unlockReader(reader);
-					for (int i = 1; i <= reader.getNumberOfPages(); i++) {
-						if (progress.isCanceled()) {
-							break;
-						}
-						document.newPage();
-						pageCount++;
-						// import the page from source pdf
-						PdfImportedPage page = copy.getImportedPage(reader, i);
-						copy.addPage(page);
-					}
-				} finally {
-					if (reader != null) {
-						reader.close();
-					}
-					if (inputStream != null) {
-						inputStream.close();
-					}
-					progress.setProgress(++n);
-				}
-			}
-			outputStream.flush();
-			document.close();
-		} finally {
-			progress.endTask();
-			// check if any page was written.
-			if (copy != null && pageCount > 0) {
-				copy.close();
-			}
-			if (outputStream != null) {
-				outputStream.close();
-			}
-		}
-	}
+            int n = 0;
+            for (File file : inputFiles) {
+                if (progress.isCanceled()) {
+                    break;
+                }
+                progress.setNote(file.getName());
+                FileInputStream inputStream = null;
+                PdfReader reader = null;
+                try {
+                    inputStream = new FileInputStream(file);
+                    reader = new PdfReader(inputStream);
+                    unlockReader(reader);
+                    for (int i = 1; i <= reader.getNumberOfPages(); i++) {
+                        if (progress.isCanceled()) {
+                            break;
+                        }
+                        document.newPage();
+                        pageCount++;
+                        // import the page from source pdf
+                        PdfImportedPage page = copy.getImportedPage(reader, i);
+                        copy.addPage(page);
+                    }
+                } finally {
+                    if (reader != null) {
+                        reader.close();
+                    }
+                    if (inputStream != null) {
+                        inputStream.close();
+                    }
+                    progress.setProgress(++n);
+                }
+            }
+            outputStream.flush();
+            document.close();
+        } finally {
+            progress.endTask();
+            // check if any page was written.
+            if (copy != null && pageCount > 0) {
+                copy.close();
+            }
+            if (outputStream != null) {
+                outputStream.close();
+            }
+        }
+    }
 
-	public static void mergePages(File output, List<PdfPages> pages, ProgressDisplay progress) throws IOException, DocumentException {
-		int totalPageCount = 0;
-		for (PdfPages pdfPages : pages) {
-			totalPageCount += pdfPages.getPageCount();
-		}
+    public static void mergePages(File output, List<PdfPages> pages, ProgressDisplay progress) throws IOException, DocumentException {
+        int totalPageCount = 0;
+        for (PdfPages pdfPages : pages) {
+            totalPageCount += pdfPages.getPageCount();
+        }
 
-		progress.startTask(Messages.getString("PdfPermissionManager.Combine"), totalPageCount, true); //$NON-NLS-1$
-		FileOutputStream outputStream = null;
-		PdfCopy copy = null;
-		int pageCount = 0;
-		try {
-			Document document = new Document();
-			outputStream = new FileOutputStream(output);
-			copy = new PdfCopy(document, outputStream);
-			document.open();
-			for (PdfPages pdfPages : pages) {
-				if (progress.isCanceled()) {
-					break;
-				}
-				progress.setNote(pdfPages.getName());
-				FileInputStream inputStream = null;
-				PdfReader reader = null;
-				try {
-					inputStream = new FileInputStream(pdfPages.getSourceFile());
-					reader = new PdfReader(inputStream);
-					unlockReader(reader);
-					for (int pageNumber : pdfPages.getPages()) {
-						if (progress.isCanceled()) {
-							break;
-						}
-						document.newPage();
-						pageCount++;
-						// import the page from source pdf
-						PdfImportedPage page = copy.getImportedPage(reader, pageNumber);
-						copy.addPage(page);
-						progress.setProgress(pageCount);
-					}
-				} finally {
-					if (reader != null) {
-						reader.close();
-					}
-					if (inputStream != null) {
-						inputStream.close();
-					}
-				}
-			}
-			outputStream.flush();
-			document.close();
-		} finally {
-			progress.endTask();
-			// check if any page was written.
-			if (copy != null && pageCount > 0) {
-				copy.close();
-			}
-			if (outputStream != null) {
-				outputStream.close();
-			}
-		}
-	}
+        progress.startTask(Messages.getString("PdfPermissionManager.Combine"), totalPageCount, true); //$NON-NLS-1$
+        FileOutputStream outputStream = null;
+        PdfCopy copy = null;
+        int pageCount = 0;
+        try {
+            Document document = new Document();
+            outputStream = new FileOutputStream(output);
+            copy = new PdfCopy(document, outputStream);
+            document.open();
+            for (PdfPages pdfPages : pages) {
+                if (progress.isCanceled()) {
+                    break;
+                }
+                progress.setNote(pdfPages.getName());
+                FileInputStream inputStream = null;
+                PdfReader reader = null;
+                try {
+                    inputStream = new FileInputStream(pdfPages.getSourceFile());
+                    reader = new PdfReader(inputStream);
+                    unlockReader(reader);
+                    for (int pageNumber : pdfPages.getPages()) {
+                        if (progress.isCanceled()) {
+                            break;
+                        }
+                        document.newPage();
+                        pageCount++;
+                        // import the page from source pdf
+                        PdfImportedPage page = copy.getImportedPage(reader, pageNumber);
+                        copy.addPage(page);
+                        progress.setProgress(pageCount);
+                    }
+                } finally {
+                    if (reader != null) {
+                        reader.close();
+                    }
+                    if (inputStream != null) {
+                        inputStream.close();
+                    }
+                }
+            }
+            outputStream.flush();
+            document.close();
+        } finally {
+            progress.endTask();
+            // check if any page was written.
+            if (copy != null && pageCount > 0) {
+                copy.close();
+            }
+            if (outputStream != null) {
+                outputStream.close();
+            }
+        }
+    }
 
-	private static File createTempFile(String name) throws IOException {
-		return File.createTempFile(hash(name), PDF_EXTENSION);
-	}
+    private static File createTempFile(String name) throws IOException {
+        return File.createTempFile(hash(name), PDF_EXTENSION);
+    }
 
-	private static String hash(String name) throws UnsupportedEncodingException {
-		MD5Digest digest = new MD5Digest();
-		byte[] output = new byte[digest.getDigestSize()];
-		byte[] input = name.getBytes("UTF-8");
-		digest.update(input, 0, input.length);
-		digest.doFinal(output, 0);
-		return new String(Hex.encode(output), "UTF-8");
-	}
+    private static String hash(String name) throws UnsupportedEncodingException {
+        MD5Digest digest = new MD5Digest();
+        byte[] output = new byte[digest.getDigestSize()];
+        byte[] input = name.getBytes("UTF-8");
+        digest.update(input, 0, input.length);
+        digest.doFinal(output, 0);
+        return new String(Hex.encode(output), "UTF-8");
+    }
 }
