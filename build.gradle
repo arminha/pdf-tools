@@ -2,8 +2,10 @@ apply plugin: 'java'
 
 apply plugin: 'launch4j'
 
+apply plugin: 'checkstyle'
 apply plugin: 'findbugs'
 apply plugin: 'pmd'
+apply plugin: 'jacoco'
 
 sourceCompatibility = 1.6
 
@@ -68,19 +70,36 @@ dependencies{
 // Code Quality
 
 findbugs {
-    toolVersion = '2.0.1'
+    ignoreFailures = true
+    toolVersion = '2.0.3'
 }
 
-tasks.withType(FindBugs) {
-    reports {
-        xml.enabled = false
-        html.enabled = true
+if (!rootProject.hasProperty("findbugsReportXml") || findbugsReportXml != 'true') {
+    tasks.withType(FindBugs) {
+        reports {
+            xml.enabled = false
+            html.enabled = true
+        }
     }
 }
 
 pmd {
+    ignoreFailures = true
     toolVersion = '5.0.5'
 }
+
+checkstyle {
+    ignoreFailures = true
+    toolVersion = '5.7'
+}
+
+///////////////////////////////////////////////////
+// jacoco
+
+jacoco {
+    toolVersion = '0.7.0.201403182114'
+}
+jacocoTestReport.dependsOn(test)
 
 ///////////////////////////////////////////////////
 // About

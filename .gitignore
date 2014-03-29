@@ -1,10 +1,12 @@
 # Gradle
 /build/
 /.gradle/
+/gradle.properties
 
 # Eclipse
 /.project
 /.classpath
+/.checkstyle
 /.settings/
 /bin/
 
