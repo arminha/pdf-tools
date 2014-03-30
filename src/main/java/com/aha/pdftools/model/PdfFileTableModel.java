@@ -29,7 +29,7 @@ public class PdfFileTableModel extends AbstractTableAdapter<PdfFile> implements 
     private static final int FIRST_PERMISSION_COLUMN = 2;
     private static final int LAST_PERMISSION_COLUMN = 9;
 
-    SelectionInList<PdfFile> listModel = new SelectionInList<PdfFile>();
+    private final SelectionInList<PdfFile> listModel;
 
     public PdfFileTableModel(SelectionInList<PdfFile> listModel) {
         super(listModel, new String[] {
@@ -50,6 +50,7 @@ public class PdfFileTableModel extends AbstractTableAdapter<PdfFile> implements 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         PdfFile pdfFile = getRow(rowIndex);
+        // CHECKSTYLE IGNORE MagicNumber
         switch (columnIndex) {
         case 0:
             return pdfFile.getName();
@@ -74,11 +75,13 @@ public class PdfFileTableModel extends AbstractTableAdapter<PdfFile> implements 
         default:
             return null;
         }
+        // CHECKSTYLE END IGNORE MagicNumber
     }
 
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         PdfFile pdfFile = getRow(rowIndex);
+        // CHECKSTYLE IGNORE MagicNumber
         switch (columnIndex) {
         case 2:
             pdfFile.setAssembly((Boolean) aValue);
@@ -107,6 +110,7 @@ public class PdfFileTableModel extends AbstractTableAdapter<PdfFile> implements 
         default:
             super.setValueAt(aValue, rowIndex, columnIndex);
         }
+        // CHECKSTYLE END IGNORE MagicNumber
     }
 
     @Override
@@ -131,7 +135,6 @@ public class PdfFileTableModel extends AbstractTableAdapter<PdfFile> implements 
      * 
      * @param columnIndex
      *            Index of the column
-     * @return the new value of the column
      */
     public void toggleColumn(int columnIndex) {
         if (getColumnClass(columnIndex) != Boolean.class) {

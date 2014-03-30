@@ -121,6 +121,7 @@ public class PermissionManager implements FileSelection {
     private void initialize() {
         frame = new JFrame();
         frame.setTitle(Messages.getString("PermissionManager.Title")); //$NON-NLS-1$
+        // SUPPRESS CHECKSTYLE MagicNumber
         frame.setBounds(100, 100, 622, 410);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -145,8 +146,8 @@ public class PermissionManager implements FileSelection {
         mntmSave.setText(Messages.getString("PermissionManager.Save..")); //$NON-NLS-1$
         mntmSave.setMnemonic(KeyEvent.VK_S);
 
-        JSeparator separator_1 = new JSeparator();
-        mnFile.add(separator_1);
+        JSeparator separator1 = new JSeparator();
+        mnFile.add(separator1);
         mnFile.add(mntmSave);
 
         JMenuItem mntmSaveAll = new JMenuItem(Messages.getString("PermissionManager.SaveAll")); //$NON-NLS-1$
@@ -212,8 +213,8 @@ public class PermissionManager implements FileSelection {
         });
         mnEdit.add(mntmSelectAll);
 
-        JSeparator separator_2 = new JSeparator();
-        mnEdit.add(separator_2);
+        JSeparator separator2 = new JSeparator();
+        mnEdit.add(separator2);
 
         JMenuItem mntmClearList = new JMenuItem(Messages.getString("PermissionManager.ClearList")); //$NON-NLS-1$
         mntmClearList.setMnemonic(KeyEvent.VK_C);
@@ -275,7 +276,7 @@ public class PermissionManager implements FileSelection {
                 if (headerRect.contains(e.getX(), e.getY())) {
                     // toggle column values
                     int mColIndex = table.convertColumnIndexToModel(vColIndex);
-                    ((PdfFileTableModel)table.getModel()).toggleColumn(mColIndex);
+                    ((PdfFileTableModel) table.getModel()).toggleColumn(mColIndex);
                 }
             }
         });
@@ -319,7 +320,8 @@ public class PermissionManager implements FileSelection {
         try {
             Desktop.getDesktop().open(pdfFile.getSourceFile());
         } catch (IOException e) {
-            Logger.getLogger(PermissionManager.class.getName()).log(Level.WARNING, "Failed to open Pdf file", e); //$NON-NLS-1$
+            Logger.getLogger(PermissionManager.class.getName())
+                .log(Level.WARNING, "Failed to open Pdf file", e); //$NON-NLS-1$
         }
     }
 
@@ -363,7 +365,8 @@ public class PermissionManager implements FileSelection {
     public boolean checkOverwriteFile(File f) {
         if (f.exists()) {
             // ask if the file should be overwritten
-            String msg = MessageFormat.format(Messages.getString("PermissionManager.AskOverwriteFile"), f.getAbsolutePath()); //$NON-NLS-1$
+            String msg = MessageFormat.
+                    format(Messages.getString("PermissionManager.AskOverwriteFile"), f.getAbsolutePath()); //$NON-NLS-1$
             int resultVal = JOptionPane.showConfirmDialog(
                     frame,
                     msg,
@@ -398,7 +401,8 @@ public class PermissionManager implements FileSelection {
                 }
                 if (!overwrittenFiles.isEmpty()) {
                     String format = Messages.getString("PermissionManager.AskOverwriteFiles"); //$NON-NLS-1$
-                    String msg = MessageFormat.format(format, overwrittenFiles.size(), targetDirectory.getAbsolutePath());
+                    String msg = MessageFormat
+                            .format(format, overwrittenFiles.size(), targetDirectory.getAbsolutePath());
                     int result = JOptionPane.showConfirmDialog(
                             frame,
                             msg,
@@ -620,7 +624,8 @@ public class PermissionManager implements FileSelection {
     @SuppressWarnings("serial")
     private class OpenFilesAction extends AbstractAction {
         public OpenFilesAction() {
-            putValue(LARGE_ICON_KEY, new ImageIcon(PermissionManager.class.getResource("/com/aha/pdftools/icons/document-open.png"))); //$NON-NLS-1$
+            putValue(LARGE_ICON_KEY, new ImageIcon(
+                    PermissionManager.class.getResource("/com/aha/pdftools/icons/document-open.png"))); //$NON-NLS-1$
             putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK));
             putValue(SHORT_DESCRIPTION, Messages.getString("PermissionManager.OpenFilesDesc")); //$NON-NLS-1$
         }
@@ -634,7 +639,8 @@ public class PermissionManager implements FileSelection {
     @SuppressWarnings("serial")
     private class OpenFolderAction extends AbstractAction {
         public OpenFolderAction() {
-            putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK));
+            putValue(ACCELERATOR_KEY,
+                    KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK));
             putValue(SHORT_DESCRIPTION, Messages.getString("PermissionManager.OpenFolderDesc")); //$NON-NLS-1$
         }
 
@@ -647,7 +653,8 @@ public class PermissionManager implements FileSelection {
     @SuppressWarnings("serial")
     private class SaveAction extends AbstractAction {
         public SaveAction() {
-            putValue(LARGE_ICON_KEY, new ImageIcon(PermissionManager.class.getResource("/com/aha/pdftools/icons/document-save.png"))); //$NON-NLS-1$
+            putValue(LARGE_ICON_KEY, new ImageIcon(
+                    PermissionManager.class.getResource("/com/aha/pdftools/icons/document-save.png"))); //$NON-NLS-1$
             putValue(SHORT_DESCRIPTION, Messages.getString("PermissionManager.SaveDesc")); //$NON-NLS-1$
             putValue(NAME, Messages.getString("PermissionManager.Save")); //$NON-NLS-1$
             putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK));
@@ -662,7 +669,8 @@ public class PermissionManager implements FileSelection {
     @SuppressWarnings("serial")
     private class DeleteAction extends AbstractAction {
         public DeleteAction() {
-            putValue(LARGE_ICON_KEY, new ImageIcon(PermissionManager.class.getResource("/com/aha/pdftools/icons/edit-delete.png"))); //$NON-NLS-1$
+            putValue(LARGE_ICON_KEY, new ImageIcon(
+                    PermissionManager.class.getResource("/com/aha/pdftools/icons/edit-delete.png"))); //$NON-NLS-1$
             putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
             putValue(SHORT_DESCRIPTION, Messages.getString("PermissionManager.DeleteDesc")); //$NON-NLS-1$
         }
@@ -676,7 +684,8 @@ public class PermissionManager implements FileSelection {
     @SuppressWarnings("serial")
     private class AllPermissionsAction extends AbstractAction {
         public AllPermissionsAction() {
-            putValue(LARGE_ICON_KEY, new ImageIcon(PermissionManager.class.getResource("/com/aha/pdftools/icons/stock_calc-accept.png"))); //$NON-NLS-1$
+            putValue(LARGE_ICON_KEY, new ImageIcon(PermissionManager
+                    .class.getResource("/com/aha/pdftools/icons/stock_calc-accept.png"))); //$NON-NLS-1$
             putValue(SHORT_DESCRIPTION, Messages.getString("PermissionManager.SetAllPermissionsDesc")); //$NON-NLS-1$
         }
 
@@ -690,7 +699,8 @@ public class PermissionManager implements FileSelection {
     private class MergeAction extends AbstractAction {
         public MergeAction() {
             putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_M, InputEvent.CTRL_MASK));
-            putValue(LARGE_ICON_KEY, new ImageIcon(PermissionManager.class.getResource("/com/aha/pdftools/icons/stock_save-pdf.png"))); //$NON-NLS-1$
+            putValue(LARGE_ICON_KEY, new ImageIcon(
+                    PermissionManager.class.getResource("/com/aha/pdftools/icons/stock_save-pdf.png"))); //$NON-NLS-1$
             putValue(SHORT_DESCRIPTION, Messages.getString("PermissionManager.CombineFilesDesc")); //$NON-NLS-1$
             putValue(NAME, Messages.getString("PermissionManager.Combine")); //$NON-NLS-1$
         }
@@ -704,7 +714,8 @@ public class PermissionManager implements FileSelection {
     @SuppressWarnings("serial")
     private class MergePagesAction extends AbstractAction {
         public MergePagesAction() {
-            putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_M, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK));
+            putValue(ACCELERATOR_KEY,
+                    KeyStroke.getKeyStroke(KeyEvent.VK_M, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK));
             putValue(SHORT_DESCRIPTION, Messages.getString("PermissionManager.CombinePagesDesc")); //$NON-NLS-1$
         }
 

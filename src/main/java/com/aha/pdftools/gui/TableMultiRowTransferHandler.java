@@ -39,8 +39,8 @@ public class TableMultiRowTransferHandler extends AbstractTableRowTransferHandle
 
     @Override
     protected Transferable createTransferable(JComponent c) {
-        assert c == table;
-        return new DataHandler(table.getSelectedRows(), localObjectFlavor.getMimeType());
+        assert c == getTable();
+        return new DataHandler(getTable().getSelectedRows(), getLocalObjectFlavor().getMimeType());
     }
 
     @Override
@@ -48,15 +48,15 @@ public class TableMultiRowTransferHandler extends AbstractTableRowTransferHandle
         JTable target = (JTable) info.getComponent();
         JTable.DropLocation dl = (JTable.DropLocation) info.getDropLocation();
         int index = dl.getRow();
-        int max = table.getModel().getRowCount();
+        int max = getTable().getModel().getRowCount();
         if (index < 0 || index > max) {
             index = max;
         }
         target.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         try {
-            int[] rowsFrom = (int[]) info.getTransferable().getTransferData(localObjectFlavor);
+            int[] rowsFrom = (int[]) info.getTransferable().getTransferData(getLocalObjectFlavor());
             if (rowsFrom.length > 0) {
-                index = ((MultiReorderable) table.getModel()).reorder(rowsFrom, index);
+                index = ((MultiReorderable) getTable().getModel()).reorder(rowsFrom, index);
                 target.getSelectionModel().addSelectionInterval(index, index + rowsFrom.length - 1);
                 return true;
             }

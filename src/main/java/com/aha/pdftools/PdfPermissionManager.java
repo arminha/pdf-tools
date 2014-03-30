@@ -58,14 +58,12 @@ public final class PdfPermissionManager {
         return permissions;
     }
 
-    private static void changePermissions(PdfReader reader, OutputStream os,
-            PdfPermissions permissions, String password)
-                    throws DocumentException, IOException {
+    private static void changePermissions(PdfReader reader, OutputStream os, PdfPermissions permissions,
+            String password) throws DocumentException, IOException {
         unlockReader(reader);
         PdfStamper stp = new PdfStamper(reader, os, '\0');
         int perms = permissions.getPermissions();
-        stp.setEncryption(null, password.getBytes("UTF-8"), perms,
-                PdfEncryption.STANDARD_ENCRYPTION_40);
+        stp.setEncryption(null, password.getBytes("UTF-8"), perms, PdfEncryption.STANDARD_ENCRYPTION_40);
         stp.close();
     }
 
@@ -98,7 +96,8 @@ public final class PdfPermissionManager {
         }
     }
 
-    public static void merge(File output, List<File> inputFiles, ProgressDisplay progress) throws IOException, DocumentException {
+    public static void merge(File output, List<File> inputFiles, ProgressDisplay progress) throws IOException,
+            DocumentException {
         progress.startTask(Messages.getString("PdfPermissionManager.Combine"), inputFiles.size(), true); //$NON-NLS-1$
         FileOutputStream outputStream = null;
         PdfCopy copy = null;
@@ -155,7 +154,8 @@ public final class PdfPermissionManager {
         }
     }
 
-    public static void mergePages(File output, List<PdfPages> pages, ProgressDisplay progress) throws IOException, DocumentException {
+    public static void mergePages(File output, List<PdfPages> pages, ProgressDisplay progress) throws IOException,
+            DocumentException {
         int totalPageCount = 0;
         for (PdfPages pdfPages : pages) {
             totalPageCount += pdfPages.getPageCount();

@@ -31,7 +31,7 @@ import javax.swing.TransferHandler;
 import com.aha.pdftools.model.Reorderable;
 
 /**
- * Handles drag & drop row reordering
+ * Handles drag & drop row reordering.
  */
 @SuppressWarnings("serial")
 public class TableRowTransferHandler extends AbstractTableRowTransferHandler {
@@ -42,8 +42,8 @@ public class TableRowTransferHandler extends AbstractTableRowTransferHandler {
 
     @Override
     protected Transferable createTransferable(JComponent c) {
-        assert c == table;
-        return new DataHandler(Integer.valueOf(table.getSelectedRow()), localObjectFlavor.getMimeType());
+        assert c == getTable();
+        return new DataHandler(Integer.valueOf(getTable().getSelectedRow()), getLocalObjectFlavor().getMimeType());
     }
 
     @Override
@@ -51,15 +51,15 @@ public class TableRowTransferHandler extends AbstractTableRowTransferHandler {
         JTable target = (JTable) info.getComponent();
         JTable.DropLocation dl = (JTable.DropLocation) info.getDropLocation();
         int index = dl.getRow();
-        int max = table.getModel().getRowCount();
+        int max = getTable().getModel().getRowCount();
         if (index < 0 || index > max) {
             index = max;
         }
         target.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         try {
-            Integer rowFrom = (Integer) info.getTransferable().getTransferData(localObjectFlavor);
+            Integer rowFrom = (Integer) info.getTransferable().getTransferData(getLocalObjectFlavor());
             if (rowFrom != -1 && rowFrom != index) {
-                ((Reorderable) table.getModel()).reorder(rowFrom, index);
+                ((Reorderable) getTable().getModel()).reorder(rowFrom, index);
                 if (index > rowFrom) {
                     index--;
                 }

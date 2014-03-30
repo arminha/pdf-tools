@@ -27,8 +27,8 @@ import javax.swing.TransferHandler;
 
 @SuppressWarnings("serial")
 public abstract class AbstractTableRowTransferHandler extends TransferHandler {
-    protected final DataFlavor localObjectFlavor;
-    protected final JTable table;
+    private final DataFlavor localObjectFlavor;
+    private final JTable table;
 
     protected AbstractTableRowTransferHandler(JTable table, DataFlavor localObjectFlavor) {
         this.table = table;
@@ -38,6 +38,14 @@ public abstract class AbstractTableRowTransferHandler extends TransferHandler {
     public abstract boolean importData(TransferHandler.TransferSupport info);
 
     protected abstract Transferable createTransferable(JComponent c);
+
+    protected JTable getTable() {
+        return table;
+    }
+
+    protected DataFlavor getLocalObjectFlavor() {
+        return localObjectFlavor;
+    }
 
     @Override
     public boolean canImport(TransferHandler.TransferSupport info) {

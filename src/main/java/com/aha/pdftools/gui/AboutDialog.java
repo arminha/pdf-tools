@@ -49,11 +49,14 @@ public class AboutDialog extends JDialog implements ActionListener, HyperlinkLis
     public AboutDialog() {
         setTitle(Messages.getString("PermissionManager.AboutTitle"));
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        // SUPPRESS CHECKSTYLE MagicNumber
         setBounds(100, 100, 450, 300);
         getContentPane().setLayout(new BorderLayout());
+        // SUPPRESS CHECKSTYLE MagicNumber
         contentPanel.setBorder(new EmptyBorder(5, 5, 0, 5));
         getContentPane().add(contentPanel, BorderLayout.CENTER);
         contentPanel.setLayout(new BorderLayout(0, 0));
+        // CHECKSTYLE IGNORE AvoidNestedBlocks
         {
             JEditorPane editorPane = new JEditorPane();
             editorPane.setEditable(false);
@@ -78,6 +81,7 @@ public class AboutDialog extends JDialog implements ActionListener, HyperlinkLis
                 buttonPane.add(closeButton);
             }
         }
+        // CHECKSTYLE END IGNORE AvoidNestedBlocks
     }
 
     @Override

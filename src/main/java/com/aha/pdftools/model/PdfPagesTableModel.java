@@ -24,7 +24,7 @@ import com.jgoodies.binding.list.SelectionInList;
 @SuppressWarnings("serial")
 public class PdfPagesTableModel extends AbstractTableAdapter<PdfPages> implements Reorderable {
 
-    SelectionInList<PdfPages> listModel = new SelectionInList<PdfPages>();
+    private final SelectionInList<PdfPages> listModel;
 
     public PdfPagesTableModel(SelectionInList<PdfPages> listModel) {
         super(listModel, "Name", "Pages");

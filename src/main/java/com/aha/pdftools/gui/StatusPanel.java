@@ -62,9 +62,10 @@ public class StatusPanel extends JPanel implements ProgressDisplay {
         groupLayout.linkSize(SwingConstants.VERTICAL, progressBar, btnCancel, lblStatus);
         groupLayout.setHorizontalGroup(
                 groupLayout.createSequentialGroup()
-                .addGap(8)
+                .addGap(8) // SUPPRESS CHECKSTYLE MagicNumber
                 .addComponent(lblStatus)
                 .addPreferredGap(ComponentPlacement.RELATED, 0, Short.MAX_VALUE)
+                // SUPPRESS CHECKSTYLE MagicNumber
                 .addComponent(progressBar, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE)
                 .addComponent(btnCancel)
                 );

@@ -74,11 +74,14 @@ public class CombineDialog extends JDialog {
         this.progress = progress;
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         setTitle(Messages.getString("PermissionManager.Combine")); //$NON-NLS-1$
+        // SUPPRESS CHECKSTYLE MagicNumber
         setBounds(100, 100, 450, 300);
         getContentPane().setLayout(new BorderLayout());
+        // SUPPRESS CHECKSTYLE MagicNumber
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         getContentPane().add(contentPanel, BorderLayout.CENTER);
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.X_AXIS));
+        // CHECKSTYLE IGNORE AvoidNestedBlocks
         {
             JScrollPane scrollPane = new JScrollPane();
             contentPanel.add(scrollPane);
@@ -115,7 +118,8 @@ public class CombineDialog extends JDialog {
                         moveUp();
                     }
                 });
-                upButton.setIcon(new ImageIcon(CombineDialog.class.getResource("/com/aha/pdftools/icons/go-up.png"))); //$NON-NLS-1$
+                upButton.setIcon(new ImageIcon(
+                        CombineDialog.class.getResource("/com/aha/pdftools/icons/go-up.png"))); //$NON-NLS-1$
                 verticalBox.add(upButton);
             }
             {
@@ -125,7 +129,8 @@ public class CombineDialog extends JDialog {
                         moveDown();
                     }
                 });
-                downButton.setIcon(new ImageIcon(CombineDialog.class.getResource("/com/aha/pdftools/icons/go-down.png"))); //$NON-NLS-1$
+                downButton.setIcon(new ImageIcon(
+                        CombineDialog.class.getResource("/com/aha/pdftools/icons/go-down.png"))); //$NON-NLS-1$
                 verticalBox.add(downButton);
             }
         }
@@ -146,7 +151,7 @@ public class CombineDialog extends JDialog {
                 }
             });
             GroupLayout gl_buttonPane = new GroupLayout(buttonPane);
-            int containerGap = 6;
+            final int containerGap = 6;
             gl_buttonPane.setAutoCreateGaps(true);
             gl_buttonPane.linkSize(saveButton, cancelButton);
             gl_buttonPane.setHorizontalGroup(
@@ -166,6 +171,7 @@ public class CombineDialog extends JDialog {
                     );
             buttonPane.setLayout(gl_buttonPane);
         }
+        // CHECKSTYLE END IGNORE AvoidNestedBlocks
     }
 
     private void moveDown() {
@@ -218,7 +224,8 @@ public class CombineDialog extends JDialog {
         try {
             Desktop.getDesktop().open(pdfPages.getSourceFile());
         } catch (IOException e) {
-            Logger.getLogger(CombineDialog.class.getName()).log(Level.WARNING, "Failed to open PDF file", e); //$NON-NLS-1$
+            Logger.getLogger(CombineDialog.class.getName())
+                .log(Level.WARNING, "Failed to open PDF file", e); //$NON-NLS-1$
         }
     }
 
@@ -227,7 +234,8 @@ public class CombineDialog extends JDialog {
         private final List<PdfPages> pages;
         private final ProgressDisplay progress;
 
-        public MergePagesTask(Component parentComponent, File outputFile, List<PdfPages> pages, ProgressDisplay progress) {
+        public MergePagesTask(Component parentComponent, File outputFile, List<PdfPages> pages,
+                ProgressDisplay progress) {
             super(parentComponent);
             this.outputFile = outputFile;
             this.pages = pages;
