@@ -167,5 +167,5 @@ task distZip(type: Zip, dependsOn: [setVersion, 'launch4j']) {
 // Wrapper
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.10'
+    gradleVersion = '1.12'
 }
