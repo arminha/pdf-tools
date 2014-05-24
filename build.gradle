@@ -151,7 +151,7 @@ String manifestClassPath(FileCollection cp) {
 jar {
     manifest {
         attributes 'Main-Class': mainClass, 
-                   'Class-Path': manifestClassPath(sourceSets.main.compileClasspath)
+                   'Class-Path': manifestClassPath(sourceSets.main.runtimeClasspath)
     }
 }
 
