@@ -557,8 +557,8 @@ public class PermissionManager implements FileSelection {
     }
 
     private static class SaveUnit {
-        final PdfFile pdfFile;
-        final File target;
+        private final PdfFile pdfFile;
+        private final File target;
 
         public SaveUnit(PdfFile pdfFile, File target) {
             this.pdfFile = pdfFile;

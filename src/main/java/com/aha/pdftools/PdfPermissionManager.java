@@ -62,7 +62,7 @@ public final class PdfPermissionManager {
             String password) throws DocumentException, IOException {
         unlockReader(reader);
         PdfStamper stp = new PdfStamper(reader, os, '\0');
-        int perms = permissions.getPermissions();
+        int perms = permissions.getPermissionFlags();
         stp.setEncryption(null, password.getBytes("UTF-8"), perms, PdfEncryption.STANDARD_ENCRYPTION_40);
         stp.close();
     }

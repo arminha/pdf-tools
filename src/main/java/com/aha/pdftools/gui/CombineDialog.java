@@ -150,26 +150,26 @@ public class CombineDialog extends JDialog {
                     setVisible(false);
                 }
             });
-            GroupLayout gl_buttonPane = new GroupLayout(buttonPane);
+            GroupLayout glButtonPane = new GroupLayout(buttonPane);
             final int containerGap = 6;
-            gl_buttonPane.setAutoCreateGaps(true);
-            gl_buttonPane.linkSize(saveButton, cancelButton);
-            gl_buttonPane.setHorizontalGroup(
-                    gl_buttonPane.createSequentialGroup()
+            glButtonPane.setAutoCreateGaps(true);
+            glButtonPane.linkSize(saveButton, cancelButton);
+            glButtonPane.setHorizontalGroup(
+                    glButtonPane.createSequentialGroup()
                     .addGap(containerGap)
                     .addGap(0, 0, Short.MAX_VALUE)
                     .addComponent(saveButton)
                     .addComponent(cancelButton)
                     .addGap(containerGap)
                     );
-            gl_buttonPane.setVerticalGroup(
-                    gl_buttonPane.createSequentialGroup()
-                    .addGroup(gl_buttonPane.createParallelGroup(Alignment.LEADING)
+            glButtonPane.setVerticalGroup(
+                    glButtonPane.createSequentialGroup()
+                    .addGroup(glButtonPane.createParallelGroup(Alignment.LEADING)
                             .addComponent(saveButton)
                             .addComponent(cancelButton))
                             .addGap(containerGap)
                     );
-            buttonPane.setLayout(gl_buttonPane);
+            buttonPane.setLayout(glButtonPane);
         }
         // CHECKSTYLE END IGNORE AvoidNestedBlocks
     }

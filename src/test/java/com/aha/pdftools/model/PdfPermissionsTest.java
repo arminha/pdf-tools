@@ -30,7 +30,7 @@ public class PdfPermissionsTest {
     private static final String SCREEN = "screenReaders";
 
     @Test
-    public void allPermissions() {
+    public void checkInitialPermissionValues() {
         PdfPermissions perm = new PdfPermissions();
         assertTrue(perm.isAssembly());
         assertTrue(perm.isCopy());
@@ -40,7 +40,7 @@ public class PdfPermissionsTest {
         assertTrue(perm.isModifyContents());
         assertTrue(perm.isPrinting());
         assertTrue(perm.isScreenReaders());
-        assertEquals(ALL_PERMISSIONS, perm.getPermissions());
+        assertEquals(ALL_PERMISSIONS, perm.getPermissionFlags());
     }
 
     @Test
@@ -55,7 +55,7 @@ public class PdfPermissionsTest {
         assertPermission(perm.isModifyAnnotations(), ANNOTATION, permissions);
         assertPermission(perm.isModifyContents(), CONTENT, permissions);
         assertPermission(perm.isScreenReaders(), SCREEN, permissions);
-        assertEquals(pdfPerm, perm.getPermissions());
+        assertEquals(pdfPerm, perm.getPermissionFlags());
     }
 
     private void assertPermission(boolean actual, String name, Set<String> permissions) {

@@ -34,15 +34,15 @@ public class PdfPermissions extends AbstractModelObject {
     public PdfPermissions() {
     }
 
-    public PdfPermissions(int perms) {
-        mAssembly = isFlagSet(perms, PdfWriter.ALLOW_ASSEMBLY);
-        mCopy = isFlagSet(perms, PdfWriter.ALLOW_COPY);
-        mDegradedPrinting = isFlagSet(perms, PdfWriter.ALLOW_DEGRADED_PRINTING);
-        mPrinting = isFlagSet(perms, PdfWriter.ALLOW_PRINTING);
-        mScreenReaders = isFlagSet(perms, PdfWriter.ALLOW_SCREENREADERS);
-        mFillIn = isFlagSet(perms, PdfWriter.ALLOW_FILL_IN);
-        mModifyContents = isFlagSet(perms, PdfWriter.ALLOW_MODIFY_CONTENTS);
-        mModifyAnnotations = isFlagSet(perms, PdfWriter.ALLOW_MODIFY_ANNOTATIONS);
+    public PdfPermissions(int flags) {
+        mAssembly = isFlagSet(flags, PdfWriter.ALLOW_ASSEMBLY);
+        mCopy = isFlagSet(flags, PdfWriter.ALLOW_COPY);
+        mDegradedPrinting = isFlagSet(flags, PdfWriter.ALLOW_DEGRADED_PRINTING);
+        mPrinting = isFlagSet(flags, PdfWriter.ALLOW_PRINTING);
+        mScreenReaders = isFlagSet(flags, PdfWriter.ALLOW_SCREENREADERS);
+        mFillIn = isFlagSet(flags, PdfWriter.ALLOW_FILL_IN);
+        mModifyContents = isFlagSet(flags, PdfWriter.ALLOW_MODIFY_CONTENTS);
+        mModifyAnnotations = isFlagSet(flags, PdfWriter.ALLOW_MODIFY_ANNOTATIONS);
     }
 
     private static boolean isFlagSet(int value, int flag) {
@@ -129,7 +129,7 @@ public class PdfPermissions extends AbstractModelObject {
         firePropertyChange("modifyAnnotations", oldValue, mModifyAnnotations);
     }
 
-    public int getPermissions() {
+    public int getPermissionFlags() {
         // as per User access permissions table in the pdf specification
         int perms = NO_PERMISSIONS;
         if (mAssembly) {
@@ -162,7 +162,7 @@ public class PdfPermissions extends AbstractModelObject {
     public String getPermissionsAsString() {
         String permissions = "";
         if (mPrinting) {
-            permissions += "AllowPrinting ";
+            permissions += "AllowPrinting";
         }
         if (mAssembly) {
             permissions += "AllowAssembly";
