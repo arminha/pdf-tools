@@ -150,6 +150,11 @@ String manifestClassPath(FileCollection cp) {
 
 jar {
     manifest {
+        attributes 'Version': setVersion.version
+        def buildTag = System.getenv()['BUILD_TAG']
+        if (buildTag != null && !buildTag.isEmpty()) {
+            attributes 'Build-Tag': buildTag
+        }
         attributes 'Main-Class': mainClass, 
                    'Class-Path': manifestClassPath(sourceSets.main.runtimeClasspath)
     }
