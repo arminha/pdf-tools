@@ -18,15 +18,19 @@ package com.aha.pdftools.gui;
 
 import java.awt.Component;
 import java.util.concurrent.ExecutionException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.aha.pdftools.Messages;
 
 public abstract class ReportingWorker<T, V> extends SwingWorker<T, V> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ReportingWorker.class);
+
     private final Component parentComponent;
 
     public ReportingWorker(Component parentComponent) {
@@ -38,10 +42,10 @@ public abstract class ReportingWorker<T, V> extends SwingWorker<T, V> {
         try {
             get();
         } catch (InterruptedException e) {
-            Logger.getLogger(getClass().getName()).log(Level.WARNING, e.getMessage(), e);
+            LOGGER.warn(e.getMessage(), e);
         } catch (ExecutionException e) {
             Throwable cause = e.getCause();
-            Logger.getLogger(getClass().getName()).log(Level.WARNING, cause.getMessage(), cause);
+            LOGGER.warn(cause.getMessage(), cause);
             showErrorMessage(cause);
         }
     }

@@ -28,14 +28,26 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * Some static utility functions for file handling.
+ */
 public final class FileUtils {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(FileUtils.class);
 
     private FileUtils() {
     }
 
+    /**
+     * Delete a file. If it is not possible to delete it right away, try deleting it when the JVM exits.
+     * 
+     * @param file
+     *            the {@link File} to delete
+     */
     public static void deleteFile(File file) {
         if (!file.delete()) {
             file.deleteOnExit();
@@ -44,8 +56,7 @@ public final class FileUtils {
 
     public static void copyFile(File sourceFile, File destFile) throws IOException {
         if (!destFile.exists() && !destFile.createNewFile()) {
-            Logger.getLogger(FileUtils.class.getName()).log(Level.WARNING,
-                    "Could not create file " + destFile.getAbsolutePath());
+            LOGGER.warn("Could not create file " + destFile.getAbsolutePath());
         }
 
         FileInputStream sourceStream = null;
@@ -58,8 +69,7 @@ public final class FileUtils {
             long amount = destination.transferFrom(source, 0, source.size());
             if (amount != source.size()) {
                 // XXX transfer rest of file
-                Logger.getLogger(FileUtils.class.getName()).log(Level.WARNING,
-                        "Could not transfer whole file " + sourceFile.getAbsolutePath());
+                LOGGER.warn("Could not transfer whole file " + sourceFile.getAbsolutePath());
             }
         } finally {
             if (sourceStream != null) {
@@ -97,7 +107,7 @@ public final class FileUtils {
                                     processedDirs.add(path);
                                 }
                             } catch (IOException e) {
-                                Logger.getLogger(FileUtils.class.getName()).log(Level.WARNING, e.getMessage(), e);
+                                LOGGER.warn(e.getMessage(), e);
                             }
                         }
                     } else {

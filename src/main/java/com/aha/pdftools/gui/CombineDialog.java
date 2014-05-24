@@ -20,17 +20,31 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Desktop;
 import java.awt.Frame;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.DropMode;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.DropMode;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.BoxLayout;
-import javax.swing.Box;
-import javax.swing.ImageIcon;
+import javax.swing.ListSelectionModel;
+import javax.swing.border.EmptyBorder;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.aha.pdftools.Messages;
 import com.aha.pdftools.PdfPermissionManager;
@@ -39,23 +53,11 @@ import com.aha.pdftools.model.PdfFile;
 import com.aha.pdftools.model.PdfPages;
 import com.aha.pdftools.model.PdfPagesTableModel;
 import com.jgoodies.binding.list.SelectionInList;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.swing.ListSelectionModel;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
 
 @SuppressWarnings("serial")
 public class CombineDialog extends JDialog {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CombineDialog.class);
 
     private final JPanel contentPanel = new JPanel();
     private JTable table;
@@ -224,8 +226,7 @@ public class CombineDialog extends JDialog {
         try {
             Desktop.getDesktop().open(pdfPages.getSourceFile());
         } catch (IOException e) {
-            Logger.getLogger(CombineDialog.class.getName())
-                .log(Level.WARNING, "Failed to open PDF file", e); //$NON-NLS-1$
+            LOGGER.warn("Failed to open PDF file", e); //$NON-NLS-1$
         }
     }
 

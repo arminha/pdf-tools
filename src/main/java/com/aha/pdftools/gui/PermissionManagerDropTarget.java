@@ -26,16 +26,20 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 class PermissionManagerDropTarget extends DropTargetAdapter {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(PermissionManagerDropTarget.class);
+
     private static DataFlavor uriListFlavor = null;
     static {
         try {
             uriListFlavor = new DataFlavor("text/uri-list; class=java.lang.String");
         } catch (ClassNotFoundException e) {
-            Logger.getLogger(PermissionManagerDropTarget.class.getName()).log(Level.SEVERE, e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         }
     }
 

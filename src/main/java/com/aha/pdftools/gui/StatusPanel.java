@@ -16,17 +16,17 @@
 
 package com.aha.pdftools.gui;
 
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
-
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.SwingConstants;
 
 import com.aha.pdftools.Messages;
 import com.aha.pdftools.ProgressDisplay;

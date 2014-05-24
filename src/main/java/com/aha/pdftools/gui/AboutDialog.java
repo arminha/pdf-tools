@@ -24,22 +24,25 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JEditorPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
-import javax.swing.JEditorPane;
-import javax.swing.JScrollPane;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.aha.pdftools.Messages;
 
 @SuppressWarnings("serial")
 public class AboutDialog extends JDialog implements ActionListener, HyperlinkListener {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AboutDialog.class);
 
     private final JPanel contentPanel = new JPanel();
 
@@ -64,7 +67,7 @@ public class AboutDialog extends JDialog implements ActionListener, HyperlinkLis
             try {
                 editorPane.setPage(AboutDialog.class.getResource("/com/aha/pdftools/gui/about.html"));
             } catch (IOException e) {
-                Logger.getLogger(AboutDialog.class.getName()).log(Level.WARNING, e.getMessage(), e);
+                LOGGER.warn(e.getMessage(), e);
             }
             editorPane.addHyperlinkListener(this);
             JScrollPane scrollPane = new JScrollPane(editorPane);
@@ -98,10 +101,8 @@ public class AboutDialog extends JDialog implements ActionListener, HyperlinkLis
             URL url = event.getURL();
             try {
                 Desktop.getDesktop().browse(url.toURI());
-            } catch (IOException e) {
-                Logger.getLogger(AboutDialog.class.getName()).log(Level.WARNING, e.getMessage(), e);
-            } catch (URISyntaxException e) {
-                Logger.getLogger(AboutDialog.class.getName()).log(Level.WARNING, e.getMessage(), e);
+            } catch (IOException | URISyntaxException e) {
+                LOGGER.warn(e.getMessage(), e);
             }
         }
     }

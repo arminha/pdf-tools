@@ -61,6 +61,9 @@ dependencies{
     compile 'com.itextpdf:itextpdf:5.4.5'
     compile 'org.bouncycastle:bcprov-jdk15on:1.50'
     compile 'com.jgoodies:jgoodies-binding:2.10.0'
+    compile 'org.slf4j:slf4j-api:1.7.7'
+
+    runtime 'org.slf4j:slf4j-jdk14:1.7.7'
 
     testCompile 'junit:junit:4.11'
     testCompile 'pl.pragmatists:JUnitParams:0.5.0'

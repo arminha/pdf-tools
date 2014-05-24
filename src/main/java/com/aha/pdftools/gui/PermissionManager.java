@@ -16,32 +16,15 @@
 
 package com.aha.pdftools.gui;
 
+import java.awt.BorderLayout;
 import java.awt.Desktop;
 import java.awt.EventQueue;
 import java.awt.Rectangle;
-
-import javax.swing.DropMode;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JTable;
-import javax.swing.UIManager;
-
-import com.aha.pdftools.FileUtils;
-import com.aha.pdftools.Messages;
-import com.aha.pdftools.PdfPermissionManager;
-import com.aha.pdftools.ProgressDisplay;
-import com.aha.pdftools.model.PdfFileTableModel;
-import com.aha.pdftools.model.PdfFile;
-import com.jgoodies.binding.list.SelectionInList;
-
-import java.awt.BorderLayout;
 import java.awt.dnd.DropTarget;
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -51,24 +34,42 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import javax.swing.JScrollPane;
-import javax.swing.ListSelectionModel;
-import javax.swing.KeyStroke;
-import java.awt.event.KeyEvent;
-import java.awt.event.InputEvent;
-import javax.swing.JSeparator;
-import javax.swing.JToolBar;
-import javax.swing.JButton;
-import javax.swing.ImageIcon;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.DropMode;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
+import javax.swing.JTable;
+import javax.swing.JToolBar;
+import javax.swing.KeyStroke;
+import javax.swing.ListSelectionModel;
+import javax.swing.UIManager;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.aha.pdftools.FileUtils;
+import com.aha.pdftools.Messages;
+import com.aha.pdftools.PdfPermissionManager;
+import com.aha.pdftools.ProgressDisplay;
+import com.aha.pdftools.model.PdfFile;
+import com.aha.pdftools.model.PdfFileTableModel;
+import com.jgoodies.binding.list.SelectionInList;
+
 public class PermissionManager implements FileSelection {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(PermissionManager.class);
 
     // XXX table headers line wrap
 
@@ -102,7 +103,7 @@ public class PermissionManager implements FileSelection {
                     window.frame.setVisible(true);
                     new DropTarget(window.frame, new PermissionManagerDropTarget(window));
                 } catch (Exception e) {
-                    Logger.getLogger(PermissionManager.class.getName()).log(Level.SEVERE, e.getMessage(), e);
+                    LOGGER.error(e.getMessage(), e);
                 }
             }
         });
@@ -320,8 +321,7 @@ public class PermissionManager implements FileSelection {
         try {
             Desktop.getDesktop().open(pdfFile.getSourceFile());
         } catch (IOException e) {
-            Logger.getLogger(PermissionManager.class.getName())
-                .log(Level.WARNING, "Failed to open Pdf file", e); //$NON-NLS-1$
+            LOGGER.warn("Failed to open Pdf file", e); //$NON-NLS-1$
         }
     }
 
@@ -440,7 +440,7 @@ public class PermissionManager implements FileSelection {
             int index = openFiles.getSize() - 1;
             table.getSelectionModel().addSelectionInterval(index, index);
         } catch (IOException e) {
-            Logger.getLogger(PermissionManager.class.getName()).log(Level.WARNING, e.getMessage(), e);
+            LOGGER.warn(e.getMessage(), e);
         }
     }
 

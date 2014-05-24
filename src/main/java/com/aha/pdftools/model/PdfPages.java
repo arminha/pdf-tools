@@ -20,10 +20,13 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PdfPages extends AbstractModelObject {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(PdfPages.class);
 
     private final File mSourceFile;
     private final int mSourcePageCount;
@@ -106,7 +109,7 @@ public class PdfPages extends AbstractModelObject {
             mPages = pages;
         } catch (NumberFormatException e) {
             // do nothing
-            Logger.getLogger(PdfPages.class.getName()).log(Level.WARNING, e.getMessage(), e);
+            LOGGER.warn(e.getMessage(), e);
         }
     }
 

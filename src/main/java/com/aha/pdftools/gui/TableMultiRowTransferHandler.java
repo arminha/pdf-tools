@@ -19,8 +19,6 @@ package com.aha.pdftools.gui;
 import java.awt.Cursor;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.activation.ActivationDataFlavor;
 import javax.activation.DataHandler;
@@ -28,10 +26,16 @@ import javax.swing.JComponent;
 import javax.swing.JTable;
 import javax.swing.TransferHandler;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.aha.pdftools.model.MultiReorderable;
 
 @SuppressWarnings("serial")
 public class TableMultiRowTransferHandler extends AbstractTableRowTransferHandler {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(TableMultiRowTransferHandler.class);
+
     public TableMultiRowTransferHandler(JTable table) {
         super(table,
                 new ActivationDataFlavor(int[].class, DataFlavor.javaJVMLocalObjectMimeType, "Integer Row Indices"));
@@ -61,7 +65,7 @@ public class TableMultiRowTransferHandler extends AbstractTableRowTransferHandle
                 return true;
             }
         } catch (Exception e) {
-            Logger.getLogger(getClass().getName()).log(Level.WARNING, e.getMessage(), e);
+            LOGGER.warn(e.getMessage(), e);
         }
         return false;
     }
