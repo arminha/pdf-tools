@@ -6,13 +6,9 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.lessThan;
 import static org.junit.Assert.assertThat;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,34 +16,20 @@ import com.itextpdf.text.pdf.PRStream;
 import com.itextpdf.text.pdf.PdfName;
 import com.itextpdf.text.pdf.PdfNumber;
 import com.itextpdf.text.pdf.PdfObject;
-import com.itextpdf.text.pdf.PdfReader;
 
-public class PdfShrinkerTest {
+public class PdfShrinkerTest extends PdfReaderTestBase {
 
-    private static final String EXAMPLE_PDF_WITH_PNG_IMAGE = "image_example.pdf";
     private PdfShrinker shrinker;
-    private InputStream pdfIn;
-    private PdfReader reader;
 
     @Before
     public void setup() throws Exception {
         shrinker = new PdfShrinker();
     }
 
-    @After
-    public void tearDown() throws Exception {
-        if (reader != null) {
-            reader.close();
-        }
-        if (pdfIn != null) {
-            pdfIn.close();
-        }
-    }
-
     @Test(expected = IllegalArgumentException.class)
     public void cannotShrinkNonImage() throws Exception {
         setupReader(EXAMPLE_PDF_WITH_PNG_IMAGE);
-        PRStream stream = (PRStream) reader.getPdfObject(30);
+        PRStream stream = (PRStream) getReader().getPdfObject(30);
 
         shrinker.shrinkImage(stream);
     }
@@ -55,7 +37,7 @@ public class PdfShrinkerTest {
     @Test
     public void shrinkPngImage() throws Exception {
         setupReader(EXAMPLE_PDF_WITH_PNG_IMAGE);
-        PRStream stream = (PRStream) reader.getPdfObject(15);
+        PRStream stream = (PRStream) getReader().getPdfObject(15);
 
         int originalLength = stream.getLength();
         shrinker.shrinkImage(stream);
@@ -70,7 +52,7 @@ public class PdfShrinkerTest {
     @Test
     public void shrinkAndResizePngImage() throws Exception {
         setupReader(EXAMPLE_PDF_WITH_PNG_IMAGE);
-        PRStream stream = (PRStream) reader.getPdfObject(15);
+        PRStream stream = (PRStream) getReader().getPdfObject(15);
 
         int originalLength = stream.getLength();
         shrinker.setScaleFactor(0.5);
@@ -81,11 +63,6 @@ public class PdfShrinkerTest {
         assertThat(stream.get(PdfName.COLORSPACE), is((PdfObject) PdfName.DEVICERGB));
         assertThat(stream.get(PdfName.WIDTH), isPdfNumber(256));
         assertThat(stream.get(PdfName.HEIGHT), isPdfNumber(256));
-    }
-
-    private void setupReader(String example) throws IOException {
-        pdfIn = getClass().getClassLoader().getResourceAsStream(example);
-        reader = new PdfReader(pdfIn);
     }
 
     private static class IsPdfNumber extends TypeSafeMatcher<PdfObject> {

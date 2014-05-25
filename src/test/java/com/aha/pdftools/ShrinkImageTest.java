@@ -7,7 +7,6 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 
@@ -22,12 +21,11 @@ import com.itextpdf.text.pdf.PdfStamper;
 import com.itextpdf.text.pdf.parser.PdfImageObject;
 import com.itextpdf.text.pdf.parser.PdfImageObject.ImageBytesType;
 
-public class ShrinkImageTest {
+public class ShrinkImageTest extends PdfReaderTestBase {
 
     @Test
     public void shrinkImage() throws Exception {
-        InputStream pdfIn = getClass().getClassLoader().getResourceAsStream("image_example.pdf");
-        PdfReader reader = new PdfReader(pdfIn);
+        PdfReader reader = setupReader(EXAMPLE_PDF_WITH_PNG_IMAGE);
         int n = reader.getXrefSize();
         PdfObject object;
         PRStream stream;

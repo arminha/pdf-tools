@@ -3,23 +3,16 @@ package com.aha.pdftools;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertThat;
 
-import java.io.InputStream;
-
 import org.junit.Test;
 
-import com.itextpdf.text.pdf.PdfReader;
-
-public class PdfInfoHelperTest {
-
-    private static final String EXAMPLE_PDF = "image_example.pdf";
+public class PdfInfoHelperTest extends PdfReaderTestBase {
 
     @Test
     public void dumpStreamInfo() throws Exception {
-        InputStream pdfIn = getClass().getClassLoader().getResourceAsStream(EXAMPLE_PDF);
-        PdfReader reader = new PdfReader(pdfIn);
+        setupReader(EXAMPLE_PDF_WITH_PNG_IMAGE);
 
         PdfInfoHelper helper = new PdfInfoHelper();
-        String streamInfo = helper.dumpStreamInfo(reader);
+        String streamInfo = helper.dumpStreamInfo(getReader());
 
         System.out.println(streamInfo);
         // @formatter:off
