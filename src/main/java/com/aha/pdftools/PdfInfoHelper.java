@@ -1,4 +1,23 @@
+/*
+ * Copyright (C) 2014  Armin Häberling
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ */
+
 package com.aha.pdftools;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import com.itextpdf.text.pdf.PRStream;
 import com.itextpdf.text.pdf.PdfName;
@@ -60,4 +79,33 @@ public class PdfInfoHelper {
         sb.append('}');
     }
 
+    public Map<PdfName, Integer> getStreamSizeByType(PdfReader reader) {
+        Map<PdfName, Integer> sizes = new HashMap<>();
+
+        int n = reader.getXrefSize();
+        PdfObject object;
+        PRStream stream;
+
+        for (int i = 0; i < n; i++) {
+            object = reader.getPdfObject(i);
+            if (object == null || !object.isStream()) {
+                continue;
+            }
+            stream = (PRStream) object;
+            int length = stream.getLength();
+            PdfName type = (PdfName) stream.get(PdfName.TYPE);
+            if (type == null || type.equals(PdfName.XOBJECT)) {
+                type = (PdfName) stream.get(PdfName.SUBTYPE);
+            }
+            Integer total = sizes.get(type);
+            if (total == null) {
+                total = length;
+            } else {
+                total = total + length;
+            }
+            sizes.put(type, total);
+        }
+
+        return sizes;
+    }
 }
