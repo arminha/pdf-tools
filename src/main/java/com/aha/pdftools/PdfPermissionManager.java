@@ -67,7 +67,7 @@ public final class PdfPermissionManager {
         stp.close();
     }
 
-    private static void unlockReader(PdfReader reader) {
+    public static void unlockReader(PdfReader reader) {
         try {
             Class<? extends PdfReader> readerClass = reader.getClass();
             Field pwField = readerClass.getDeclaredField("ownerPasswordUsed"); //$NON-NLS-1$
