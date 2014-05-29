@@ -62,6 +62,7 @@ dependencies{
     compile 'org.bouncycastle:bcprov-jdk15on:1.50'
     compile 'com.jgoodies:jgoodies-binding:2.10.0'
     compile 'org.slf4j:slf4j-api:1.7.7'
+    compile 'com.google.code.findbugs:jsr305:2.0.3'
 
     runtime 'org.slf4j:slf4j-jdk14:1.7.7'
 

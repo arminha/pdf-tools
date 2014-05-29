@@ -1,4 +1,20 @@
-package com.aha.pdftools;
+/*
+ * Copyright (C) 2014  Armin Häberling
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ */
+
+package com.aha.pdftools.transform;
 
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
@@ -12,9 +28,10 @@ import com.itextpdf.text.pdf.PRStream;
 import com.itextpdf.text.pdf.PdfName;
 import com.itextpdf.text.pdf.PdfNumber;
 import com.itextpdf.text.pdf.PdfObject;
+import com.itextpdf.text.pdf.PdfStream;
 import com.itextpdf.text.pdf.parser.PdfImageObject;
 
-public class PdfShrinker {
+public class ShrinkImages extends PdfTransformation {
 
     private static final int BITS_PER_COMPONENT = 8;
 
@@ -28,9 +45,14 @@ public class PdfShrinker {
         this.scaleFactor = scaleFactor;
     }
 
-    public void shrinkImage(PRStream stream) throws IOException {
-        checkIsImage(stream);
+    @Override
+    protected void transformStream(PdfStream stream) throws IOException {
+        if (isImage(stream)) {
+            shrinkImage((PRStream) stream);
+        }
+    }
 
+    private void shrinkImage(PRStream stream) throws IOException {
         PdfObject colorSpace = stream.get(PdfName.COLORSPACE);
 
         PdfImageObject image = new PdfImageObject(stream);
@@ -71,10 +93,7 @@ public class PdfShrinker {
         return img;
     }
 
-    private void checkIsImage(PRStream stream) {
-        if (!stream.checkType(PdfName.XOBJECT) || !PdfName.IMAGE.equals(stream.get(PdfName.SUBTYPE))) {
-            throw new IllegalArgumentException("stream is no image");
-        }
+    private boolean isImage(PdfStream stream) {
+        return PdfName.IMAGE.equals(stream.get(PdfName.SUBTYPE));
     }
-
 }

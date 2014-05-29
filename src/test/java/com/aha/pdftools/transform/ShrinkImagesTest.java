@@ -1,37 +1,56 @@
-package com.aha.pdftools;
+/*
+ * Copyright (C) 2014  Armin Häberling
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ */
 
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.instanceOf;
+package com.aha.pdftools.transform;
+
+import static com.aha.pdftools.IsPdfNumber.isPdfNumber;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.lessThan;
 import static org.junit.Assert.assertThat;
 
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeMatcher;
+import java.io.ByteArrayOutputStream;
+
 import org.junit.Before;
 import org.junit.Test;
 
+import com.aha.pdftools.PdfReaderTestBase;
 import com.itextpdf.text.pdf.PRStream;
 import com.itextpdf.text.pdf.PdfName;
-import com.itextpdf.text.pdf.PdfNumber;
 import com.itextpdf.text.pdf.PdfObject;
+import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.pdf.PdfStamper;
 
-public class PdfShrinkerTest extends PdfReaderTestBase {
+public class ShrinkImagesTest extends PdfReaderTestBase {
 
-    private PdfShrinker shrinker;
+    private ShrinkImages transformation;
 
     @Before
     public void setup() throws Exception {
-        shrinker = new PdfShrinker();
+        transformation = new ShrinkImages();
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void cannotShrinkNonImage() throws Exception {
-        setupReader(EXAMPLE_PDF_WITH_PNG_IMAGE);
-        PRStream stream = (PRStream) getReader().getPdfObject(30);
-
-        shrinker.shrinkImage(stream);
+    @Test
+    public void reducedPdfSize() throws Exception {
+        PdfReader reader = setupReader(EXAMPLE_PDF_WITH_PNG_IMAGE);
+        transformation.setScaleFactor(0.5);
+        transformation.transform(reader);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PdfStamper stamper = new PdfStamper(reader, outputStream);
+        stamper.close();
+        assertThat(outputStream.size(), lessThan(62000));
     }
 
     @Test
@@ -40,7 +59,7 @@ public class PdfShrinkerTest extends PdfReaderTestBase {
         PRStream stream = (PRStream) getReader().getPdfObject(15);
 
         int originalLength = stream.getLength();
-        shrinker.shrinkImage(stream);
+        transformation.transform(getReader());
         assertThat(stream.getLength(), lessThan(originalLength));
         assertThat(stream.getLength(), lessThan(40000));
         assertThat(stream.get(PdfName.BITSPERCOMPONENT), isPdfNumber(8));
@@ -55,8 +74,8 @@ public class PdfShrinkerTest extends PdfReaderTestBase {
         PRStream stream = (PRStream) getReader().getPdfObject(15);
 
         int originalLength = stream.getLength();
-        shrinker.setScaleFactor(0.5);
-        shrinker.shrinkImage(stream);
+        transformation.setScaleFactor(0.5);
+        transformation.transform(getReader());
         assertThat(stream.getLength(), lessThan(originalLength));
         assertThat(stream.getLength(), lessThan(14000));
         assertThat(stream.get(PdfName.BITSPERCOMPONENT), isPdfNumber(8));
@@ -65,26 +84,4 @@ public class PdfShrinkerTest extends PdfReaderTestBase {
         assertThat(stream.get(PdfName.HEIGHT), isPdfNumber(256));
     }
 
-    private static class IsPdfNumber extends TypeSafeMatcher<PdfObject> {
-
-        private final int expected;
-
-        public IsPdfNumber(int expected) {
-            this.expected = expected;
-        }
-
-        @Override
-        protected boolean matchesSafely(PdfObject item) {
-            return item instanceof PdfNumber && ((PdfNumber) item).intValue() == expected;
-        }
-
-        @Override
-        public void describeTo(Description description) {
-            description.appendValue(new PdfNumber(expected));
-        }
-    }
-
-    private static Matcher<PdfObject> isPdfNumber(int value) {
-        return allOf(instanceOf(PdfNumber.class), new IsPdfNumber(value));
-    }
 }
