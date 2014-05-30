@@ -29,6 +29,7 @@ import com.itextpdf.text.pdf.PdfArray;
 import com.itextpdf.text.pdf.PdfName;
 import com.itextpdf.text.pdf.PdfNumber;
 import com.itextpdf.text.pdf.PdfObject;
+import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStream;
 import com.itextpdf.text.pdf.parser.PdfImageObject;
 
@@ -51,6 +52,11 @@ public class ShrinkImages extends PdfTransformation {
         if (isImage(stream)) {
             shrinkImage((PRStream) stream);
         }
+    }
+
+    @Override
+    protected void postTransform(PdfReader reader) {
+        reader.removeUnusedObjects();
     }
 
     private void shrinkImage(PRStream stream) throws IOException {
