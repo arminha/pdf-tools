@@ -163,6 +163,7 @@ jar {
 }
 
 task distZip(type: Zip, dependsOn: [setVersion, 'launch4j']) {
+    description 'Bundles the project as a JVM application with libs and the launch4j .exe'
     archiveName = project.name + '-v' + setVersion.version + '.zip'
     destinationDir = buildDir
     excludes = [launch4j.xmlFileName]
@@ -171,8 +172,18 @@ task distZip(type: Zip, dependsOn: [setVersion, 'launch4j']) {
 }
 
 ///////////////////////////////////////////////////////
+// Run Application
+
+task run(type: JavaExec) {
+    description 'Runs this project as a JVM application'
+    classpath = sourceSets.main.runtimeClasspath
+    main = mainClass
+}
+
+///////////////////////////////////////////////////////
 // Wrapper
 
 task wrapper(type: Wrapper) {
+    description 'Updates the Gradle wrapper'
     gradleVersion = '1.12'
 }
