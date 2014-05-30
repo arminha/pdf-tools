@@ -83,7 +83,6 @@ public class ShrinkImages extends PdfTransformation {
         stream.clear();
         stream.setData(imgData);
         stream.put(PdfName.TYPE, PdfName.XOBJECT);
-        stream.put(PdfName.TYPE, PdfName.XOBJECT);
         stream.put(PdfName.SUBTYPE, PdfName.IMAGE);
         stream.put(PdfName.FILTER, PdfName.DCTDECODE);
         stream.put(PdfName.WIDTH, new PdfNumber(width));
