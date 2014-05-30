@@ -21,6 +21,7 @@ import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.nio.channels.FileChannel;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -29,6 +30,8 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
+import org.bouncycastle.crypto.digests.MD5Digest;
+import org.bouncycastle.util.encoders.Hex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -119,4 +122,16 @@ public final class FileUtils {
         return files;
     }
 
+    public static File createTempFile(String name, String extension) throws IOException {
+        return File.createTempFile(hash(name), extension);
+    }
+
+    private static String hash(String name) throws UnsupportedEncodingException {
+        MD5Digest digest = new MD5Digest();
+        byte[] output = new byte[digest.getDigestSize()];
+        byte[] input = name.getBytes("UTF-8");
+        digest.update(input, 0, input.length);
+        digest.doFinal(output, 0);
+        return new String(Hex.encode(output), "UTF-8");
+    }
 }

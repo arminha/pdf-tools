@@ -21,13 +21,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.bouncycastle.crypto.digests.MD5Digest;
-import org.bouncycastle.util.encoders.Hex;
 
 import com.aha.pdftools.model.PdfFile;
 import com.aha.pdftools.model.PdfPages;
@@ -87,7 +83,7 @@ public final class PdfPermissionManager {
             return;
         }
         boolean createTempFile = inputFile.equals(output);
-        File outputFile = createTempFile ? createTempFile(output.getAbsolutePath()) : output;
+        File outputFile = createTempFile ? FileUtils.createTempFile(output.getAbsolutePath(), PDF_EXTENSION) : output;
         PdfReader reader = new PdfReader(inputFile.getAbsolutePath());
         FileOutputStream fout = new FileOutputStream(outputFile);
         changePermissions(reader, fout, permissions, password);
@@ -213,18 +209,5 @@ public final class PdfPermissionManager {
                 outputStream.close();
             }
         }
-    }
-
-    private static File createTempFile(String name) throws IOException {
-        return File.createTempFile(hash(name), PDF_EXTENSION);
-    }
-
-    private static String hash(String name) throws UnsupportedEncodingException {
-        MD5Digest digest = new MD5Digest();
-        byte[] output = new byte[digest.getDigestSize()];
-        byte[] input = name.getBytes("UTF-8");
-        digest.update(input, 0, input.length);
-        digest.doFinal(output, 0);
-        return new String(Hex.encode(output), "UTF-8");
     }
 }
