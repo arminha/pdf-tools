@@ -25,6 +25,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import com.itextpdf.text.pdf.PRStream;
+import com.itextpdf.text.pdf.PdfArray;
 import com.itextpdf.text.pdf.PdfName;
 import com.itextpdf.text.pdf.PdfNumber;
 import com.itextpdf.text.pdf.PdfObject;
@@ -54,6 +55,10 @@ public class ShrinkImages extends PdfTransformation {
 
     private void shrinkImage(PRStream stream) throws IOException {
         PdfObject colorSpace = stream.get(PdfName.COLORSPACE);
+        PdfNumber bitsPerComponent = (PdfNumber) stream.get(PdfName.BITSPERCOMPONENT);
+        if (!isColorSpaceSupported(colorSpace, bitsPerComponent)) {
+            return;
+        }
 
         PdfImageObject image = new PdfImageObject(stream);
         BufferedImage origImg = image.getBufferedImage();
@@ -62,6 +67,16 @@ public class ShrinkImages extends PdfTransformation {
         byte[] imgData = writeAsJpeg(img);
 
         replaceImage(stream, imgData, img.getWidth(), img.getHeight(), colorSpace);
+    }
+
+    private boolean isColorSpaceSupported(PdfObject colorSpace, PdfNumber bitsPerComponent) {
+        if (bitsPerComponent.intValue() != BITS_PER_COMPONENT) {
+            return false;
+        }
+        if (colorSpace.isArray() && ((PdfArray) colorSpace).contains(PdfName.INDEXED)) {
+            return false;
+        }
+        return true;
     }
 
     private void replaceImage(PRStream stream, byte[] imgData, int width, int height, PdfObject colorSpace) {
