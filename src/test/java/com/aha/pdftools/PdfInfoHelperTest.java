@@ -77,4 +77,25 @@ public class PdfInfoHelperTest extends PdfReaderTestBase {
         assertThat(sizeByType, hasEntry(PdfName.IMAGE, 733935));
     }
 
+    @Test
+    public void getStreamSizeByTypeEmbeddedOdt() throws Exception {
+        setupReader(EXAMPLE_PDF_WITH_EMBEDDED_ODT);
+
+        Map<PdfName, Integer> sizeByType = helper.getStreamSizeByType(getReader());
+
+        assertThat(sizeByType, hasEntry(null, 570325));
+        assertThat(sizeByType, hasEntry(PdfName.METADATA, 3058));
+        assertThat(sizeByType, hasEntry(PdfName.IMAGE, 733935));
+    }
+
+    @Test
+    public void getStreamSizeByTypeJpeg() throws Exception {
+        setupReader(EXAMPLE_PDF_WITH_JPEG_IMAGE);
+
+        Map<PdfName, Integer> sizeByType = helper.getStreamSizeByType(getReader());
+
+        assertThat(sizeByType, hasEntry(null, 36127));
+        assertThat(sizeByType, hasEntry(PdfName.IMAGE, 64562));
+    }
+
 }

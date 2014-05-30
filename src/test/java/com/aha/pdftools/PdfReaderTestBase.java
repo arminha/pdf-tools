@@ -26,6 +26,8 @@ import com.itextpdf.text.pdf.PdfReader;
 public class PdfReaderTestBase {
 
     public static final String EXAMPLE_PDF_WITH_PNG_IMAGE = "image_example.pdf";
+    public static final String EXAMPLE_PDF_WITH_JPEG_IMAGE = "image_jpeg_example.pdf";
+    public static final String EXAMPLE_PDF_WITH_EMBEDDED_ODT = "doc_embedded_example.pdf";
 
     private InputStream pdfIn;
     private PdfReader reader;
