@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
@@ -62,6 +63,7 @@ import org.slf4j.LoggerFactory;
 import com.aha.pdftools.FileUtils;
 import com.aha.pdftools.Messages;
 import com.aha.pdftools.PdfPermissionManager;
+import com.aha.pdftools.PdfShrinker;
 import com.aha.pdftools.ProgressDisplay;
 import com.aha.pdftools.model.PdfFile;
 import com.aha.pdftools.model.PdfFileTableModel;
@@ -84,6 +86,7 @@ public class PermissionManager implements FileSelection {
     private final Action allPermissionsAction = new AllPermissionsAction();
     private final Action mergeAction = new MergeAction();
     private final Action mergePagesAction = new MergePagesAction();
+    private final Action shrinkFilesAction = new ShrinkFilesAction();
     private StatusPanel statusPanel;
     private JFileChooser fileChooser;
 
@@ -182,6 +185,11 @@ public class PermissionManager implements FileSelection {
         mntmMergePages.setText(Messages.getString("PermissionManager.CombinePages")); //$NON-NLS-1$
         mnFile.add(mntmMergePages);
 
+        JMenuItem mntmShrinkFiles = new JMenuItem(shrinkFilesAction);
+        mntmShrinkFiles.setMnemonic(KeyEvent.VK_K);
+        mntmShrinkFiles.setText(Messages.getString("PermissionManager.ShrinkFiles")); //$NON-NLS-1$
+        mnFile.add(mntmShrinkFiles);
+
         JSeparator separator = new JSeparator();
         mnFile.add(separator);
 
@@ -270,9 +278,9 @@ public class PermissionManager implements FileSelection {
                 // Determine if mouse was clicked between column heads
                 Rectangle headerRect = table.getTableHeader().getHeaderRect(vColIndex);
                 if (vColIndex == 0) {
-                    headerRect.width -= 3;    // Hard-coded constant
+                    headerRect.width -= 3; // Hard-coded constant
                 } else {
-                    headerRect.grow(-3, 0);   // Hard-coded constant
+                    headerRect.grow(-3, 0); // Hard-coded constant
                 }
                 if (headerRect.contains(e.getX(), e.getY())) {
                     // toggle column values
@@ -337,11 +345,15 @@ public class PermissionManager implements FileSelection {
     }
 
     private void saveSelected() {
+        save(getSelected());
+    }
+
+    private List<PdfFile> getSelected() {
         List<PdfFile> selected = new ArrayList<PdfFile>();
         for (int row : table.getSelectedRows()) {
             selected.add(openFiles.getList().get(row));
         }
-        save(selected);
+        return selected;
     }
 
     private void saveAll() {
@@ -350,8 +362,8 @@ public class PermissionManager implements FileSelection {
 
     private void mergeSelected() {
         List<File> sourceFiles = new ArrayList<File>();
-        for (int row : table.getSelectedRows()) {
-            sourceFiles.add(openFiles.getList().get(row).getSourceFile());
+        for (PdfFile pdfFile : getSelected()) {
+            sourceFiles.add(pdfFile.getSourceFile());
         }
         if (!sourceFiles.isEmpty()) {
             File file = chooseSaveFile(null, true);
@@ -365,8 +377,8 @@ public class PermissionManager implements FileSelection {
     public boolean checkOverwriteFile(File f) {
         if (f.exists()) {
             // ask if the file should be overwritten
-            String msg = MessageFormat.
-                    format(Messages.getString("PermissionManager.AskOverwriteFile"), f.getAbsolutePath()); //$NON-NLS-1$
+            String msg = MessageFormat.format(
+                    Messages.getString("PermissionManager.AskOverwriteFile"), f.getAbsolutePath()); //$NON-NLS-1$
             int resultVal = JOptionPane.showConfirmDialog(
                     frame,
                     msg,
@@ -380,7 +392,14 @@ public class PermissionManager implements FileSelection {
     }
 
     private void save(List<PdfFile> files) {
-        List<SaveUnit> saveUnits = new ArrayList<SaveUnit>();
+        List<SaveUnit> saveUnits = createSaveUnits(files);
+        if (!saveUnits.isEmpty()) {
+            new SaveFileTask(saveUnits, statusPanel).execute();
+        }
+    }
+
+    private List<SaveUnit> createSaveUnits(List<PdfFile> files) {
+        List<SaveUnit> saveUnits = new ArrayList<>();
         if (files.size() == 1) {
             File f = chooseSaveFile(null, true);
             if (f != null && checkOverwriteFile(f)) {
@@ -401,23 +420,20 @@ public class PermissionManager implements FileSelection {
                 }
                 if (!overwrittenFiles.isEmpty()) {
                     String format = Messages.getString("PermissionManager.AskOverwriteFiles"); //$NON-NLS-1$
-                    String msg = MessageFormat
-                            .format(format, overwrittenFiles.size(), targetDirectory.getAbsolutePath());
+                    String msg = MessageFormat.format(format, overwrittenFiles.size(),
+                            targetDirectory.getAbsolutePath());
                     int result = JOptionPane.showConfirmDialog(
                             frame,
                             msg,
                             Messages.getString("PermissionManager.SaveAs"), //$NON-NLS-1$
                             JOptionPane.YES_NO_OPTION);
                     if (result == JOptionPane.NO_OPTION) {
-                        return;
+                        return Collections.emptyList();
                     }
                 }
             }
         }
-
-        if (!saveUnits.isEmpty()) {
-            new SaveFileTask(saveUnits, statusPanel).execute();
-        }
+        return saveUnits;
     }
 
     static List<File> filesInFolder(File folder) {
@@ -524,6 +540,13 @@ public class PermissionManager implements FileSelection {
         }
     }
 
+    private void shrinkSelected() {
+        List<SaveUnit> saveUnits = createSaveUnits(getSelected());
+        if (!saveUnits.isEmpty()) {
+            new ShrinkFileTask(saveUnits, statusPanel).execute();
+        }
+    }
+
     private class OpenFileTask extends ReportingWorker<Void, Void> {
         private final List<File> files;
         private final ProgressDisplay progress;
@@ -604,8 +627,7 @@ public class PermissionManager implements FileSelection {
         private final List<File> sourceFiles;
         private final ProgressDisplay progress;
 
-        public MergeFilesTask(File outputFile, List<File> sourceFiles,
-                ProgressDisplay progress) {
+        public MergeFilesTask(File outputFile, List<File> sourceFiles, ProgressDisplay progress) {
             super(frame);
             this.outputFile = outputFile;
             this.sourceFiles = sourceFiles;
@@ -616,6 +638,40 @@ public class PermissionManager implements FileSelection {
         protected Void doInBackground() throws Exception {
             synchronized (progress) {
                 PdfPermissionManager.merge(outputFile, sourceFiles, progress);
+            }
+            return null;
+        }
+    }
+
+    private class ShrinkFileTask extends ReportingWorker<Void, Void> {
+        private final List<SaveUnit> files;
+        private final ProgressDisplay progress;
+
+        public ShrinkFileTask(List<SaveUnit> files, ProgressDisplay progress) {
+            super(frame);
+            this.files = files;
+            this.progress = progress;
+        }
+
+        protected Void doInBackground() throws Exception {
+            synchronized (progress) {
+                progress.startTask(Messages.getString("PermissionManager.Saving"), files.size(), true); //$NON-NLS-1$
+                int i = 0;
+                PdfShrinker shrinker = new PdfShrinker();
+                try {
+                    for (SaveUnit unit : files) {
+                        if (progress.isCanceled()) {
+                            break;
+                        }
+                        progress.setNote(unit.pdfFile.getName());
+                        File source = unit.pdfFile.getSourceFile();
+                        File target = unit.target;
+                        shrinker.process(source, target);
+                        progress.setProgress(++i);
+                    }
+                } finally {
+                    progress.endTask();
+                }
             }
             return null;
         }
@@ -722,6 +778,19 @@ public class PermissionManager implements FileSelection {
         @Override
         public void actionPerformed(ActionEvent e) {
             mergePages();
+        }
+    }
+
+    @SuppressWarnings("serial")
+    private class ShrinkFilesAction extends AbstractAction {
+        public ShrinkFilesAction() {
+            putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_K, InputEvent.CTRL_MASK));
+            putValue(SHORT_DESCRIPTION, Messages.getString("PermissionManager.ShrinkFilesDesc")); //$NON-NLS-1$
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            shrinkSelected();
         }
     }
 }
