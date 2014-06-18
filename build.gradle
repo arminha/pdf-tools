@@ -2,9 +2,7 @@ apply plugin: 'java'
 
 apply plugin: 'launch4j'
 
-apply plugin: 'checkstyle'
-apply plugin: 'findbugs'
-apply plugin: 'pmd'
+apply from:   'gradle/codequality.gradle'
 apply plugin: 'jacoco'
 
 sourceCompatibility = 1.7
@@ -69,33 +67,6 @@ dependencies{
     testCompile 'junit:junit:4.11'
     testCompile 'org.hamcrest:hamcrest-library:1.3'
     testCompile 'pl.pragmatists:JUnitParams:0.5.0'
-}
-
-///////////////////////////////////////////////////
-// Code Quality
-
-findbugs {
-    ignoreFailures = true
-    toolVersion = '2.0.3'
-}
-
-if (!rootProject.hasProperty("findbugsReportXml") || findbugsReportXml != 'true') {
-    tasks.withType(FindBugs) {
-        reports {
-            xml.enabled = false
-            html.enabled = true
-        }
-    }
-}
-
-pmd {
-    ignoreFailures = true
-    toolVersion = '5.0.5'
-}
-
-checkstyle {
-    ignoreFailures = true
-    toolVersion = '5.7'
 }
 
 ///////////////////////////////////////////////////
