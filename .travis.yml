@@ -5,7 +5,9 @@ jdk:
 env:
   - TERM=dumb
 
-before_install:
-  - sudo apt-get install -qq python-docutils
+addons:
+  apt:
+    packages:
+    - python-docutils
 
 sudo: false
