@@ -7,3 +7,5 @@ env:
 
 before_install:
   - sudo apt-get install -qq python-docutils
+
+sudo: false
