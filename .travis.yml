@@ -10,7 +10,7 @@ addons:
     packages:
     - python-docutils
 
-script: .gradlew check distZip
+script: ./gradlew check distZip
 
 sudo: false
 
