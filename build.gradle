@@ -1,9 +1,9 @@
-apply plugin: 'java'
-
-apply plugin: 'launch4j'
-
+plugins {
+    id 'java'
+    id 'edu.sc.seis.launch4j' version '1.6.1'
+    id 'jacoco'
+}
 apply from:   'gradle/codequality.gradle'
-apply plugin: 'jacoco'
 
 sourceCompatibility = 1.7
 
@@ -24,14 +24,13 @@ ext {
 
 launch4j {
     mainClassName = mainClass
-    launch4jCmd = '../../lib/launch4j/launch4j'
     dontWrapJar = true
     jar = jarName
 }
 
 copyL4jLib.doLast {
-    String destDir = buildDir.path + '/' + launch4j.outputDir
-    String srcFile = destDir + '/lib/' + jarName
+    String destDir = "$buildDir/launch4j"
+    String srcFile = "$destDir/lib/$jarName"
     copy {
         from srcFile
         into destDir
@@ -39,16 +38,6 @@ copyL4jLib.doLast {
     }
     delete {
         srcFile
-    }
-}
-
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath 'edu.sc.seis.gradle:launch4j:1.0.6'
     }
 }
 
@@ -141,8 +130,8 @@ task distZip(type: Zip, dependsOn: [setVersion, 'launch4j']) {
     description 'Bundles the project as a JVM application with libs and the launch4j .exe'
     archiveName = project.name + '-v' + setVersion.version + '.zip'
     destinationDir = buildDir
-    excludes = [launch4j.xmlFileName]
-    from(buildDir.path + '/' + launch4j.outputDir)
+    excludes = [launch4j.xmlFileName, 'bin-launch4j']
+    from("$buildDir/launch4j")
     into project.name
 }
 
