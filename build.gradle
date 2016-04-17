@@ -28,19 +28,6 @@ launch4j {
     jar = jarName
 }
 
-copyL4jLib.doLast {
-    String destDir = "$buildDir/launch4j"
-    String srcFile = "$destDir/lib/$jarName"
-    copy {
-        from srcFile
-        into destDir
-        fileMode = 0755
-    }
-    delete {
-        srcFile
-    }
-}
-
 ///////////////////////////////////////////////////
 // Dependencies
 
@@ -130,8 +117,10 @@ task distZip(type: Zip, dependsOn: [setVersion, 'launch4j']) {
     description 'Bundles the project as a JVM application with libs and the launch4j .exe'
     archiveName = project.name + '-v' + setVersion.version + '.zip'
     destinationDir = buildDir
-    excludes = [launch4j.xmlFileName, 'bin-launch4j']
+    excludes = [launch4j.xmlFileName, 'bin-launch4j', "lib/$jarName"]
     from("$buildDir/launch4j")
+    into project.name
+    from jar.outputs
     into project.name
 }
 
