@@ -11,6 +11,10 @@ ext {
     mainClass = 'com.aha.pdftools.gui.PermissionManager'
 }
 
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
 ///////////////////////////////////////////////////
 // Launch4j
 
