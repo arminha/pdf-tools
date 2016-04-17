@@ -9,6 +9,7 @@ addons:
   apt:
     packages:
     - python-docutils
+    - libc6:i386
 
 script: ./gradlew check distZip
 
