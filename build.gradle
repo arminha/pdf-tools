@@ -156,5 +156,5 @@ task run(type: JavaExec) {
 
 task wrapper(type: Wrapper) {
     description 'Updates the Gradle wrapper'
-    gradleVersion = '1.12'
+    gradleVersion = '2.12'
 }
