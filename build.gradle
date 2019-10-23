@@ -1,7 +1,8 @@
 plugins {
     id 'java'
-    id 'edu.sc.seis.launch4j' version '1.6.1'
+    id 'edu.sc.seis.launch4j' version '2.4.6'
     id 'jacoco'
+    id 'com.github.spotbugs' version '2.0.0'
 }
 apply from:   'gradle/codequality.gradle'
 
@@ -57,6 +58,23 @@ jacoco {
     toolVersion = '0.7.6.201602180812'
 }
 jacocoTestReport.dependsOn(test)
+
+/////////////////
+// spotbugs
+
+spotbugs {
+    toolVersion = "3.1.12"
+    ignoreFailures = true
+}
+
+if (!rootProject.hasProperty("findbugsReportXml") || findbugsReportXml != 'true') {
+    tasks.withType(com.github.spotbugs.SpotBugsTask) {
+        reports {
+            xml.enabled = false
+            html.enabled = true
+        }
+    }
+}
 
 ///////////////////////////////////////////////////
 // About
@@ -114,7 +132,7 @@ jar {
     }
 }
 
-task distZip(type: Zip, dependsOn: [setVersion, 'launch4j']) {
+task distZip(type: Zip, dependsOn: [setVersion, 'createExe']) {
     description 'Bundles the project as a JVM application with libs and the launch4j .exe'
     archiveName = project.name + '-v' + setVersion.version + '.zip'
     destinationDir = buildDir
@@ -137,7 +155,6 @@ task run(type: JavaExec) {
 ///////////////////////////////////////////////////////
 // Wrapper
 
-task wrapper(type: Wrapper) {
-    description 'Updates the Gradle wrapper'
-    gradleVersion = '3.3'
+wrapper {
+    gradleVersion = '5.6.3'
 }
