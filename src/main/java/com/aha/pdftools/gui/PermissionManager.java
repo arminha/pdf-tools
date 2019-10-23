@@ -67,6 +67,7 @@ import com.aha.pdftools.PdfShrinker;
 import com.aha.pdftools.ProgressDisplay;
 import com.aha.pdftools.model.PdfFile;
 import com.aha.pdftools.model.PdfFileTableModel;
+import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.jgoodies.binding.list.SelectionInList;
 
 public class PermissionManager implements FileSelection {
@@ -97,11 +98,7 @@ public class PermissionManager implements FileSelection {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    String os = System.getProperty("os.name").toLowerCase(); //$NON-NLS-1$
-                    if (os.equals("linux")) { //$NON-NLS-1$
-                        UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-                    }
-
+                    FlatIntelliJLaf.install();
                     PermissionManager window = new PermissionManager();
                     window.frame.setVisible(true);
                     new DropTarget(window.frame, new PermissionManagerDropTarget(window));
