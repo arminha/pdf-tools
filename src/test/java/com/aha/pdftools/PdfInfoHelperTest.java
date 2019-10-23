@@ -39,14 +39,14 @@ public class PdfInfoHelperTest extends PdfReaderTestBase {
 
     // @formatter:off
     private static final String STREAM_15 = "Stream #15 {\n"
-            + "  /ColorSpace = /DeviceRGB\n"
-            + "  /Subtype = /Image\n"
-            + "  /Height = 512\n"
-            + "  /Filter = /FlateDecode\n"
             + "  /Type = /XObject\n"
+            + "  /Subtype = /Image\n"
             + "  /Width = 512\n"
+            + "  /Height = 512\n"
             + "  /BitsPerComponent = 8\n"
             + "  /Length = 733935\n"
+            + "  /Filter = /FlateDecode\n"
+            + "  /ColorSpace = /DeviceRGB\n"
             + "}";
     // @formatter:on
 

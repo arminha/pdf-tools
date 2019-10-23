@@ -34,7 +34,7 @@ public class PdfPermissions extends AbstractModelObject {
     public PdfPermissions() {
     }
 
-    public PdfPermissions(int flags) {
+    public PdfPermissions(long flags) {
         mAssembly = isFlagSet(flags, PdfWriter.ALLOW_ASSEMBLY);
         mCopy = isFlagSet(flags, PdfWriter.ALLOW_COPY);
         mDegradedPrinting = isFlagSet(flags, PdfWriter.ALLOW_DEGRADED_PRINTING);
@@ -45,7 +45,7 @@ public class PdfPermissions extends AbstractModelObject {
         mModifyAnnotations = isFlagSet(flags, PdfWriter.ALLOW_MODIFY_ANNOTATIONS);
     }
 
-    private static boolean isFlagSet(int value, int flag) {
+    private static boolean isFlagSet(long value, int flag) {
         return (value & flag) == flag;
     }
 

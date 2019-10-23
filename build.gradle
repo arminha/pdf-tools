@@ -37,14 +37,14 @@ repositories {
 }
 
 dependencies{
-    compile 'com.itextpdf:itextpdf:5.4.5'
-    compile 'org.bouncycastle:bcprov-jdk15on:1.50'
-    compile 'com.jgoodies:jgoodies-binding:2.10.0'
-    compile 'org.slf4j:slf4j-api:1.7.7'
-    compile 'com.google.code.findbugs:jsr305:2.0.3'
+    compile 'com.itextpdf:itextpdf:5.5.13.1'
+    compile 'org.bouncycastle:bcprov-jdk15on:1.64'
+    compile 'com.jgoodies:jgoodies-binding:2.13.0'
+    compile 'org.slf4j:slf4j-api:1.7.28'
+    compile 'com.google.code.findbugs:jsr305:3.0.2'
     compile 'com.formdev:flatlaf:0.16'
 
-    runtime 'org.slf4j:slf4j-jdk14:1.7.7'
+    runtime 'org.slf4j:slf4j-jdk14:1.7.28'
 
     testCompile 'junit:junit:4.11'
     testCompile 'org.hamcrest:hamcrest-library:1.3'

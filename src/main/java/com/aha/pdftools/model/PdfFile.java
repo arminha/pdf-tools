@@ -29,13 +29,13 @@ public class PdfFile extends PdfPermissions {
 
     public static final PdfFile openFile(File file) throws IOException {
         PdfReader reader = new PdfReader(file.getAbsolutePath());
-        int perm = PdfPermissionManager.getPermissions(reader);
+        long perm = PdfPermissionManager.getPermissions(reader);
         int pageCount = reader.getNumberOfPages();
         reader.close();
         return new PdfFile(file, perm, pageCount);
     }
 
-    public PdfFile(File sourceFile, int perm, int pageCount) {
+    public PdfFile(File sourceFile, long perm, int pageCount) {
         super(perm);
         mSourceFile = sourceFile;
         mPageCount = pageCount;
