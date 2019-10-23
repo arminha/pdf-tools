@@ -16,7 +16,6 @@
 
 package com.aha.pdftools.model;
 
-import static junitparams.JUnitParamsRunner.$;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -84,6 +83,10 @@ public class PdfPermissionsTest {
             set.add(permissions[i]);
         }
         return set;
+    }
+
+    private Object[] $(Object... elements) {
+        return elements;
     }
 
     Object[] permissionValues() {
