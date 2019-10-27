@@ -67,6 +67,7 @@ import com.aha.pdftools.ProgressDisplay;
 import com.aha.pdftools.model.PdfFile;
 import com.aha.pdftools.model.PdfFileTableModel;
 import com.formdev.flatlaf.FlatIntelliJLaf;
+import com.formdev.flatlaf.util.UIScale;
 import com.jgoodies.binding.list.SelectionInList;
 
 public class PermissionManager implements FileSelection {
@@ -119,10 +120,18 @@ public class PermissionManager implements FileSelection {
      * Initialize the contents of the frame.
      */
     private void initialize() {
+        int width = 622;
+        int height = 410;
+        float factor = UIScale.getUserScaleFactor();
+        if (factor > 1.0f) {
+            width = Math.round(factor * width);
+            height = Math.round(factor * height);
+        }
+
         frame = new JFrame();
         frame.setTitle(Messages.getString("PermissionManager.Title")); //$NON-NLS-1$
         // SUPPRESS CHECKSTYLE MagicNumber
-        frame.setBounds(100, 100, 622, 410);
+        frame.setBounds(100, 100, width, height);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JMenuBar menuBar = new JMenuBar();
