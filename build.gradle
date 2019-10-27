@@ -83,7 +83,7 @@ String gitVersion() {
     new ByteArrayOutputStream().withStream { os ->
         def result = exec {
             executable = 'git'
-            args = ['describe', '--abbrev=6']
+            args = ['describe', '--abbrev=6', '--always']
             standardOutput = os
         }
         return os.toString().trim()
