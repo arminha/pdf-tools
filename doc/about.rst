@@ -14,7 +14,7 @@ Version |version-nr|
 
 |
 
-Copyright (c) 2012 Armin Häberling
+Copyright (c) 2012-2019 Armin Häberling
 
 Special thanks to **Valerie** for her help to improve this program with hours of testing, criticism and suggestions for new features.
 Without her the program would be nowhere near as usable as it is now.

@@ -11,4 +11,8 @@ It uses code from the following external libraries:
 
 * `JGoodies Binding <http://www.jgoodies.com/freeware/libraries/binding/>`_, licensed under a `BSD license <http://www.opensource.org/licenses/bsd-license.html>`__.
 
+* `SLF4J <http://www.slf4j.org/>`_, licensed under an `MIT license <http://www.slf4j.org/license.html>`__.
+
+* `FlatLaf <https://www.formdev.com/flatlaf/>`_, licensed under the `Apache 2.0 License <https://github.com/JFormDesigner/FlatLaf/blob/master/LICENSE>`__.
+
 * `launch4j <http://launch4j.sourceforge.net/>`_, licensed under an `MIT license <http://www.opensource.org/licenses/mit-license.html>`__.
