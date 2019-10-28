@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012  Armin Häberling
+ * Copyright (C) 2019  Armin Häberling
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -44,6 +44,9 @@ public class AboutDialog extends JDialog implements ActionListener, HyperlinkLis
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AboutDialog.class);
 
+    private static final int WIDTH = 450;
+    private static final int HEIGHT = 300;
+
     private final JPanel contentPanel = new JPanel();
 
     /**
@@ -53,7 +56,7 @@ public class AboutDialog extends JDialog implements ActionListener, HyperlinkLis
         setTitle(Messages.getString("PermissionManager.AboutTitle"));
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         // SUPPRESS CHECKSTYLE MagicNumber
-        setBounds(100, 100, 450, 300);
+        WindowUtil.setBoundsScaled(this, 100, 100, WIDTH, HEIGHT);
         getContentPane().setLayout(new BorderLayout());
         // SUPPRESS CHECKSTYLE MagicNumber
         contentPanel.setBorder(new EmptyBorder(5, 5, 0, 5));
