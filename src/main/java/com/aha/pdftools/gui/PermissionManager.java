@@ -147,30 +147,19 @@ public class PermissionManager implements FileSelection {
         mntmSave.setText(Messages.getString("PermissionManager.Save..")); //$NON-NLS-1$
         mntmSave.setMnemonic(KeyEvent.VK_S);
 
-        JSeparator separator1 = new JSeparator();
-        mnFile.add(separator1);
+        mnFile.add(new JSeparator());
         mnFile.add(mntmSave);
 
         JMenuItem mntmSaveAll = new JMenuItem(Messages.getString("PermissionManager.SaveAll")); //$NON-NLS-1$
         mntmSaveAll.setMnemonic(KeyEvent.VK_A);
         mntmSaveAll.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK));
-        mntmSaveAll.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                saveAll();
-            }
-        });
+        mntmSaveAll.addActionListener(e -> saveAll());
         mnFile.add(mntmSaveAll);
 
         JMenuItem mntmQuit = new JMenuItem(Messages.getString("PermissionManager.Quit")); //$NON-NLS-1$
         mntmQuit.setMnemonic(KeyEvent.VK_Q);
         mntmQuit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.CTRL_MASK));
-        mntmQuit.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                frame.dispose();
-            }
-        });
+        mntmQuit.addActionListener(e -> frame.dispose());
 
         JMenuItem mntmMergeFiles = new JMenuItem(mergeAction);
         mntmMergeFiles.setText(Messages.getString("PermissionManager.CombineFiles")); //$NON-NLS-1$
@@ -187,15 +176,10 @@ public class PermissionManager implements FileSelection {
         mntmShrinkFiles.setText(Messages.getString("PermissionManager.ShrinkFiles")); //$NON-NLS-1$
         mnFile.add(mntmShrinkFiles);
 
-        JSeparator separator = new JSeparator();
-        mnFile.add(separator);
+        mnFile.add(new JSeparator());
 
         JMenuItem mntmAbout = new JMenuItem(Messages.getString("PermissionManager.About")); //$NON-NLS-1$
-        mntmAbout.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                new AboutDialog().setVisible(true);
-            }
-        });
+        mntmAbout.addActionListener(e -> new AboutDialog().setVisible(true));
         mnFile.add(mntmAbout);
         mnFile.add(mntmQuit);
 
@@ -211,26 +195,15 @@ public class PermissionManager implements FileSelection {
         JMenuItem mntmSelectAll = new JMenuItem(Messages.getString("PermissionManager.SelectAll")); //$NON-NLS-1$
         mntmSelectAll.setMnemonic(KeyEvent.VK_A);
         mntmSelectAll.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, InputEvent.CTRL_MASK));
-        mntmSelectAll.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                table.selectAll();
-            }
-        });
+        mntmSelectAll.addActionListener(e -> table.selectAll());
         mnEdit.add(mntmSelectAll);
 
-        JSeparator separator2 = new JSeparator();
-        mnEdit.add(separator2);
+        mnEdit.add(new JSeparator());
 
         JMenuItem mntmClearList = new JMenuItem(Messages.getString("PermissionManager.ClearList")); //$NON-NLS-1$
         mntmClearList.setMnemonic(KeyEvent.VK_C);
         mntmClearList.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, InputEvent.SHIFT_MASK));
-        mntmClearList.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                clearFiles();
-            }
-        });
+        mntmClearList.addActionListener(e -> clearFiles());
         mnEdit.add(mntmClearList);
 
         JMenuItem mntmAllPermissions = new JMenuItem(allPermissionsAction);
@@ -238,7 +211,7 @@ public class PermissionManager implements FileSelection {
         mntmAllPermissions.setMnemonic(KeyEvent.VK_P);
         mnEdit.add(mntmAllPermissions);
 
-        openFiles = new SelectionInList<PdfFile>();
+        openFiles = new SelectionInList<>();
         table = new JTable();
         table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         table.setModel(new PdfFileTableModel(openFiles));
