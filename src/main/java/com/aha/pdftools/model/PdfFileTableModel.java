@@ -32,18 +32,17 @@ public class PdfFileTableModel extends AbstractTableAdapter<PdfFile> implements 
     private final SelectionInList<PdfFile> listModel;
 
     public PdfFileTableModel(SelectionInList<PdfFile> listModel) {
-        super(listModel, new String[] {
-                Messages.getString("PdfFileTableModel.Name"), //$NON-NLS-1$
-                Messages.getString("PdfFileTableModel.Path"), //$NON-NLS-1$
-                Messages.getString("PdfFileTableModel.Assembly"), //$NON-NLS-1$
-                Messages.getString("PdfFileTableModel.Copy"), //$NON-NLS-1$
-                Messages.getString("PdfFileTableModel.DegradedPrinting"), //$NON-NLS-1$
-                Messages.getString("PdfFileTableModel.Printing"), //$NON-NLS-1$
-                Messages.getString("PdfFileTableModel.ScreenReaders"), //$NON-NLS-1$
-                Messages.getString("PdfFileTableModel.FillIn"), //$NON-NLS-1$
-                Messages.getString("PdfFileTableModel.ModifyAnnotations"), //$NON-NLS-1$
-                Messages.getString("PdfFileTableModel.ModifyContents"), //$NON-NLS-1$
-        });
+        super(listModel, Messages.getString("PdfFileTableModel.Name"), //$NON-NLS-1$
+            Messages.getString("PdfFileTableModel.Path"), //$NON-NLS-1$
+            Messages.getString("PdfFileTableModel.Assembly"), //$NON-NLS-1$
+            Messages.getString("PdfFileTableModel.Copy"), //$NON-NLS-1$
+            Messages.getString("PdfFileTableModel.DegradedPrinting"), //$NON-NLS-1$
+            Messages.getString("PdfFileTableModel.Printing"), //$NON-NLS-1$
+            Messages.getString("PdfFileTableModel.ScreenReaders"), //$NON-NLS-1$
+            Messages.getString("PdfFileTableModel.FillIn"), //$NON-NLS-1$
+            Messages.getString("PdfFileTableModel.ModifyAnnotations"), //$NON-NLS-1$
+            Messages.getString("PdfFileTableModel.ModifyContents") //$NON-NLS-1$
+        );
         this.listModel = listModel;
     }
 
