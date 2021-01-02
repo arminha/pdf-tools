@@ -6,6 +6,7 @@ on:
 
 jobs:
   build:
+    name: Build on Java ${{ matrix.java }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -16,6 +17,11 @@ jobs:
     steps:
       - name: Checkout sources
         uses: actions/checkout@v2
+
+      - name: Install python-docutils
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y python-docutils
 
       - name: Set up JDK
         uses: actions/setup-java@v1
