@@ -16,21 +16,18 @@
 
 package com.aha.pdftools.model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import junitparams.JUnitParamsRunner;
-import junitparams.Parameters;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
 import com.itextpdf.text.pdf.PdfWriter;
 
-@RunWith(JUnitParamsRunner.class)
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+
 public class PdfPermissionsTest {
 
     private static final int ALL_PERMISSIONS = 0xfffffffc;
@@ -58,8 +55,8 @@ public class PdfPermissionsTest {
         assertEquals(ALL_PERMISSIONS, perm.getPermissionFlags());
     }
 
-    @Test
-    @Parameters(method = "permissionValues")
+    @ParameterizedTest
+    @MethodSource("permissionValues")
     public void permissions(int pdfPerm, Set<String> permissions) {
         PdfPermissions perm = new PdfPermissions(pdfPerm);
         assertPermission(perm.isAssembly(), ASSEMBLY, permissions);
@@ -74,10 +71,10 @@ public class PdfPermissionsTest {
     }
 
     private void assertPermission(boolean actual, String name, Set<String> permissions) {
-        assertEquals(name, permissions.contains(name), actual);
+        assertEquals(permissions.contains(name), actual, name);
     }
 
-    private Set<String> $$(String... permissions) {
+    private static Set<String> $$(String... permissions) {
         HashSet<String> set = new HashSet<String>();
         for (int i = 0; i < permissions.length; i++) {
             set.add(permissions[i]);
@@ -85,11 +82,11 @@ public class PdfPermissionsTest {
         return set;
     }
 
-    private Object[] $(Object... elements) {
+    private static Object[] $(Object... elements) {
         return elements;
     }
 
-    Object[] permissionValues() {
+    static Object[] permissionValues() {
         return $(
                 $(ALL_PERMISSIONS, $$(ASSEMBLY, COPY, PRINT, DEGRADED_PRINT, FILL_IN, ANNOTATION, CONTENT, SCREEN)),
                 $((ALL_PERMISSIONS ^ PdfWriter.ALLOW_PRINTING) & ALL_PERMISSIONS,

@@ -18,13 +18,13 @@ package com.aha.pdftools;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasEntry;
-import static org.junit.Assert.assertThat;
 
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.itextpdf.text.pdf.PdfName;
 
@@ -32,7 +32,7 @@ public class PdfInfoHelperTest extends PdfReaderTestBase {
 
     private PdfInfoHelper helper;
 
-    @Before
+    @BeforeEach
     public void setup() {
         helper = new PdfInfoHelper();
     }

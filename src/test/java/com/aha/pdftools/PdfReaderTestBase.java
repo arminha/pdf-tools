@@ -19,7 +19,7 @@ package com.aha.pdftools;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
 
 import com.itextpdf.text.pdf.PdfReader;
 
@@ -32,7 +32,7 @@ public class PdfReaderTestBase {
     private InputStream pdfIn;
     private PdfReader reader;
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         if (reader != null) {
             reader.close();

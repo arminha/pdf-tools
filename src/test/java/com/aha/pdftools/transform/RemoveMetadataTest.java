@@ -16,13 +16,13 @@
 
 package com.aha.pdftools.transform;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.lessThan;
-import static org.junit.Assert.assertThat;
 
 import java.io.ByteArrayOutputStream;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.aha.pdftools.PdfReaderTestBase;
 import com.itextpdf.text.pdf.PdfReader;
@@ -32,7 +32,7 @@ public class RemoveMetadataTest extends PdfReaderTestBase {
 
     private RemoveMetadata transformation;
 
-    @Before
+    @BeforeEach
     public void setup() throws Exception {
         transformation = new RemoveMetadata();
     }
