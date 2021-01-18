@@ -38,15 +38,15 @@ repositories {
 }
 
 dependencies{
-    implementation 'com.itextpdf:itextpdf:5.5.13.1'
-    implementation 'org.bouncycastle:bcprov-jdk15on:1.64'
+    implementation 'com.itextpdf:itextpdf:5.5.13.2'
+    implementation 'org.bouncycastle:bcprov-jdk15on:1.68'
     implementation 'com.jgoodies:jgoodies-binding:2.13.0'
-    implementation 'org.slf4j:slf4j-api:1.7.28'
+    implementation 'org.slf4j:slf4j-api:1.7.30'
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
-    implementation 'com.formdev:flatlaf:0.16'
+    implementation 'com.formdev:flatlaf:0.46'
     implementation 'com.sun.activation:javax.activation:1.2.0'
 
-    runtimeOnly 'org.slf4j:slf4j-jdk14:1.7.28'
+    runtimeOnly 'org.slf4j:slf4j-jdk14:1.7.30'
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.hamcrest:hamcrest-library:1.3'
