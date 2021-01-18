@@ -40,7 +40,7 @@ public class RemoveMetadata extends PdfTransformation {
     }
 
     @Override
-    protected void transformStream(PdfStream stream) throws IOException {
+    protected void transformStream(PdfStream stream) {
         removeMetaData(stream);
     }
 

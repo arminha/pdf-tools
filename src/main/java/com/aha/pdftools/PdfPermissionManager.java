@@ -20,8 +20,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,11 +57,11 @@ public final class PdfPermissionManager {
     }
 
     private static void changePermissions(PdfReader reader, OutputStream os, PdfPermissions permissions,
-            String password) throws DocumentException, IOException {
+                                          String password) throws DocumentException, IOException {
         unlockReader(reader);
         PdfStamper stp = new PdfStamper(reader, os, '\0');
         int perms = permissions.getPermissionFlags();
-        stp.setEncryption(null, password.getBytes("UTF-8"), perms, PdfEncryption.STANDARD_ENCRYPTION_40);
+        stp.setEncryption(null, password.getBytes(StandardCharsets.UTF_8), perms, PdfEncryption.STANDARD_ENCRYPTION_40);
         stp.close();
     }
 
@@ -75,9 +77,9 @@ public final class PdfPermissionManager {
     }
 
     public static void processFile(File inputFile, File output, PdfPermissions permissions, String password)
-            throws IOException, DocumentException {
+        throws IOException, DocumentException {
         if (permissions instanceof PdfFile && ((PdfFile) permissions).isAllowAll()) {
-            ArrayList<File> inputFiles = new ArrayList<File>();
+            List<File> inputFiles = new ArrayList<>();
             inputFiles.add(inputFile);
             merge(output, inputFiles, new NullProgressDisplay());
             return;
@@ -93,7 +95,7 @@ public final class PdfPermissionManager {
     }
 
     public static void merge(File output, List<File> inputFiles, ProgressDisplay progress) throws IOException,
-            DocumentException {
+        DocumentException {
         progress.startTask(Messages.getString("PdfPermissionManager.Combine"), inputFiles.size(), true); //$NON-NLS-1$
         FileOutputStream outputStream = null;
         PdfCopy copy = null;
@@ -110,10 +112,8 @@ public final class PdfPermissionManager {
                     break;
                 }
                 progress.setNote(file.getName());
-                FileInputStream inputStream = null;
                 PdfReader reader = null;
-                try {
-                    inputStream = new FileInputStream(file);
+                try (InputStream inputStream = new FileInputStream(file)) {
                     reader = new PdfReader(inputStream);
                     unlockReader(reader);
                     for (int i = 1; i <= reader.getNumberOfPages(); i++) {
@@ -129,9 +129,6 @@ public final class PdfPermissionManager {
                 } finally {
                     if (reader != null) {
                         reader.close();
-                    }
-                    if (inputStream != null) {
-                        inputStream.close();
                     }
                     progress.setProgress(++n);
                 }
@@ -151,7 +148,7 @@ public final class PdfPermissionManager {
     }
 
     public static void mergePages(File output, List<PdfPages> pages, ProgressDisplay progress) throws IOException,
-            DocumentException {
+        DocumentException {
         int totalPageCount = 0;
         for (PdfPages pdfPages : pages) {
             totalPageCount += pdfPages.getPageCount();
@@ -171,10 +168,8 @@ public final class PdfPermissionManager {
                     break;
                 }
                 progress.setNote(pdfPages.getName());
-                FileInputStream inputStream = null;
                 PdfReader reader = null;
-                try {
-                    inputStream = new FileInputStream(pdfPages.getSourceFile());
+                try (InputStream inputStream = new FileInputStream(pdfPages.getSourceFile())) {
                     reader = new PdfReader(inputStream);
                     unlockReader(reader);
                     for (int pageNumber : pdfPages.getPages()) {
@@ -191,9 +186,6 @@ public final class PdfPermissionManager {
                 } finally {
                     if (reader != null) {
                         reader.close();
-                    }
-                    if (inputStream != null) {
-                        inputStream.close();
                     }
                 }
             }

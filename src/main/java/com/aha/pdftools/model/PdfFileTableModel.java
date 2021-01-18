@@ -23,7 +23,6 @@ import com.aha.pdftools.Messages;
 import com.jgoodies.binding.adapter.AbstractTableAdapter;
 import com.jgoodies.binding.list.SelectionInList;
 
-@SuppressWarnings("serial")
 public class PdfFileTableModel extends AbstractTableAdapter<PdfFile> implements Reorderable, MultiReorderable {
 
     private static final int FIRST_PERMISSION_COLUMN = 2;
@@ -124,7 +123,7 @@ public class PdfFileTableModel extends AbstractTableAdapter<PdfFile> implements 
     public Class<?> getColumnClass(int columnIndex) {
         if (columnIndex < FIRST_PERMISSION_COLUMN) {
             return String.class;
-        } else if (columnIndex >= FIRST_PERMISSION_COLUMN && columnIndex <= LAST_PERMISSION_COLUMN) {
+        } else if (columnIndex <= LAST_PERMISSION_COLUMN) {
             return Boolean.class;
         }
         return super.getColumnClass(columnIndex);
@@ -146,7 +145,7 @@ public class PdfFileTableModel extends AbstractTableAdapter<PdfFile> implements 
             if (!value) {
                 break;
             }
-            value = value && (Boolean) getValueAt(i, columnIndex);
+            value = (Boolean) getValueAt(i, columnIndex);
         }
         for (int i = 0; i < n; i++) {
             setValueAt(!value, i, columnIndex);
@@ -175,7 +174,7 @@ public class PdfFileTableModel extends AbstractTableAdapter<PdfFile> implements 
 
     @Override
     public int reorder(int[] fromIndices, int toIndex) {
-        List<PdfFile> insert = new ArrayList<PdfFile>();
+        List<PdfFile> insert = new ArrayList<>();
         List<PdfFile> list = listModel.getList();
         for (int i = fromIndices.length - 1; i >= 0; i--) {
             int index = fromIndices[i];

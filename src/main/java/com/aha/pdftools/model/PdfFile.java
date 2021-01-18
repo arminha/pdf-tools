@@ -27,7 +27,7 @@ public class PdfFile extends PdfPermissions {
     private final File mSourceFile;
     private final int mPageCount;
 
-    public static final PdfFile openFile(File file) throws IOException {
+    public static PdfFile openFile(File file) throws IOException {
         PdfReader reader = new PdfReader(file.getAbsolutePath());
         long perm = PdfPermissionManager.getPermissions(reader);
         int pageCount = reader.getNumberOfPages();

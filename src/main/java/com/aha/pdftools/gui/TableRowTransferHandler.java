@@ -34,7 +34,6 @@ import com.aha.pdftools.model.Reorderable;
 /**
  * Handles drag & drop row reordering.
  */
-@SuppressWarnings("serial")
 public class TableRowTransferHandler extends AbstractTableRowTransferHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TableMultiRowTransferHandler.class);
@@ -47,7 +46,7 @@ public class TableRowTransferHandler extends AbstractTableRowTransferHandler {
     @Override
     protected Transferable createTransferable(JComponent c) {
         assert c == getTable();
-        return new DataHandler(Integer.valueOf(getTable().getSelectedRow()), getLocalObjectFlavor().getMimeType());
+        return new DataHandler(getTable().getSelectedRow(), getLocalObjectFlavor().getMimeType());
     }
 
     @Override
@@ -61,7 +60,7 @@ public class TableRowTransferHandler extends AbstractTableRowTransferHandler {
         }
         target.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         try {
-            Integer rowFrom = (Integer) info.getTransferable().getTransferData(getLocalObjectFlavor());
+            int rowFrom = (Integer) info.getTransferable().getTransferData(getLocalObjectFlavor());
             if (rowFrom != -1 && rowFrom != index) {
                 ((Reorderable) getTable().getModel()).reorder(rowFrom, index);
                 if (index > rowFrom) {

@@ -35,7 +35,7 @@ public class PdfPages extends AbstractModelObject {
     public PdfPages(File sourceFile, int sourcePageCount) {
         mSourceFile = sourceFile;
         mSourcePageCount = sourcePageCount;
-        mPages = new ArrayList<Integer>(sourcePageCount);
+        mPages = new ArrayList<>(sourcePageCount);
         for (int i = 0; i < sourcePageCount; i++) {
             mPages.add(i + 1);
         }
@@ -92,7 +92,7 @@ public class PdfPages extends AbstractModelObject {
 
     public void setPagesString(String pagesAsString) {
         String[] intervals = pagesAsString.split(",");
-        List<Integer> pages = new ArrayList<Integer>();
+        List<Integer> pages = new ArrayList<>();
         try {
             for (String intervalAsString : intervals) {
                 int minusIndex = intervalAsString.indexOf('-');
@@ -117,7 +117,7 @@ public class PdfPages extends AbstractModelObject {
         if (start < 1 || start > mSourcePageCount || start > end) {
             throw new IllegalArgumentException();
         }
-        if (end < 1 || end > mSourcePageCount) {
+        if (end > mSourcePageCount) {
             throw new IllegalArgumentException();
         }
         for (int i = start; i <= end; i++) {
@@ -126,7 +126,7 @@ public class PdfPages extends AbstractModelObject {
     }
 
     private static class Interval {
-        private int start;
+        private final int start;
         private int end;
 
         public Interval(int start) {

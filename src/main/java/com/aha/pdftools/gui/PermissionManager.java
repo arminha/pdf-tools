@@ -22,7 +22,6 @@ import java.awt.EventQueue;
 import java.awt.Rectangle;
 import java.awt.dnd.DropTarget;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -35,6 +34,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -67,7 +67,6 @@ import com.aha.pdftools.ProgressDisplay;
 import com.aha.pdftools.model.PdfFile;
 import com.aha.pdftools.model.PdfFileTableModel;
 import com.formdev.flatlaf.FlatIntelliJLaf;
-import com.formdev.flatlaf.util.UIScale;
 import com.jgoodies.binding.list.SelectionInList;
 
 public class PermissionManager implements FileSelection {
@@ -79,7 +78,7 @@ public class PermissionManager implements FileSelection {
     private JFrame frame;
     private JTable table;
     private SelectionInList<PdfFile> openFiles;
-    private HashSet<String> openFileSet = new HashSet<String>();
+    private final Set<String> openFileSet = new HashSet<>();
     private final Action openFilesAction = new OpenFilesAction();
     private final Action openFolderAction = new OpenFolderAction();
     private final Action saveAction = new SaveAction();
@@ -95,16 +94,14 @@ public class PermissionManager implements FileSelection {
      * Launch the application.
      */
     public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    FlatIntelliJLaf.install();
-                    PermissionManager window = new PermissionManager();
-                    window.frame.setVisible(true);
-                    new DropTarget(window.frame, new PermissionManagerDropTarget(window));
-                } catch (Exception e) {
-                    LOGGER.error(e.getMessage(), e);
-                }
+        EventQueue.invokeLater(() -> {
+            try {
+                FlatIntelliJLaf.install();
+                PermissionManager window = new PermissionManager();
+                window.frame.setVisible(true);
+                new DropTarget(window.frame, new PermissionManagerDropTarget(window));
+            } catch (Exception e) {
+                LOGGER.error(e.getMessage(), e);
             }
         });
     }
@@ -319,7 +316,7 @@ public class PermissionManager implements FileSelection {
     }
 
     private List<PdfFile> getSelected() {
-        List<PdfFile> selected = new ArrayList<PdfFile>();
+        List<PdfFile> selected = new ArrayList<>();
         for (int row : table.getSelectedRows()) {
             selected.add(openFiles.getList().get(row));
         }
@@ -331,7 +328,7 @@ public class PermissionManager implements FileSelection {
     }
 
     private void mergeSelected() {
-        List<File> sourceFiles = new ArrayList<File>();
+        List<File> sourceFiles = new ArrayList<>();
         for (PdfFile pdfFile : getSelected()) {
             sourceFiles.add(pdfFile.getSourceFile());
         }
@@ -354,9 +351,7 @@ public class PermissionManager implements FileSelection {
                     msg,
                     Messages.getString("PermissionManager.SaveAs"), //$NON-NLS-1$
                     JOptionPane.YES_NO_OPTION);
-            if (resultVal == JOptionPane.NO_OPTION) {
-                return false;
-            }
+            return resultVal != JOptionPane.NO_OPTION;
         }
         return true;
     }
@@ -379,7 +374,7 @@ public class PermissionManager implements FileSelection {
             File f = chooseSaveFile(Messages.getString("PermissionManager.FileNameWillBeIgnored"), false); //$NON-NLS-1$
             if (f != null) {
                 File targetDirectory = f.getParentFile();
-                List<File> overwrittenFiles = new ArrayList<File>();
+                List<File> overwrittenFiles = new ArrayList<>();
                 for (PdfFile pdfFile : files) {
                     String name = pdfFile.getName();
                     File target = new File(targetDirectory.getAbsolutePath() + File.separator + name);
@@ -456,7 +451,7 @@ public class PermissionManager implements FileSelection {
             if (!allowAll) {
                 break;
             }
-            allowAll = allowAll && pdfFile.isAllowAll();
+            allowAll = pdfFile.isAllowAll();
         }
 
         for (PdfFile pdfFile : openFiles.getList()) {
@@ -500,9 +495,9 @@ public class PermissionManager implements FileSelection {
 
     private void mergePages() {
         int[] selectedRows = table.getSelectedRows();
-        List<PdfFile> files = new ArrayList<PdfFile>();
-        for (int i = 0; i < selectedRows.length; i++) {
-            files.add(openFiles.getElementAt(selectedRows[i]));
+        List<PdfFile> files = new ArrayList<>();
+        for (int selectedRow : selectedRows) {
+            files.add(openFiles.getElementAt(selectedRow));
         }
         if (!files.isEmpty()) {
             CombineDialog dialog = new CombineDialog(frame, this, statusPanel);
@@ -528,7 +523,7 @@ public class PermissionManager implements FileSelection {
         }
 
         @Override
-        protected Void doInBackground() throws Exception {
+        protected Void doInBackground() {
             synchronized (progress) {
                 progress.startTask(Messages.getString("PermissionManager.Loading"), files.size(), true); //$NON-NLS-1$
                 int i = 0;
@@ -647,7 +642,6 @@ public class PermissionManager implements FileSelection {
         }
     }
 
-    @SuppressWarnings("serial")
     private class OpenFilesAction extends AbstractAction {
         public OpenFilesAction() {
             putValue(LARGE_ICON_KEY, new ImageIcon(
@@ -662,7 +656,6 @@ public class PermissionManager implements FileSelection {
         }
     }
 
-    @SuppressWarnings("serial")
     private class OpenFolderAction extends AbstractAction {
         public OpenFolderAction() {
             putValue(ACCELERATOR_KEY,
@@ -676,7 +669,6 @@ public class PermissionManager implements FileSelection {
         }
     }
 
-    @SuppressWarnings("serial")
     private class SaveAction extends AbstractAction {
         public SaveAction() {
             putValue(LARGE_ICON_KEY, new ImageIcon(
@@ -692,7 +684,6 @@ public class PermissionManager implements FileSelection {
         }
     }
 
-    @SuppressWarnings("serial")
     private class DeleteAction extends AbstractAction {
         public DeleteAction() {
             putValue(LARGE_ICON_KEY, new ImageIcon(
@@ -707,7 +698,6 @@ public class PermissionManager implements FileSelection {
         }
     }
 
-    @SuppressWarnings("serial")
     private class AllPermissionsAction extends AbstractAction {
         public AllPermissionsAction() {
             putValue(LARGE_ICON_KEY, new ImageIcon(PermissionManager
@@ -721,7 +711,6 @@ public class PermissionManager implements FileSelection {
         }
     }
 
-    @SuppressWarnings("serial")
     private class MergeAction extends AbstractAction {
         public MergeAction() {
             putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_M, InputEvent.CTRL_MASK));
@@ -737,7 +726,6 @@ public class PermissionManager implements FileSelection {
         }
     }
 
-    @SuppressWarnings("serial")
     private class MergePagesAction extends AbstractAction {
         public MergePagesAction() {
             putValue(ACCELERATOR_KEY,
@@ -751,7 +739,6 @@ public class PermissionManager implements FileSelection {
         }
     }
 
-    @SuppressWarnings("serial")
     private class ShrinkFilesAction extends AbstractAction {
         public ShrinkFilesAction() {
             putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_K, InputEvent.CTRL_MASK));

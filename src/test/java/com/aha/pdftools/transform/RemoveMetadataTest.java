@@ -33,7 +33,7 @@ public class RemoveMetadataTest extends PdfReaderTestBase {
     private RemoveMetadata transformation;
 
     @BeforeEach
-    public void setup() throws Exception {
+    public void setup() {
         transformation = new RemoveMetadata();
     }
 

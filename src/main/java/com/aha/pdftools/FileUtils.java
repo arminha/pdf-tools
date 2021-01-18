@@ -21,8 +21,8 @@ import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.nio.channels.FileChannel;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -93,10 +93,10 @@ public final class FileUtils {
     }
 
     public static List<File> listFiles(File dir, boolean recursive, FileFilter filter) {
-        ArrayList<File> files = new ArrayList<File>();
+        List<File> files = new ArrayList<>();
         if (dir.isDirectory()) {
-            Queue<File> dirsToProcess = new ArrayDeque<File>();
-            Set<String> processedDirs = new HashSet<String>();
+            Queue<File> dirsToProcess = new ArrayDeque<>();
+            Set<String> processedDirs = new HashSet<>();
             dirsToProcess.add(dir);
             while (!dirsToProcess.isEmpty()) {
                 File currentDir = dirsToProcess.remove();
@@ -126,12 +126,12 @@ public final class FileUtils {
         return File.createTempFile(hash(name), extension);
     }
 
-    private static String hash(String name) throws UnsupportedEncodingException {
+    private static String hash(String name) {
         MD5Digest digest = new MD5Digest();
         byte[] output = new byte[digest.getDigestSize()];
-        byte[] input = name.getBytes("UTF-8");
+        byte[] input = name.getBytes(StandardCharsets.UTF_8);
         digest.update(input, 0, input.length);
         digest.doFinal(output, 0);
-        return new String(Hex.encode(output), "UTF-8");
+        return new String(Hex.encode(output), StandardCharsets.UTF_8);
     }
 }

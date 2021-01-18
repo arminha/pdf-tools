@@ -20,8 +20,6 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Desktop;
 import java.awt.Frame;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -54,21 +52,17 @@ import com.aha.pdftools.model.PdfPages;
 import com.aha.pdftools.model.PdfPagesTableModel;
 import com.jgoodies.binding.list.SelectionInList;
 
-@SuppressWarnings("serial")
 public class CombineDialog extends JDialog {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CombineDialog.class);
 
-    private final JPanel contentPanel = new JPanel();
-    private JTable table;
-    private final SelectionInList<PdfPages> sourcePages = new SelectionInList<PdfPages>();
+    private final JTable table;
+    private final SelectionInList<PdfPages> sourcePages = new SelectionInList<>();
     private final FileSelection fileSelection;
     private final ProgressDisplay progress;
 
     /**
      * Create the dialog.
-     * 
-     * @param frame
      */
     public CombineDialog(Frame frame, FileSelection fileSelection, ProgressDisplay progress) {
         super(frame, true);
@@ -80,6 +74,7 @@ public class CombineDialog extends JDialog {
         setBounds(100, 100, 450, 300);
         getContentPane().setLayout(new BorderLayout());
         // SUPPRESS CHECKSTYLE MagicNumber
+        JPanel contentPanel = new JPanel();
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         getContentPane().add(contentPanel, BorderLayout.CENTER);
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.X_AXIS));
@@ -115,22 +110,14 @@ public class CombineDialog extends JDialog {
             contentPanel.add(verticalBox);
             {
                 JButton upButton = new JButton();
-                upButton.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        moveUp();
-                    }
-                });
+                upButton.addActionListener(e -> moveUp());
                 upButton.setIcon(new ImageIcon(
                         CombineDialog.class.getResource("/com/aha/pdftools/icons/go-up.png"))); //$NON-NLS-1$
                 verticalBox.add(upButton);
             }
             {
                 JButton downButton = new JButton();
-                downButton.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        moveDown();
-                    }
-                });
+                downButton.addActionListener(e -> moveDown());
                 downButton.setIcon(new ImageIcon(
                         CombineDialog.class.getResource("/com/aha/pdftools/icons/go-down.png"))); //$NON-NLS-1$
                 verticalBox.add(downButton);
@@ -140,18 +127,10 @@ public class CombineDialog extends JDialog {
             JPanel buttonPane = new JPanel();
             getContentPane().add(buttonPane, BorderLayout.SOUTH);
             JButton saveButton = new JButton(Messages.getString("PermissionManager.Save")); //$NON-NLS-1$
-            saveButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    save();
-                }
-            });
+            saveButton.addActionListener(e -> save());
             getRootPane().setDefaultButton(saveButton);
             JButton cancelButton = new JButton(Messages.getString("PermissionManager.Cancel")); //$NON-NLS-1$
-            cancelButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    setVisible(false);
-                }
-            });
+            cancelButton.addActionListener(e -> setVisible(false));
             GroupLayout glButtonPane = new GroupLayout(buttonPane);
             final int containerGap = 6;
             glButtonPane.setAutoCreateGaps(true);
@@ -190,7 +169,7 @@ public class CombineDialog extends JDialog {
     }
 
     public void show(List<PdfFile> files) {
-        ArrayList<PdfPages> pages = new ArrayList<PdfPages>(files.size());
+        List<PdfPages> pages = new ArrayList<>(files.size());
         for (PdfFile pdfFile : files) {
             pages.add(new PdfPages(pdfFile.getSourceFile(), pdfFile.getPageCount()));
         }

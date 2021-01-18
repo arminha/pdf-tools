@@ -79,10 +79,7 @@ public class ShrinkImages extends PdfTransformation {
         if (bitsPerComponent.intValue() != BITS_PER_COMPONENT) {
             return false;
         }
-        if (colorSpace.isArray() && ((PdfArray) colorSpace).contains(PdfName.INDEXED)) {
-            return false;
-        }
-        return true;
+        return !colorSpace.isArray() || !((PdfArray) colorSpace).contains(PdfName.INDEXED);
     }
 
     private void replaceImage(PRStream stream, byte[] imgData, int width, int height, PdfObject colorSpace) {

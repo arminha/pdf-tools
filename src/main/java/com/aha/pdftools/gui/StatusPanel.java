@@ -16,9 +16,6 @@
 
 package com.aha.pdftools.gui;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
@@ -31,13 +28,12 @@ import javax.swing.SwingConstants;
 import com.aha.pdftools.Messages;
 import com.aha.pdftools.ProgressDisplay;
 
-@SuppressWarnings("serial")
 public class StatusPanel extends JPanel implements ProgressDisplay {
 
     private boolean canceled = false;
-    private JButton btnCancel;
-    private JProgressBar progressBar;
-    private JLabel lblStatus;
+    private final JButton btnCancel;
+    private final JProgressBar progressBar;
+    private final JLabel lblStatus;
     private String message;
     private boolean taskStarted;
 
@@ -51,11 +47,7 @@ public class StatusPanel extends JPanel implements ProgressDisplay {
         progressBar.setEnabled(false);
 
         btnCancel = new JButton(Messages.getString("PermissionManager.Cancel")); //$NON-NLS-1$
-        btnCancel.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                canceled = true;
-            }
-        });
+        btnCancel.addActionListener(e -> canceled = true);
         btnCancel.setEnabled(false);
 
         GroupLayout groupLayout = new GroupLayout(this);

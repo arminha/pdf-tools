@@ -34,12 +34,13 @@ class PermissionManagerDropTarget extends DropTargetAdapter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PermissionManagerDropTarget.class);
 
-    private static DataFlavor uriListFlavor = null;
+    private static final DataFlavor uriListFlavor;
     static {
         try {
             uriListFlavor = new DataFlavor("text/uri-list; class=java.lang.String");
         } catch (ClassNotFoundException e) {
             LOGGER.error(e.getMessage(), e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -50,7 +51,7 @@ class PermissionManagerDropTarget extends DropTargetAdapter {
     }
 
     private boolean openFiles(List<File> files) {
-        List<File> finalFiles = new ArrayList<File>();
+        List<File> finalFiles = new ArrayList<>();
         for (File file : files) {
             if (!file.canRead()) {
                 continue;
@@ -88,7 +89,7 @@ class PermissionManagerDropTarget extends DropTargetAdapter {
             try {
                 String uris = (String) trans.getTransferData(uriListFlavor);
                 StringTokenizer tokenizer = new StringTokenizer(uris);
-                List<File> files = new ArrayList<File>();
+                List<File> files = new ArrayList<>();
                 while (tokenizer.hasMoreTokens()) {
                     URI uri = new URI(tokenizer.nextToken());
                     files.add(new File(uri));

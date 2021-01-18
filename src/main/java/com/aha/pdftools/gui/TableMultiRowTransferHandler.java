@@ -31,7 +31,6 @@ import org.slf4j.LoggerFactory;
 
 import com.aha.pdftools.model.MultiReorderable;
 
-@SuppressWarnings("serial")
 public class TableMultiRowTransferHandler extends AbstractTableRowTransferHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TableMultiRowTransferHandler.class);

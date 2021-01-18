@@ -36,7 +36,6 @@ public class PdfInfoHelper {
      *            a type to filter. If null all types are included.
      * @param filterSubType
      *            a subtype to filter. If null all subtypes are included.
-     * @return
      */
     public String dumpStreamInfo(PdfReader reader, PdfName filterType, PdfName filterSubType) {
         StringBuilder sb = new StringBuilder();

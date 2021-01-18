@@ -25,7 +25,6 @@ import javax.swing.JComponent;
 import javax.swing.JTable;
 import javax.swing.TransferHandler;
 
-@SuppressWarnings("serial")
 public abstract class AbstractTableRowTransferHandler extends TransferHandler {
     private final DataFlavor localObjectFlavor;
     private final JTable table;

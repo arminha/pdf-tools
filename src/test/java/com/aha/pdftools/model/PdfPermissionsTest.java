@@ -19,6 +19,7 @@ package com.aha.pdftools.model;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -75,10 +76,8 @@ public class PdfPermissionsTest {
     }
 
     private static Set<String> $$(String... permissions) {
-        HashSet<String> set = new HashSet<String>();
-        for (int i = 0; i < permissions.length; i++) {
-            set.add(permissions[i]);
-        }
+        Set<String> set = new HashSet<>();
+        Collections.addAll(set, permissions);
         return set;
     }
 

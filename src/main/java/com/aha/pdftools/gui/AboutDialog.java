@@ -39,15 +39,12 @@ import org.slf4j.LoggerFactory;
 
 import com.aha.pdftools.Messages;
 
-@SuppressWarnings("serial")
 public class AboutDialog extends JDialog implements ActionListener, HyperlinkListener {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AboutDialog.class);
 
     private static final int WIDTH = 450;
     private static final int HEIGHT = 300;
-
-    private final JPanel contentPanel = new JPanel();
 
     /**
      * Create the dialog.
@@ -59,6 +56,7 @@ public class AboutDialog extends JDialog implements ActionListener, HyperlinkLis
         WindowUtil.setBoundsScaled(this, 100, 100, WIDTH, HEIGHT);
         getContentPane().setLayout(new BorderLayout());
         // SUPPRESS CHECKSTYLE MagicNumber
+        JPanel contentPanel = new JPanel();
         contentPanel.setBorder(new EmptyBorder(5, 5, 0, 5));
         getContentPane().add(contentPanel, BorderLayout.CENTER);
         contentPanel.setLayout(new BorderLayout(0, 0));
@@ -92,7 +90,7 @@ public class AboutDialog extends JDialog implements ActionListener, HyperlinkLis
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getActionCommand() == "Close") {
+        if ("Close".equals(e.getActionCommand())) {
             setVisible(false);
             dispose();
         }

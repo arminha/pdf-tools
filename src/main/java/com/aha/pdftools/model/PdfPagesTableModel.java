@@ -21,7 +21,6 @@ import java.util.List;
 import com.jgoodies.binding.adapter.AbstractTableAdapter;
 import com.jgoodies.binding.list.SelectionInList;
 
-@SuppressWarnings("serial")
 public class PdfPagesTableModel extends AbstractTableAdapter<PdfPages> implements Reorderable {
 
     private final SelectionInList<PdfPages> listModel;

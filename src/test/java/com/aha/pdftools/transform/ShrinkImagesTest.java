@@ -29,7 +29,6 @@ import org.junit.jupiter.api.Test;
 import com.aha.pdftools.PdfReaderTestBase;
 import com.itextpdf.text.pdf.PRStream;
 import com.itextpdf.text.pdf.PdfName;
-import com.itextpdf.text.pdf.PdfObject;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
 
@@ -38,7 +37,7 @@ public class ShrinkImagesTest extends PdfReaderTestBase {
     private ShrinkImages transformation;
 
     @BeforeEach
-    public void setup() throws Exception {
+    public void setup() {
         transformation = new ShrinkImages();
     }
 
@@ -63,7 +62,7 @@ public class ShrinkImagesTest extends PdfReaderTestBase {
         assertThat(stream.getLength(), lessThan(originalLength));
         assertThat(stream.getLength(), lessThan(40000));
         assertThat(stream.get(PdfName.BITSPERCOMPONENT), isPdfNumber(8));
-        assertThat(stream.get(PdfName.COLORSPACE), is((PdfObject) PdfName.DEVICERGB));
+        assertThat(stream.get(PdfName.COLORSPACE), is(PdfName.DEVICERGB));
         assertThat(stream.get(PdfName.WIDTH), isPdfNumber(512));
         assertThat(stream.get(PdfName.HEIGHT), isPdfNumber(512));
     }
@@ -79,7 +78,7 @@ public class ShrinkImagesTest extends PdfReaderTestBase {
         assertThat(stream.getLength(), lessThan(originalLength));
         assertThat(stream.getLength(), lessThan(14000));
         assertThat(stream.get(PdfName.BITSPERCOMPONENT), isPdfNumber(8));
-        assertThat(stream.get(PdfName.COLORSPACE), is((PdfObject) PdfName.DEVICERGB));
+        assertThat(stream.get(PdfName.COLORSPACE), is(PdfName.DEVICERGB));
         assertThat(stream.get(PdfName.WIDTH), isPdfNumber(256));
         assertThat(stream.get(PdfName.HEIGHT), isPdfNumber(256));
     }
