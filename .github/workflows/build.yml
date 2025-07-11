@@ -11,25 +11,26 @@ jobs:
     strategy:
       matrix:
         java:
-          - 8
-          - 11
+          - 17
+          - 21
 
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Install python-docutils
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y python-docutils
+          sudo apt-get install -y python3-docutils
 
       - name: Set up JDK
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v4
         with:
+          distribution: 'temurin'
           java-version: ${{ matrix.java }}
 
       - name: Cache Gradle packages
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}

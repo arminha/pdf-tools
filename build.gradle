@@ -1,13 +1,10 @@
 plugins {
     id 'java'
-    id 'edu.sc.seis.launch4j' version '2.4.6'
+    id 'edu.sc.seis.launch4j' version '3.0.6'
     id 'jacoco'
-    id 'com.github.spotbugs' version '2.0.0'
-    id 'pmd'
-    id 'checkstyle'
 }
 
-sourceCompatibility = 1.8
+sourceCompatibility = 17
 
 ext {
     mainClass = 'com.aha.pdftools.gui.PermissionManager'
@@ -27,7 +24,6 @@ ext {
 launch4j {
     mainClassName = mainClass
     dontWrapJar = true
-    jar = jarName
 }
 
 ///////////////////////////////////////////////////
@@ -62,48 +58,9 @@ test {
 // jacoco
 
 jacoco {
-    toolVersion = '0.8.5'
+    toolVersion = '0.8.13'
 }
 jacocoTestReport.dependsOn(test)
-
-/////////////////
-// spotbugs
-
-spotbugs {
-    toolVersion = "3.1.12"
-    ignoreFailures = true
-}
-
-if (!rootProject.hasProperty("findbugsReportXml") || findbugsReportXml != 'true') {
-    tasks.withType(com.github.spotbugs.SpotBugsTask) {
-        reports {
-            xml.enabled = false
-            html.enabled = true
-        }
-    }
-}
-
-/////////////////
-// pmd
-
-pmd {
-    ignoreFailures = true
-    toolVersion = '5.4.1'
-}
-
-/////////////////
-// checkstyle
-
-checkstyle {
-    ignoreFailures = true
-    toolVersion = '5.7'
-    configFile = rootProject.file('config/checkstyle/checkstyle.xml')
-}
-
-// different rule file for tests
-tasks.matching({ task -> task.getName().endsWith("Test")}).withType(Checkstyle) {
-    configFile = rootProject.file('config/checkstyle/checkstyle-test.xml')
-}
 
 ///////////////////////////////////////////////////
 // About
@@ -163,9 +120,9 @@ jar {
 
 task distZip(type: Zip, dependsOn: [setVersion, 'createExe']) {
     description 'Bundles the project as a JVM application with libs and the launch4j .exe'
-    archiveName = project.name + '-v' + setVersion.version + '.zip'
-    destinationDir = buildDir
-    excludes = [launch4j.xmlFileName, 'bin-launch4j', "lib/$jarName"]
+    archiveFileName = project.name + '-v' + setVersion.version + '.zip'
+    destinationDirectory = buildDir
+    excludes = ["lib/$jarName"]
     from("$buildDir/launch4j")
     into project.name
     from jar.outputs
@@ -178,12 +135,12 @@ task distZip(type: Zip, dependsOn: [setVersion, 'createExe']) {
 task run(type: JavaExec) {
     description 'Runs this project as a JVM application'
     classpath = sourceSets.main.runtimeClasspath
-    main = mainClass
+    mainClass = project.mainClass
 }
 
 ///////////////////////////////////////////////////////
 // Wrapper
 
 wrapper {
-    gradleVersion = '5.6.3'
+    gradleVersion = '8.14.3'
 }
