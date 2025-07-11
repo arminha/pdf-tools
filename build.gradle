@@ -10,7 +10,7 @@ ext {
     mainClass = 'com.aha.pdftools.gui.PermissionManager'
 }
 
-tasks.withType(JavaCompile) {
+tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
 }
 
@@ -76,14 +76,15 @@ String gitVersion() {
     }
 }
 
-task setVersion {
+tasks.register('setVersion') {
     ext.version = gitVersion()
     ext.destFile = file('doc/version.rst')
     outputs.file destFile
     destFile.write('.. |version-nr| replace:: ' + version)
 }
 
-task aboutPage(type:Exec, dependsOn:setVersion) {
+tasks.register('aboutPage', Exec) {
+    dependsOn setVersion
     ext.srcFile = 'doc/about.rst'
     ext.destFile = 'src/main/resources/com/aha/pdftools/gui/about.html'
     inputs.files srcFile, 'doc/license.rst', 'doc/about.css', 'doc/html4css1.css', 'doc/version.rst'
@@ -97,7 +98,7 @@ processResources.dependsOn aboutPage
 ///////////////////////////////////////////////////
 // Packaging
 
-String manifestClassPath(FileCollection cp) {
+static String manifestClassPath(FileCollection cp) {
     def cpManifest = ''
     cp.each {
         File file ->
@@ -118,7 +119,8 @@ jar {
     }
 }
 
-task distZip(type: Zip, dependsOn: [setVersion, 'createExe']) {
+tasks.register('distZip', Zip) {
+    dependsOn 'setVersion', 'createExe'
     description 'Bundles the project as a JVM application with libs and the launch4j .exe'
     archiveFileName = project.name + '-v' + setVersion.version + '.zip'
     destinationDirectory = buildDir
@@ -132,7 +134,7 @@ task distZip(type: Zip, dependsOn: [setVersion, 'createExe']) {
 ///////////////////////////////////////////////////////
 // Run Application
 
-task run(type: JavaExec) {
+tasks.register('run', JavaExec) {
     description 'Runs this project as a JVM application'
     classpath = sourceSets.main.runtimeClasspath
     mainClass = project.mainClass
