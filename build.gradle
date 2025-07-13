@@ -40,7 +40,6 @@ dependencies{
     implementation 'org.slf4j:slf4j-api:1.7.30'
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
     implementation 'com.formdev:flatlaf:0.46'
-    implementation 'com.sun.activation:javax.activation:1.2.0'
 
     runtimeOnly 'org.slf4j:slf4j-jdk14:1.7.30'
 

@@ -4,8 +4,6 @@ import java.awt.Cursor;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 
-import javax.activation.ActivationDataFlavor;
-import javax.activation.DataHandler;
 import javax.swing.JComponent;
 import javax.swing.JTable;
 import javax.swing.TransferHandler;
@@ -20,14 +18,13 @@ public class TableMultiRowTransferHandler extends AbstractTableRowTransferHandle
     private static final Logger LOGGER = LoggerFactory.getLogger(TableMultiRowTransferHandler.class);
 
     public TableMultiRowTransferHandler(JTable table) {
-        super(table,
-                new ActivationDataFlavor(int[].class, DataFlavor.javaJVMLocalObjectMimeType, "Integer Row Indices"));
+        super(table, new DataFlavor(int[].class, "Integer Row Indices"));
     }
 
     @Override
     protected Transferable createTransferable(JComponent c) {
         assert c == getTable();
-        return new DataHandler(getTable().getSelectedRows(), getLocalObjectFlavor().getMimeType());
+        return new SimpleTransferable<>(getTable().getSelectedRows(), getLocalObjectFlavor());
     }
 
     @Override

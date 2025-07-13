@@ -4,8 +4,6 @@ import java.awt.Cursor;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 
-import javax.activation.ActivationDataFlavor;
-import javax.activation.DataHandler;
 import javax.swing.JComponent;
 import javax.swing.JTable;
 import javax.swing.TransferHandler;
@@ -20,17 +18,16 @@ import com.aha.pdftools.model.Reorderable;
  */
 public class TableRowTransferHandler extends AbstractTableRowTransferHandler {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TableMultiRowTransferHandler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TableRowTransferHandler.class);
 
     public TableRowTransferHandler(JTable table) {
-        super(table,
-                new ActivationDataFlavor(Integer.class, DataFlavor.javaJVMLocalObjectMimeType, "Integer Row Index"));
+        super(table, new DataFlavor(Integer.class, "Integer Row Index"));
     }
 
     @Override
     protected Transferable createTransferable(JComponent c) {
         assert c == getTable();
-        return new DataHandler(getTable().getSelectedRow(), getLocalObjectFlavor().getMimeType());
+        return new SimpleTransferable<>(getTable().getSelectedRow(), getLocalObjectFlavor());
     }
 
     @Override
