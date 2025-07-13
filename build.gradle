@@ -34,19 +34,19 @@ repositories {
 }
 
 dependencies{
-    implementation 'com.itextpdf:itextpdf:5.5.13.2'
-    implementation 'org.bouncycastle:bcprov-jdk15on:1.68'
+    implementation 'com.itextpdf:itextpdf:5.5.13.4'
+    implementation 'org.bouncycastle:bcprov-jdk18on:1.81'
     implementation 'com.jgoodies:jgoodies-binding:2.13.0'
-    implementation 'org.slf4j:slf4j-api:1.7.30'
-    implementation 'com.google.code.findbugs:jsr305:3.0.2'
-    implementation 'com.formdev:flatlaf:0.46'
+    implementation 'org.slf4j:slf4j-api:2.0.17'
+    implementation 'com.formdev:flatlaf:3.6'
+    compileOnly 'org.jspecify:jspecify:1.0.0'
 
-    runtimeOnly 'org.slf4j:slf4j-jdk14:1.7.30'
+    runtimeOnly 'org.slf4j:slf4j-jdk14:2.0.17'
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.7.0")
-    testImplementation 'org.hamcrest:hamcrest:2.2'
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.4")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.11.4")
+    testImplementation('org.assertj:assertj-core:3.27.3')
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.11.4")
 }
 
 test {

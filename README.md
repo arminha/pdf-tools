@@ -7,7 +7,7 @@ A set of tools for PDF files.
 ## Features
 
 * Change permissions (print, copy etc)
-* Combine PDF files or individial pages from PDF files.
+* Combine PDF files or individual pages from PDF files.
 
 ## Download
 

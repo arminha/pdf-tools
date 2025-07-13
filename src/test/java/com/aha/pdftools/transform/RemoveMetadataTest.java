@@ -1,7 +1,6 @@
 package com.aha.pdftools.transform;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.lessThan;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.ByteArrayOutputStream;
 
@@ -30,7 +29,7 @@ public class RemoveMetadataTest extends PdfReaderTestBase {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         PdfStamper stamper = new PdfStamper(reader, outputStream);
         stamper.close();
-        assertThat(outputStream.size(), lessThan(780000));
+        assertThat(outputStream.size()).isLessThan(780000);
     }
 
 }

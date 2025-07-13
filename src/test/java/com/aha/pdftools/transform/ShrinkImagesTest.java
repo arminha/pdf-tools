@@ -1,9 +1,6 @@
 package com.aha.pdftools.transform;
 
-import static com.aha.pdftools.IsPdfNumber.isPdfNumber;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.lessThan;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.ByteArrayOutputStream;
 
@@ -13,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import com.aha.pdftools.PdfReaderTestBase;
 import com.itextpdf.text.pdf.PRStream;
 import com.itextpdf.text.pdf.PdfName;
+import com.itextpdf.text.pdf.PdfNumber;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
 
@@ -33,7 +31,7 @@ public class ShrinkImagesTest extends PdfReaderTestBase {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         PdfStamper stamper = new PdfStamper(reader, outputStream);
         stamper.close();
-        assertThat(outputStream.size(), lessThan(62000));
+        assertThat(outputStream.size()).isLessThan(62000);
     }
 
     @Test
@@ -43,12 +41,12 @@ public class ShrinkImagesTest extends PdfReaderTestBase {
 
         int originalLength = stream.getLength();
         transformation.transform(getReader());
-        assertThat(stream.getLength(), lessThan(originalLength));
-        assertThat(stream.getLength(), lessThan(40000));
-        assertThat(stream.get(PdfName.BITSPERCOMPONENT), isPdfNumber(8));
-        assertThat(stream.get(PdfName.COLORSPACE), is(PdfName.DEVICERGB));
-        assertThat(stream.get(PdfName.WIDTH), isPdfNumber(512));
-        assertThat(stream.get(PdfName.HEIGHT), isPdfNumber(512));
+        assertThat(stream.getLength()).isLessThan(originalLength)
+            .isLessThan(40000);
+        assertThat(stream.get(PdfName.BITSPERCOMPONENT)).isInstanceOfSatisfying(PdfNumber.class, n -> assertThat(n.intValue()).isEqualTo(8));
+        assertThat(stream.get(PdfName.COLORSPACE)).isEqualTo(PdfName.DEVICERGB);
+        assertThat(stream.get(PdfName.WIDTH)).isInstanceOfSatisfying(PdfNumber.class, n -> assertThat(n.intValue()).isEqualTo(512));
+        assertThat(stream.get(PdfName.HEIGHT)).isInstanceOfSatisfying(PdfNumber.class, n -> assertThat(n.intValue()).isEqualTo(512));
     }
 
     @Test
@@ -59,12 +57,12 @@ public class ShrinkImagesTest extends PdfReaderTestBase {
         int originalLength = stream.getLength();
         transformation.setScaleFactor(0.5);
         transformation.transform(getReader());
-        assertThat(stream.getLength(), lessThan(originalLength));
-        assertThat(stream.getLength(), lessThan(14000));
-        assertThat(stream.get(PdfName.BITSPERCOMPONENT), isPdfNumber(8));
-        assertThat(stream.get(PdfName.COLORSPACE), is(PdfName.DEVICERGB));
-        assertThat(stream.get(PdfName.WIDTH), isPdfNumber(256));
-        assertThat(stream.get(PdfName.HEIGHT), isPdfNumber(256));
+        assertThat(stream.getLength()).isLessThan(originalLength)
+            .isLessThan(14000);
+        assertThat(stream.get(PdfName.BITSPERCOMPONENT)).isInstanceOfSatisfying(PdfNumber.class, n -> assertThat(n.intValue()).isEqualTo(8));
+        assertThat(stream.get(PdfName.COLORSPACE)).isEqualTo(PdfName.DEVICERGB);
+        assertThat(stream.get(PdfName.WIDTH)).isInstanceOfSatisfying(PdfNumber.class, n -> assertThat(n.intValue()).isEqualTo(256));
+        assertThat(stream.get(PdfName.HEIGHT)).isInstanceOfSatisfying(PdfNumber.class, n -> assertThat(n.intValue()).isEqualTo(256));
     }
 
 }

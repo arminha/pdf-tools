@@ -55,7 +55,7 @@ public class PdfPages extends AbstractModelObject {
         for (int curPage : mPages) {
             if (interval != null) {
                 if (!interval.addPage(curPage)) {
-                    if (sb.length() > 0) {
+                    if (!sb.isEmpty()) {
                         sb.append(", ");
                     }
                     sb.append(interval);
@@ -66,7 +66,7 @@ public class PdfPages extends AbstractModelObject {
             }
         }
         if (interval != null) {
-            if (sb.length() > 0) {
+            if (!sb.isEmpty()) {
                 sb.append(", ");
             }
             sb.append(interval);

@@ -1,9 +1,6 @@
 package com.aha.pdftools;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasEntry;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Map;
 
@@ -39,16 +36,16 @@ public class PdfInfoHelperTest extends PdfReaderTestBase {
         setupReader(EXAMPLE_PDF_WITH_PNG_IMAGE);
 
         String streamInfo = helper.dumpStreamInfo(getReader(), null, null);
-        assertThat(streamInfo, containsString(STREAM_15));
+        assertThat(streamInfo).contains(STREAM_15);
 
         streamInfo = helper.dumpStreamInfo(getReader(), PdfName.XOBJECT, null);
-        assertThat(streamInfo, containsString(STREAM_15));
+        assertThat(streamInfo).contains(STREAM_15);
 
         streamInfo = helper.dumpStreamInfo(getReader(), PdfName.XOBJECT, PdfName.IMAGE);
-        assertThat(streamInfo, containsString(STREAM_15));
+        assertThat(streamInfo).contains(STREAM_15);
 
         streamInfo = helper.dumpStreamInfo(getReader(), PdfName.XOBJECT, PdfName.FILEATTACHMENT);
-        assertThat(streamInfo, not(containsString(STREAM_15)));
+        assertThat(streamInfo).doesNotContain(STREAM_15);
     }
 
     @Test
@@ -57,9 +54,9 @@ public class PdfInfoHelperTest extends PdfReaderTestBase {
 
         Map<PdfName, Integer> sizeByType = helper.getStreamSizeByType(getReader());
 
-        assertThat(sizeByType, hasEntry(null, 38930));
-        assertThat(sizeByType, hasEntry(PdfName.METADATA, 3058));
-        assertThat(sizeByType, hasEntry(PdfName.IMAGE, 733935));
+        assertThat(sizeByType).containsEntry(null, 38930);
+        assertThat(sizeByType).containsEntry(PdfName.METADATA, 3058);
+        assertThat(sizeByType).containsEntry(PdfName.IMAGE, 733935);
     }
 
     @Test
@@ -68,9 +65,9 @@ public class PdfInfoHelperTest extends PdfReaderTestBase {
 
         Map<PdfName, Integer> sizeByType = helper.getStreamSizeByType(getReader());
 
-        assertThat(sizeByType, hasEntry(null, 570325));
-        assertThat(sizeByType, hasEntry(PdfName.METADATA, 3058));
-        assertThat(sizeByType, hasEntry(PdfName.IMAGE, 733935));
+        assertThat(sizeByType).containsEntry(null, 570325);
+        assertThat(sizeByType).containsEntry(PdfName.METADATA, 3058);
+        assertThat(sizeByType).containsEntry(PdfName.IMAGE, 733935);
     }
 
     @Test
@@ -79,8 +76,8 @@ public class PdfInfoHelperTest extends PdfReaderTestBase {
 
         Map<PdfName, Integer> sizeByType = helper.getStreamSizeByType(getReader());
 
-        assertThat(sizeByType, hasEntry(null, 36127));
-        assertThat(sizeByType, hasEntry(PdfName.IMAGE, 64562));
+        assertThat(sizeByType).containsEntry(null, 36127);
+        assertThat(sizeByType).containsEntry(PdfName.IMAGE, 64562);
     }
 
 }

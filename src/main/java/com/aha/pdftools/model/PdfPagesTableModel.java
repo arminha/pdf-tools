@@ -45,14 +45,11 @@ public class PdfPagesTableModel extends AbstractTableAdapter<PdfPages> implement
 
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-        switch (columnIndex) {
-        case 1:
+        if (columnIndex == 1) {
             PdfPages pdfPages = getRow(rowIndex);
             pdfPages.setPagesString((String) aValue);
-            break;
-        default:
+        } else {
             super.setValueAt(aValue, rowIndex, columnIndex);
-            break;
         }
     }
 

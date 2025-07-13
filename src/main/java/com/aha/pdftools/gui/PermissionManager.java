@@ -80,7 +80,7 @@ public class PermissionManager implements FileSelection {
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
             try {
-                FlatIntelliJLaf.install();
+                FlatIntelliJLaf.setup();
                 PermissionManager window = new PermissionManager();
                 window.frame.setVisible(true);
                 new DropTarget(window.frame, new PermissionManagerDropTarget(window));
@@ -455,11 +455,11 @@ public class PermissionManager implements FileSelection {
     }
 
     @Override
-    public File chooseSaveFile(String initalName, boolean addExtension) {
+    public File chooseSaveFile(String initialName, boolean addExtension) {
         JFileChooser chooser = getFileChooser();
         chooser.setFileFilter(new PdfFileFilter());
-        if (initalName != null) {
-            File f = new File(chooser.getCurrentDirectory().getAbsolutePath() + File.separator + initalName);
+        if (initialName != null) {
+            File f = new File(chooser.getCurrentDirectory().getAbsolutePath() + File.separator + initialName);
             chooser.setSelectedFile(f);
         }
         int result = chooser.showSaveDialog(frame);
