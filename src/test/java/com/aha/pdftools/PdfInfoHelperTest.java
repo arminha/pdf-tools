@@ -19,16 +19,17 @@ public class PdfInfoHelperTest extends PdfReaderTestBase {
     }
 
     // @formatter:off
-    private static final String STREAM_15 = "Stream #15 {\n"
-            + "  /Type = /XObject\n"
-            + "  /Subtype = /Image\n"
-            + "  /Width = 512\n"
-            + "  /Height = 512\n"
-            + "  /BitsPerComponent = 8\n"
-            + "  /Length = 733935\n"
-            + "  /Filter = /FlateDecode\n"
-            + "  /ColorSpace = /DeviceRGB\n"
-            + "}";
+    private static final String STREAM_15 = """
+Stream #15 {
+  /Type = /XObject
+  /Subtype = /Image
+  /Width = 512
+  /Height = 512
+  /BitsPerComponent = 8
+  /Length = 733935
+  /Filter = /FlateDecode
+  /ColorSpace = /DeviceRGB
+}""";
     // @formatter:on
 
     @Test

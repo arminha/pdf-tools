@@ -40,6 +40,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -455,7 +456,7 @@ public class PermissionManager implements FileSelection {
     }
 
     @Override
-    public File chooseSaveFile(String initialName, boolean addExtension) {
+    public @Nullable File chooseSaveFile(@Nullable String initialName, boolean addExtension) {
         JFileChooser chooser = getFileChooser();
         chooser.setFileFilter(new PdfFileFilter());
         if (initialName != null) {

@@ -3,7 +3,6 @@ package com.aha.pdftools.gui;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
-import java.io.IOException;
 
 public class SimpleTransferable<T> implements Transferable {
 

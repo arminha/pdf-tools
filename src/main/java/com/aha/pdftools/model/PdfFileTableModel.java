@@ -32,38 +32,24 @@ public class PdfFileTableModel extends AbstractTableAdapter<PdfFile> implements 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         PdfFile pdfFile = getRow(rowIndex);
-        // CHECKSTYLE IGNORE MagicNumber
-        switch (columnIndex) {
-        case 0:
-            return pdfFile.getName();
-        case 1:
-            return pdfFile.getSourcePath();
-        case 2:
-            return pdfFile.isAssembly();
-        case 3:
-            return pdfFile.isCopy();
-        case 4:
-            return pdfFile.isDegradedPrinting();
-        case 5:
-            return pdfFile.isPrinting();
-        case 6:
-            return pdfFile.isScreenReaders();
-        case 7:
-            return pdfFile.isFillIn();
-        case 8:
-            return pdfFile.isModifyAnnotations();
-        case 9:
-            return pdfFile.isModifyContents();
-        default:
-            return null;
-        }
-        // CHECKSTYLE END IGNORE MagicNumber
+        return switch (columnIndex) {
+            case 0 -> pdfFile.getName();
+            case 1 -> pdfFile.getSourcePath();
+            case 2 -> pdfFile.isAssembly();
+            case 3 -> pdfFile.isCopy();
+            case 4 -> pdfFile.isDegradedPrinting();
+            case 5 -> pdfFile.isPrinting();
+            case 6 -> pdfFile.isScreenReaders();
+            case 7 -> pdfFile.isFillIn();
+            case 8 -> pdfFile.isModifyAnnotations();
+            case 9 -> pdfFile.isModifyContents();
+            default -> throw new IllegalArgumentException("Invalid column index: " + columnIndex);
+        };
     }
 
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         PdfFile pdfFile = getRow(rowIndex);
-        // CHECKSTYLE IGNORE MagicNumber
         switch (columnIndex) {
         case 2:
             pdfFile.setAssembly((Boolean) aValue);
@@ -90,9 +76,8 @@ public class PdfFileTableModel extends AbstractTableAdapter<PdfFile> implements 
             pdfFile.setModifyContents((Boolean) aValue);
             break;
         default:
-            super.setValueAt(aValue, rowIndex, columnIndex);
+            throw new IllegalArgumentException("Invalid column index: " + columnIndex);
         }
-        // CHECKSTYLE END IGNORE MagicNumber
     }
 
     @Override

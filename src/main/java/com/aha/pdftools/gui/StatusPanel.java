@@ -18,7 +18,7 @@ public class StatusPanel extends JPanel implements ProgressDisplay {
     private final JButton btnCancel;
     private final JProgressBar progressBar;
     private final JLabel lblStatus;
-    private String message;
+    private String message = "";
     private boolean taskStarted;
 
     /**

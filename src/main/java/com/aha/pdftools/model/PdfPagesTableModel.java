@@ -17,14 +17,11 @@ public class PdfPagesTableModel extends AbstractTableAdapter<PdfPages> implement
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         PdfPages pdfPages = getRow(rowIndex);
-        switch (columnIndex) {
-        case 0:
-            return pdfPages.getName();
-        case 1:
-            return pdfPages.getPagesString();
-        default:
-            return null;
-        }
+        return switch (columnIndex) {
+            case 0 -> pdfPages.getName();
+            case 1 -> pdfPages.getPagesString();
+            default -> throw new IllegalArgumentException("Invalid column index: " + columnIndex);
+        };
     }
 
     @Override
@@ -49,7 +46,7 @@ public class PdfPagesTableModel extends AbstractTableAdapter<PdfPages> implement
             PdfPages pdfPages = getRow(rowIndex);
             pdfPages.setPagesString((String) aValue);
         } else {
-            super.setValueAt(aValue, rowIndex, columnIndex);
+            throw new IllegalArgumentException("Invalid column index: " + columnIndex);
         }
     }
 

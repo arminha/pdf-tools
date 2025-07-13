@@ -33,7 +33,7 @@ public final class PdfPermissionManager {
     public static long getPermissions(PdfReader reader) {
         long permissions;
         if (!reader.isEncrypted()) {
-            permissions = 0xFFFFFFFF;
+            permissions = 0xffff_ffffL;
         } else {
             permissions = reader.getPermissions();
         }
