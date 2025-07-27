@@ -6,7 +6,7 @@ plugins {
     id("jacoco")
 }
 
-configure<JavaPluginExtension> {
+java {
     sourceCompatibility = JavaVersion.VERSION_17
 }
 
