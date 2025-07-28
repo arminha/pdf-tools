@@ -15,4 +15,6 @@ It uses code from the following external libraries:
 
 * `FlatLaf <https://www.formdev.com/flatlaf/>`_, licensed under the `Apache 2.0 License <https://github.com/JFormDesigner/FlatLaf/blob/master/LICENSE>`__.
 
+* `JSpecify <https://github.com/jspecify/jspecify>`_, licensed under the `Apache 2.0 License <https://github.com/jspecify/jspecify/blob/main/LICENSE>`__.
+
 * `launch4j <http://launch4j.sourceforge.net/>`_, licensed under an `MIT license <http://www.opensource.org/licenses/mit-license.html>`__.
