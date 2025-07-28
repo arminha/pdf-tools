@@ -31,20 +31,24 @@ repositories {
     mavenCentral()
 }
 
+dependencyLocking {
+    lockAllConfigurations()
+}
+
 dependencies{
-    implementation("com.itextpdf:itextpdf:5.5.13.4")
-    implementation("org.bouncycastle:bcprov-jdk18on:1.81")
-    implementation("com.jgoodies:jgoodies-binding:2.13.0")
-    implementation("org.slf4j:slf4j-api:2.0.17")
-    implementation("com.formdev:flatlaf:3.6")
-    compileOnly("org.jspecify:jspecify:1.0.0")
+    implementation(libs.itextpdf)
+    implementation(libs.bouncycastle)
+    implementation(libs.jgoodies.binding)
+    implementation(libs.slf4j.api)
+    implementation(libs.flatlaf)
+    compileOnly(libs.jspecify)
 
-    runtimeOnly("org.slf4j:slf4j-jdk14:2.0.17")
+    runtimeOnly(libs.slf4j.jdk14)
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.4")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.11.4")
-    testImplementation("org.assertj:assertj-core:3.27.3")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.11.4")
+    testImplementation(libs.junit.jupiter.api)
+    testImplementation(libs.junit.jupiter.params)
+    testImplementation(libs.assertj.core)
+    testRuntimeOnly(libs.junit.jupiter.engine)
 }
 
 tasks.named<Test>("test") {
