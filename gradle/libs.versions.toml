@@ -6,7 +6,7 @@ slf4j = "2.0.17"
 flatlaf = "3.6.1"
 jgoodies-binding = "2.13.0"
 
-junit = "5.11.4"
+junit = "5.13.4"
 assertj = "3.27.4"
 
 [libraries]
