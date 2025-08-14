@@ -1,15 +1,20 @@
 [versions]
+asm = "9.8"
+
 bouncycastle = "1.81"
 itextpdf = "5.5.13.4"
 jspecify = "1.0.0"
 slf4j = "2.0.17"
 flatlaf = "3.6.1"
 jgoodies-binding = "2.13.0"
+jgoodies-common = "1.8.1"
 
 junit = "5.13.4"
 assertj = "3.27.4"
 
 [libraries]
+asm = { group = "org.ow2.asm", name = "asm", version.ref = "asm" }
+
 bouncycastle = { group = "org.bouncycastle", name = "bcprov-jdk18on", version.ref = "bouncycastle" }
 itextpdf = { group = "com.itextpdf", name = "itextpdf", version.ref = "itextpdf" }
 slf4j-api = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j" }
