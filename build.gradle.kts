@@ -49,6 +49,7 @@ dependencies{
     testImplementation(libs.junit.jupiter.params)
     testImplementation(libs.assertj.core)
     testRuntimeOnly(libs.junit.jupiter.engine)
+    testRuntimeOnly(libs.junit.jupiter.platform.launcher)
 }
 
 tasks.named<Test>("test") {
