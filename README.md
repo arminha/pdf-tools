@@ -12,3 +12,18 @@ A set of tools for PDF files.
 ## Download
 
 Get the [latest release](https://github.com/arminha/pdf-tools/releases/latest).
+
+
+## Develop
+
+### Build
+
+```shell
+./gradlew clean build
+```
+
+### Update Dependency Lock Files
+
+```shell
+./gradlew dependencies --write-locks
+```
