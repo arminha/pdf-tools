@@ -2,9 +2,10 @@ import java.io.ByteArrayOutputStream
 
 plugins {
     id("java")
+    id("application")
     id("extra-java-module-info")
-    id("edu.sc.seis.launch4j").version("3.0.6")
     id("jacoco")
+    id("edu.sc.seis.launch4j").version("3.0.6")
 }
 
 java {
@@ -15,6 +16,10 @@ extra["mainClass"] = "com.aha.pdftools.gui.PermissionManager"
 
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
+}
+application {
+    mainModule = "com.aha.pdftools"
+    mainClass = extra["mainClass"] as String
 }
 
 ///////////////////////////////////////////////////
@@ -180,7 +185,7 @@ tasks.named("processResources") {
 // Packaging
 
 fun manifestClassPath(cp: FileCollection): String {
-    return cp.filter { it.name.endsWith(".jar") }.map { "lib/${it.name}" }.joinToString(" ")
+    return cp.filter { it.name.endsWith(".jar") }.joinToString(" ") { "lib/${it.name}" }
 }
 
 tasks.jar {
@@ -193,31 +198,31 @@ tasks.jar {
     }
 }
 
-tasks.register<Zip>("distZip") {
-    group = "Build"
-    description = "Bundles the project as a JVM application with libs and the launch4j .exe"
-    val gitVersion = tasks.named("gitVersion")
-    dependsOn(gitVersion)
-    dependsOn("createExe", "jar")
-    archiveFileName = provider { "${project.name}-v${gitVersion.get().extra["version"]}.zip" }
-    destinationDirectory = project.layout.buildDirectory
-    val jarTask = tasks.getByName("jar")
-    val jarName = jarTask.outputs.files.singleFile.name
-    from(project.layout.buildDirectory.dir("launch4j"))
-        .exclude("lib/$jarName")
-        .into(project.name)
-    from(jarTask.outputs)
-        .into(project.name)
+distributions {
+    main {
+        contents {
+            from(project.layout.buildDirectory.dir("launch4j")) {
+                include("PdfTools.exe")
+                into(".")
+            }
+        }
+    }
 }
 
-///////////////////////////////////////////////////////
-// Run Application
+tasks.getByName<Tar>("distTar").enabled = false
 
-tasks.register<JavaExec>("run") {
-    group = "Application"
-    description = "Runs this project as a JVM application"
-    classpath = sourceSets.main.get().runtimeClasspath
-    mainClass = project.extra["mainClass"] as String
+tasks.getByName<Zip>("distZip") {
+    val gitVersion = tasks.named("gitVersion")
+    dependsOn(gitVersion)
+    dependsOn("createExe")
+    archiveFileName = provider { "${project.name}-v${gitVersion.get().extra["version"]}.zip" }
+    eachFile {
+        relativePath = RelativePath(
+            relativePath.isFile,
+            archiveBaseName.get(),
+            *relativePath.segments.drop(1).toTypedArray()
+        )
+    }
 }
 
 ///////////////////////////////////////////////////////
