@@ -1,6 +1,6 @@
 [versions]
 bouncycastle = "1.81"
-itextpdf = "5.5.13.4"
+itextpdf = "5.5.13.5"
 jspecify = "1.0.0"
 slf4j = "2.0.17"
 flatlaf = "3.6.1"
